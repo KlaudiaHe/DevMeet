@@ -1,10 +1,11 @@
-package pl.com.devmeet.devmeetcore.user.domain;
+package pl.com.devmeet.devmeetcore.user.api;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.com.devmeet.devmeetcore.user.domain.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,13 +25,13 @@ class UserService {
 
     Optional<UserDto> findById(Long id) {
         return repository.findById(id)
-                .map(UserMapper::toDto);
+                .map(UserCrudFacade::map);
     }
 
     List<UserDto> findAll() {
         return repository.findAll()
                 .stream()
-                .map(UserMapper::toDto)
+                .map(UserCrudFacade::map)
                 .collect(Collectors.toList());
     }
 
@@ -43,7 +44,7 @@ class UserService {
 
     Optional<UserDto> findByEmail(String email) {
         return repository.findByEmail(email)
-                .map(UserMapper::toDto);
+                .map(UserCrudFacade::map);
     }
 
 //    List<UserDto> findAllByEmailAndPhone(String text) {
@@ -56,7 +57,7 @@ class UserService {
     List<UserDto> findAllByIsActive(Boolean isActive) {
         return repository.findAllByIsActive(isActive)
                 .stream()
-                .map(UserMapper::toDto)
+                .map(UserCrudFacade::map)
                 .collect(Collectors.toList());
     }
 
@@ -104,9 +105,9 @@ class UserService {
     // custom methods
 
     private UserDto mapAndSave(UserDto user) {
-        UserEntity userEntity = UserMapper.toEntity(user);
+        UserEntity userEntity = UserCrudFacade.map(user);
         UserEntity savedUser = repository.save(userEntity);
-        return UserMapper.toDto(savedUser);
+        return UserCrudFacade.map(savedUser);
     }
 //
 //    private void checkEmailDuplication(UserDto user) {

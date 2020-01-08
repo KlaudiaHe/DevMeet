@@ -1,13 +1,13 @@
-package pl.com.devmeet.devmeetcore.user.domain;
+package pl.com.devmeet.devmeetcore.user.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.com.devmeet.devmeetcore.user.domain.UserCrudFacade;
+import pl.com.devmeet.devmeetcore.user.domain.UserDto;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
-import java.net.URI;
 import java.util.List;
 
 @CrossOrigin
@@ -17,19 +17,20 @@ class UserApi {
 
     private UserService userService;
 
+    private UserCrudFacade userCrudFacade;
+
     @Autowired
-    public UserApi(UserService userService) {
+    public UserApi(UserService userService, UserCrudFacade userCrudFacade) {
         this.userService = userService;
+        this.userCrudFacade = userCrudFacade;
     }
 
     // get
 
-//    @GetMapping
-//    public List<UserDto> getFiltered(@RequestParam(required = false) String searchEmalOrPhone) {
-//        if (searchEmalOrPhone != null)
-//            return userService.findAllByEmailAndPhone(searchEmalOrPhone);
-//        else return userService.findAll();
-//    }
+    @GetMapping("/all")
+    public List<UserDto> findAllUsers() {
+        return userCrudFacade.findAll();
+    }
 
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getById(@PathVariable Long id) {
@@ -40,9 +41,13 @@ class UserApi {
 
     @GetMapping("/email/{email}")
     public ResponseEntity<UserDto> getByEmail(@PathVariable String email) {
-        return userService.findByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        try {
+            return userCrudFacade.findByEmail(email)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @GetMapping("/is-active/{isActive}")
