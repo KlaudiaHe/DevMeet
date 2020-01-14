@@ -16,7 +16,7 @@ import pl.com.devmeet.devmeetcore.user.api.UserService;
 import java.util.ArrayList;
 import java.util.List;
 
-@Route("users")
+@Route("admin/users")
 class UserGui extends VerticalLayout {
 
     private UserService service;
