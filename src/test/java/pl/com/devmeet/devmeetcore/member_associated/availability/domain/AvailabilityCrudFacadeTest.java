@@ -102,7 +102,7 @@ public class AvailabilityCrudFacadeTest {
         UserEntity testUser = null;
         try {
             testUser = userCrudFacade
-                    .findEntityByEmail(userCrudFacade.add(testUserDto));
+                    .findEntity(userCrudFacade.add(testUserDto));
         } catch (UserNotFoundException | UserAlreadyExistsException e) {
             e.printStackTrace();
         }
@@ -123,7 +123,7 @@ public class AvailabilityCrudFacadeTest {
     public void USER_CRUD_FACADE_WR() throws UserAlreadyExistsException, UserNotFoundException {
         UserCrudFacade userCrudFacade = initUserCrudFacade();
         UserDto testUser = userCrudFacade.add(testUserDto);
-        UserEntity userEntity = userCrudFacade.findEntityByEmail(testUser);
+        UserEntity userEntity = userCrudFacade.findEntity(testUser);
         assertThat(userEntity).isNotNull();
     }
 

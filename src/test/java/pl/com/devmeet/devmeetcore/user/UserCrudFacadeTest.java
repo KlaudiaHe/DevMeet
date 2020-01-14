@@ -118,6 +118,20 @@ public class UserCrudFacadeTest {
     }
 
     @Test
+    public void WHEN_check_activated_user_is_active_THEN_return_true() throws UserAlreadyExistsException, UserNotFoundException, UserAlreadyActiveException {
+        createTestUser();
+        UserCrudFacade userFacade = initFacade();
+        userFacade.activation(testDto);
+
+        assertThat(userFacade.isUserActive(testDto)).isTrue();
+    }
+    @Test
+    public void WHEN_check_not_activated_user_is_active_THEN_return_false() throws UserAlreadyExistsException, UserNotFoundException {
+        createTestUser();
+        assertThat(initFacade().isUserActive(testDto)).isFalse();
+    }
+
+    @Test
     public void WHEN_try_to_activate_not_existing_user_THEN_return_UserNotFoundException() {
         try {
             initFacade().activation(testDto);

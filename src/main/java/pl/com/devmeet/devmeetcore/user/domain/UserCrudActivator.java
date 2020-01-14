@@ -29,6 +29,14 @@ class UserCrudActivator {
             throw new UserAlreadyActiveException(UserCrudStatusEnum.USER_ALREADY_ACTIVE.toString());
     }
 
+    public boolean isUserActive(UserDto dto) throws UserNotFoundException {
+        return isUserActive(dto.getEmail());
+    }
+
+    public boolean isUserActive(String email) throws UserNotFoundException {
+        return userFinder.findByEmail(email).isActive();
+    }
+
     private UserEntity saveUserEntity(UserEntity entity) {
         return userSaver.saveEntity(entity);
     }

@@ -157,8 +157,8 @@ public class MessageCrudFacadeTest {
         UserEntity userEntityFirst = null;
         UserEntity userEntitySecond = null;
         try {
-            userEntityFirst = userCrudFacade.findEntityByEmail(userCrudFacade.add(firstUser));
-            userEntitySecond = userCrudFacade.findEntityByEmail(userCrudFacade.add(secondUser));
+            userEntityFirst = userCrudFacade.findEntity(userCrudFacade.add(firstUser));
+            userEntitySecond = userCrudFacade.findEntity(userCrudFacade.add(secondUser));
         } catch (UserNotFoundException | UserAlreadyExistsException e) {
             e.printStackTrace();
         }

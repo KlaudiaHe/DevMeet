@@ -8,22 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceCrudStatusEnum;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceFoundButNotActiveException;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerRepository;
-import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
-import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.user.domain.*;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -56,7 +52,7 @@ public class PlaceCrudFacadeTest {
     private UserCrudFacade userCrudFacade;
 
     private PlaceDto testPlaceDto;
-//    private MemberDto testMemberDto;
+    //    private MemberDto testMemberDto;
     private UserDto testUserDto;
     private AvailabilityDto testAvailabilityDto;
 
@@ -108,8 +104,12 @@ public class PlaceCrudFacadeTest {
         UserEntity testUser = null;
         try {
             testUser = userCrudFacade
-                    .findEntityByEmail(userCrudFacade.add(testUserDto));
-        } catch (UserNotFoundException | UserAlreadyExistsException e) {
+                    .findEntity(
+                            userCrudFacade.activation(
+                                    userCrudFacade.add(testUserDto)
+                            )
+                    );
+        } catch (UserNotFoundException | UserAlreadyExistsException | UserAlreadyActiveException e) {
             e.printStackTrace();
         }
 
@@ -128,7 +128,7 @@ public class PlaceCrudFacadeTest {
     public void USER_CRUD_FACADE_WR() throws UserNotFoundException, UserAlreadyExistsException {
         UserCrudFacade userCrudFacade = initUserCrudFacade();
         UserDto testUser = userCrudFacade.add(testUserDto);
-        UserEntity userEntity = userCrudFacade.findEntityByEmail(testUser);
+        UserEntity userEntity = userCrudFacade.findEntity(testUser);
         assertThat(userEntity).isNotNull();
     }
 

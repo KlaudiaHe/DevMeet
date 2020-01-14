@@ -115,7 +115,7 @@ public class MessengerCrudFacadeTest {
         }
         UserEntity userEntityFirst = null;
         try {
-            userEntityFirst = userCrudFacade.findEntityByEmail(firstTestUserDto);
+            userEntityFirst = userCrudFacade.findEntity(firstTestUserDto);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         }

@@ -116,7 +116,7 @@ public class PermissionCrudFacadeTest {
         UserEntity testUser = null;
         try {
             testUser = userCrudFacade
-                    .findEntityByEmail(userCrudFacade
+                    .findEntity(userCrudFacade
                             .add(testUserDto));
         } catch (UserNotFoundException | UserAlreadyExistsException e) {
             e.printStackTrace();
@@ -150,7 +150,7 @@ public class PermissionCrudFacadeTest {
     public void USER_CRUD_FACADE_WR() throws UserAlreadyExistsException, UserNotFoundException {
         UserCrudFacade userFacade = initUserCrudFacade();
         UserDto testUser = userFacade.add(testUserDto);
-        UserEntity userEntity = userFacade.findEntityByEmail(testUser);
+        UserEntity userEntity = userFacade.findEntity(testUser);
 
         assertThat(userEntity).isNotNull();
     }

@@ -208,13 +208,13 @@ public class AvailabilityVoteCrudFacadeTest {
 
         UserEntity userEntityFirst = null;
         try {
-            userEntityFirst = userCrudFacade.findEntityByEmail(userCrudFacade.add(testUserDtoFirst));
+            userEntityFirst = userCrudFacade.findEntity(userCrudFacade.add(testUserDtoFirst));
         } catch (UserNotFoundException | UserAlreadyExistsException e) {
             e.printStackTrace();
         }
         UserEntity userEntitySecond = null;
         try {
-            userEntitySecond = userCrudFacade.findEntityByEmail(userCrudFacade.add(testUserDtoSecond));
+            userEntitySecond = userCrudFacade.findEntity(userCrudFacade.add(testUserDtoSecond));
         } catch (UserNotFoundException | UserAlreadyExistsException e) {
             e.printStackTrace();
         }
