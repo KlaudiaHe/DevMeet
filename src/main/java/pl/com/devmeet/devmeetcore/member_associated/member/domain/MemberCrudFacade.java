@@ -16,6 +16,7 @@ import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exce
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.UserCrudFacade;
+import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -107,20 +108,16 @@ public class MemberCrudFacade implements CrudFacadeInterface<MemberDto, MemberEn
         return map(initDeleter().delete(dto));
     }
 
-    public boolean isActive(MemberDto memberDto) {
-        try {
-            initFinder().findEntity(memberDto).isActive();
-            return true;
-        } catch (UserNotFoundException | MemberNotFoundException e) {
-            return false;
-        }
-    }
-
     public boolean isExist(MemberDto memberDto) {
         return initFinder().isExist(memberDto);
     }
 
 
+    public MemberEntity findEntityByUser(UserDto userDto) throws MemberNotFoundException, UserNotFoundException {
+        return initFinder().findEntityByUser(userDto);
+    }
+
+    @Deprecated
     public MemberEntity findEntity(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         return initFinder().findEntity(dto);
     }

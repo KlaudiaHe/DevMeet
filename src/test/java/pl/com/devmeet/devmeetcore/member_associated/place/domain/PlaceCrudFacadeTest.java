@@ -31,6 +31,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/*
+todo Przetestowac wiazanie kilku Place do jedego Membera i czy dziala wyszukiwanie tych Places
+ */
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
@@ -53,7 +56,7 @@ public class PlaceCrudFacadeTest {
     private UserCrudFacade userCrudFacade;
 
     private PlaceDto testPlaceDto;
-    private MemberDto testMemberDto;
+//    private MemberDto testMemberDto;
     private UserDto testUserDto;
     private AvailabilityDto testAvailabilityDto;
 
@@ -66,13 +69,13 @@ public class PlaceCrudFacadeTest {
                 .isActive(true)
                 .build();
 
-        testMemberDto = new MemberDto().builder()
-                .user(testUserDto)
-                .nick("Wasacz")
-                .build();
+//        testMemberDto = new MemberDto().builder()
+//                .user(testUserDto)
+//                .nick("Wasacz")
+//                .build();
 
         testPlaceDto = new PlaceDto().builder()
-                .member(testMemberDto)
+//                .member(testMemberDto)
                 .placeName("Centrum Zarządzania Innowacjami i Transferem Technologii Politechniki Warszawskiej")
                 .description("openspace koło Metra Politechniki")
                 .website("cziitt.pw.edu.pl")
@@ -110,16 +113,15 @@ public class PlaceCrudFacadeTest {
             e.printStackTrace();
         }
 
-        MemberEntity memberEntity = null;
-        try {
-            memberEntity = memberCrudFacade
-                    .findEntity(memberCrudFacade.add(testMemberDto));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
-            e.printStackTrace();
-        }
+//        MemberEntity memberEntity = null;
+//        try {
+//            memberEntity = memberCrudFacade
+//                    .findEntity(memberCrudFacade.add(testMemberDto));
+//        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
+//            e.printStackTrace();
+//        }
 
-        return testUser != null
-                && memberEntity != null;
+        return testUser != null;
     }
 
     @Test
@@ -131,10 +133,10 @@ public class PlaceCrudFacadeTest {
     }
 
     @Test
-    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException, UserAlreadyExistsException {
+    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberNotFoundException, UserAlreadyExistsException {
         MemberCrudFacade memberCrudFacade = initMemberCrudFacade();
         initUserCrudFacade().add(testUserDto);
-        MemberEntity memberEntity = memberCrudFacade.findEntity(memberCrudFacade.add(testMemberDto));
+        MemberEntity memberEntity = memberCrudFacade.findEntityByUser(testUserDto);
         assertThat(memberEntity).isNotNull();
     }
 
@@ -202,7 +204,7 @@ public class PlaceCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_find_all_places_THEN_return_places() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException {
+    public void WHEN_try_to_find_all_places_THEN_return_places() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
         initTestDB();
         List<PlaceDto> found;
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();

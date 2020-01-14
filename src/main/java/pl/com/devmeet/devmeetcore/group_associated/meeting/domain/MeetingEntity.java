@@ -41,7 +41,7 @@ public class MeetingEntity {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private DateTime endTime;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private PlaceEntity place;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")

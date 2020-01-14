@@ -48,6 +48,7 @@ public class PlaceCrudFacade implements CrudFacadeInterface<PlaceDto, PlaceEntit
         return PlaceCrudCreator.builder()
                 .placeCrudFinder(initFinder())
                 .placeCrudSaver(initSaver())
+                .placeMemberFinder(initMemberFinder())
                 .build();
     }
 

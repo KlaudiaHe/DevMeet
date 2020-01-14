@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-class UserService {
+public class UserService {
 
     private UserRepository repository;
 
@@ -28,7 +28,7 @@ class UserService {
                 .map(UserCrudFacade::map);
     }
 
-    List<UserDto> findAll() {
+    public List<UserDto> findAll() {
         return repository.findAll()
                 .stream()
                 .map(UserCrudFacade::map)

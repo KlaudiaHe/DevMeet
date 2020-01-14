@@ -39,16 +39,16 @@ class UserApi {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<UserDto> getByEmail(@PathVariable String email) {
-        try {
-            return userCrudFacade.findByEmail(email)
-                    .map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.notFound().build());
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+//    @GetMapping("/email/{email}")
+//    public ResponseEntity<UserDto> getByEmail(@PathVariable String email) {
+//        try {
+//            return userCrudFacade.findByEmail(email)
+//                    .map(ResponseEntity::ok)
+//                    .orElse(ResponseEntity.notFound().build());
+//        } catch (UserNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @GetMapping("/is-active/{isActive}")
     public List<UserDto> getAllIsActive(@PathVariable String isActive) {
