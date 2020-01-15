@@ -23,6 +23,7 @@ class PlacesGui extends VerticalLayout {
     private H1 header;
     private Grid<PlaceDto> placeGrid;
 
+    @Autowired
     public PlacesGui(PlaceCrudFacade place) {
         this.place = place;
         placeList = new ArrayList<>();
