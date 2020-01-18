@@ -7,6 +7,7 @@ import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_excep
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberCrudStatusEnum;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberUserNotActiveException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.user.domain.UserEntity;
@@ -23,28 +24,31 @@ class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEntity> {
     private MemberMessengerCreator memberMessengerCreator;
 
     @Override
-    public MemberEntity createEntity(MemberDto dto) throws MemberAlreadyExistsException, UserNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
+    public MemberEntity createEntity(MemberDto dto) throws MemberAlreadyExistsException, UserNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified, MemberUserNotActiveException {
         MemberEntity memberEntity;
+        UserEntity foundUser = findUser(dto);
 
-        try {
-            memberEntity = memberFinder.findEntity(dto);
+        if (foundUser.isActive()) {
+            try {
+                memberEntity = memberFinder.findEntity(dto);
 
-            if (!memberEntity.isActive())
-                return saver.saveEntity(
-                        setDefaultValuesIfMemberExistButNotActive(
-                                mapToEntity(dto)));
+                if (!memberEntity.isActive())
+                    return saver.saveEntity(
+                            setDefaultValuesIfMemberExistButNotActive(
+                                    mapToEntity(dto)));
 
-        } catch (MemberNotFoundException e) {
-            memberEntity = saver.saveEntity(
-                    setDefaultValuesIfMemberNotExist(
-                            connectMemberWithUser(dto))
-            );
-            createMessengerForMember(dto);
+            } catch (MemberNotFoundException e) {
+                memberEntity = saver.saveEntity(
+                        setDefaultValuesIfMemberNotExist(
+                                connectMemberWithUser(MemberMapper.map(dto), foundUser))
+                );
+                createMessengerForMember(dto);
 
-            return memberEntity;
+                return memberEntity;
+            }
+            throw new MemberAlreadyExistsException(MemberCrudStatusEnum.MEMBER_ALREADY_EXIST.toString());
         }
-
-        throw new MemberAlreadyExistsException(MemberCrudStatusEnum.MEMBER_ALREADY_EXIST.toString());
+        throw new MemberUserNotActiveException(MemberCrudStatusEnum.MEMBER_USER_NOT_ACTIVE.toString());
     }
 
     private MemberEntity mapToEntity(MemberDto dto) {
@@ -65,13 +69,8 @@ class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEntity> {
         return entity;
     }
 
-    private MemberEntity connectMemberWithUser(MemberDto memberDto) throws UserNotFoundException {
-        UserEntity foundUser = findUser(memberDto);
-        MemberEntity memberEntity = mapToEntity(memberDto);
-
-        memberEntity.setUser(foundUser);
-
-        return memberEntity;
+    private MemberEntity connectMemberWithUser(MemberEntity memberEntity, UserEntity userEntity) throws UserNotFoundException {
+        return new MemberUserConnector().connect(memberEntity, userEntity);
     }
 
     private UserEntity findUser(MemberDto memberDto) throws UserNotFoundException {

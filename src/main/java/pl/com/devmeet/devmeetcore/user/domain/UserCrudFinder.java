@@ -1,56 +1,51 @@
 package pl.com.devmeet.devmeetcore.user.domain;
 
-import pl.com.devmeet.devmeetcore.domain_utils.CrudEntityFinder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserCrudStatusEnum;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
 
-class UserCrudFinder implements CrudEntityFinder <UserDto, UserEntity> {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+class UserCrudFinder {
 
     private UserRepository repository;
 
-    private String userNotFoundMessage = "User not found";
-
-    public UserCrudFinder(UserRepository repository) {
-        this.repository = repository;
-    }
-
-    @Override
-    public UserEntity findEntity(UserDto dto) {
+    public UserEntity findByEmail(String email) throws UserNotFoundException {
         Optional<UserEntity> foundUser = Optional.empty();
-        String phone = dto.getPhone();
-        String email = dto.getEmail();
-
-        if (phone != null && !phone.equals(""))
-            foundUser = repository.findByPhoneAndPassword(phone, dto.getPassword());
-        else if (email != null && !email.equals(""))
-            foundUser = repository.findByEmailAndPassword(email, dto.getPassword());
+        if (!email.isEmpty())
+            foundUser = repository.findByEmail(email);
 
         if (foundUser.isPresent())
             return foundUser.get();
-        else
-            throw new IllegalArgumentException(userNotFoundMessage);
+
+        throw new UserNotFoundException(UserCrudStatusEnum.USER_NOT_FOUND.toString());
     }
 
-    @Override
-    public List<UserEntity> findEntities(UserDto dto) {
-        return null;
+    public UserEntity find(UserDto dto) throws UserNotFoundException {
+        String email = "";
+
+        if (dto != null)
+            email = dto.getEmail();
+
+        return findByEmail(email);
     }
 
-    public UserDto read(UserDto dto) {
-        return getDtoFromEntity(findEntity(dto));
+    public List<UserEntity> findAllEntities() {
+        return repository.findAll();
     }
 
-    @Override
+    @Deprecated
     public boolean isExist(UserDto dto) {
         try {
-            return findEntity(dto) != null;
-        } catch (IllegalArgumentException e) {
+            return find(dto) != null;
+        } catch (UserNotFoundException e) {
             return false;
         }
-    }
-
-    private UserDto getDtoFromEntity(UserEntity entity) {
-        return UserCrudInterface.map(entity);
     }
 }

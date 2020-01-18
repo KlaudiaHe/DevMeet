@@ -6,16 +6,14 @@ import pl.com.devmeet.devmeetcore.domain_utils.CrudFacadeInterface;
 import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberCrudStatusEnum;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberFoundButNotActiveException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.*;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerCrudFacade;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.UserCrudFacade;
+import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -83,7 +81,7 @@ public class MemberCrudFacade implements CrudFacadeInterface<MemberDto, MemberEn
     }
 
     @Override
-    public MemberDto add(MemberDto dto) throws MemberAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
+    public MemberDto add(MemberDto dto) throws MemberAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified, MemberUserNotActiveException {
         return map(initCreator().createEntity(dto));
     }
 
@@ -107,20 +105,16 @@ public class MemberCrudFacade implements CrudFacadeInterface<MemberDto, MemberEn
         return map(initDeleter().delete(dto));
     }
 
-    public boolean isActive(MemberDto memberDto) {
-        try {
-            initFinder().findEntity(memberDto).isActive();
-            return true;
-        } catch (UserNotFoundException | MemberNotFoundException e) {
-            return false;
-        }
-    }
-
     public boolean isExist(MemberDto memberDto) {
         return initFinder().isExist(memberDto);
     }
 
 
+    public MemberEntity findEntityByUser(UserDto userDto) throws MemberNotFoundException, UserNotFoundException {
+        return initFinder().findEntityByUser(userDto);
+    }
+
+    @Deprecated
     public MemberEntity findEntity(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         return initFinder().findEntity(dto);
     }

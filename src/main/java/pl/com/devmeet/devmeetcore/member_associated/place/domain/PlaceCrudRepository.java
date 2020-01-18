@@ -10,8 +10,19 @@ import java.util.Optional;
 @Repository
 public interface PlaceCrudRepository extends PagingAndSortingRepository<PlaceEntity, Long> {
 
+    Optional<PlaceEntity> findByMemberAndPlaceName(MemberEntity member, String placeName);
 
-    Optional<PlaceEntity> findByMember(MemberEntity member);
+    Optional<PlaceEntity> findByMemberAndDescription(MemberEntity member, String description);
+
+    Optional<PlaceEntity> findByMemberAndWebsite(MemberEntity member, String website);
+
+    Optional<PlaceEntity> findByMemberAndLocation(MemberEntity member, String location);
+
+    Optional<PlaceEntity> findByMemberAndPlaceNameAndDescriptionAndWebsiteAndLocation(MemberEntity member,
+                                                                                      String placeName,
+                                                                                      String description,
+                                                                                      String website,
+                                                                                      String location);
 
     Optional<List<PlaceEntity>> findAllByMember(MemberEntity member);
 }

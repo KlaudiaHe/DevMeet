@@ -1,23 +1,23 @@
 package pl.com.devmeet.devmeetcore.user.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserCrudStatusEnum;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 class UserCrudActivator {
 
     private UserCrudSaver userSaver;
     private UserCrudFinder userFinder;
 
-    private String userAlreadyActivatedMessage = "User has been activated";
-
-    public UserCrudActivator(UserRepository repository) {
-        this.userSaver = new UserCrudSaver(repository);
-        this.userFinder = new UserCrudFinder(repository);
-    }
-
-    public UserDto activate(UserDto dto) {
-        UserEntity found;
-
-        found = userFinder.findEntity(dto);
+    public UserEntity activate(UserDto dto) throws UserNotFoundException, UserAlreadyActiveException {
+        UserEntity found = userFinder.find(dto);
 
         if (!found.isActive()) {
             found.setActive(true);
@@ -26,10 +26,18 @@ class UserCrudActivator {
             return saveUserEntity(found);
 
         } else
-            throw new IllegalArgumentException(userAlreadyActivatedMessage);
+            throw new UserAlreadyActiveException(UserCrudStatusEnum.USER_ALREADY_ACTIVE.toString());
     }
 
-    private UserDto saveUserEntity(UserEntity entity) {
+    public boolean isUserActive(UserDto dto) throws UserNotFoundException {
+        return isUserActive(dto.getEmail());
+    }
+
+    public boolean isUserActive(String email) throws UserNotFoundException {
+        return userFinder.findByEmail(email).isActive();
+    }
+
+    private UserEntity saveUserEntity(UserEntity entity) {
         return userSaver.saveEntity(entity);
     }
 }

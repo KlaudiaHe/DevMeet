@@ -8,28 +8,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceCrudStatusEnum;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceFoundButNotActiveException;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerRepository;
-import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
-import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.user.domain.*;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/*
+todo Przetestowac wiazanie kilku Place do jedego Membera i czy dziala wyszukiwanie tych Places
+ */
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
@@ -52,7 +52,7 @@ public class PlaceCrudFacadeTest {
     private UserCrudFacade userCrudFacade;
 
     private PlaceDto testPlaceDto;
-    private MemberDto testMemberDto;
+    //    private MemberDto testMemberDto;
     private UserDto testUserDto;
     private AvailabilityDto testAvailabilityDto;
 
@@ -61,19 +61,17 @@ public class PlaceCrudFacadeTest {
 
         testUserDto = new UserDto().builder()
                 .email("mailik@gmail.com")
-                .phone("567566456")
                 .password("multiPass")
                 .isActive(true)
-                .loggedIn(true)
                 .build();
 
-        testMemberDto = new MemberDto().builder()
-                .user(testUserDto)
-                .nick("Wasacz")
-                .build();
+//        testMemberDto = new MemberDto().builder()
+//                .user(testUserDto)
+//                .nick("Wasacz")
+//                .build();
 
         testPlaceDto = new PlaceDto().builder()
-                .member(testMemberDto)
+//                .member(testMemberDto)
                 .placeName("Centrum Zarządzania Innowacjami i Transferem Technologii Politechniki Warszawskiej")
                 .description("openspace koło Metra Politechniki")
                 .website("cziitt.pw.edu.pl")
@@ -103,34 +101,44 @@ public class PlaceCrudFacadeTest {
         userCrudFacade = initUserCrudFacade();
         memberCrudFacade = initMemberCrudFacade();
 
-        UserEntity testUser = userCrudFacade
-                .findEntity(userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.PHONE));
-
-        MemberEntity memberEntity = null;
+        UserEntity testUser = null;
         try {
-            memberEntity = memberCrudFacade
-                    .findEntity(memberCrudFacade.add(testMemberDto));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
+            testUser = userCrudFacade
+                    .findEntity(
+                            userCrudFacade.activation(
+                                    userCrudFacade.add(testUserDto)
+                            )
+                    );
+        } catch (UserNotFoundException | UserAlreadyExistsException | UserAlreadyActiveException e) {
             e.printStackTrace();
         }
 
-        return testUser != null
-                && memberEntity != null;
+//        MemberEntity memberEntity = null;
+//        try {
+//            memberEntity = memberCrudFacade
+//                    .findEntity(memberCrudFacade.add(testMemberDto));
+//        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
+//            e.printStackTrace();
+//        }
+
+        return testUser != null;
     }
 
     @Test
-    public void USER_CRUD_FACADE_WR() {
+    public void USER_CRUD_FACADE_WR() throws UserNotFoundException, UserAlreadyExistsException {
         UserCrudFacade userCrudFacade = initUserCrudFacade();
-        UserDto testUser = userCrudFacade.create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
+        UserDto testUser = userCrudFacade.add(testUserDto);
         UserEntity userEntity = userCrudFacade.findEntity(testUser);
         assertThat(userEntity).isNotNull();
     }
 
     @Test
-    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException {
+    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberNotFoundException, UserAlreadyExistsException, UserAlreadyActiveException {
         MemberCrudFacade memberCrudFacade = initMemberCrudFacade();
-        initUserCrudFacade().create(testUserDto, DefaultUserLoginTypeEnum.EMAIL);
-        MemberEntity memberEntity = memberCrudFacade.findEntity(memberCrudFacade.add(testMemberDto));
+        UserCrudFacade userCrudFacade = initUserCrudFacade();
+        userCrudFacade.add(testUserDto);
+        userCrudFacade.activation(testUserDto);
+        MemberEntity memberEntity = memberCrudFacade.findEntityByUser(testUserDto);
         assertThat(memberEntity).isNotNull();
     }
 
@@ -198,7 +206,7 @@ public class PlaceCrudFacadeTest {
     }
 
     @Test
-    public void WHEN_try_to_find_all_places_THEN_return_places() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException {
+    public void WHEN_try_to_find_all_places_THEN_return_places() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
         initTestDB();
         List<PlaceDto> found;
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();

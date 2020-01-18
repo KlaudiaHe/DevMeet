@@ -26,31 +26,50 @@ class PlaceCrudFinder implements CrudEntityFinder<PlaceDto, PlaceEntity> {
 
     @Override
     public PlaceEntity findEntity(PlaceDto dto) throws PlaceNotFoundException, MemberNotFoundException, UserNotFoundException {
-        Optional<PlaceEntity> place = findPlace(dto);
-        if (place.isPresent())
-            return place.get();
-        else
-            throw new PlaceNotFoundException(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString());
+        return findPlace(dto);
     }
 
     private MemberEntity findMemberEntity(MemberDto member) throws MemberNotFoundException, UserNotFoundException {
         return memberFinder.findMember(member);
     }
 
-    private Optional<PlaceEntity> findPlace(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException {
-        MemberEntity member = findMemberEntity(dto.getMember());
-
-        return placeRepository.findByMember(member);
+    private MemberDto getMemberFromDto(PlaceDto dto) {
+        try {
+            return dto.getMember();
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
-    @Override
-    public List<PlaceEntity> findEntities(PlaceDto dto) throws PlaceNotFoundException, MemberNotFoundException, UserNotFoundException {
-        Optional<List<PlaceEntity>> placeEntities = findPlaces(dto);
+    public List<PlaceEntity> findAllEntitiesByMember(MemberDto memberDto) throws MemberNotFoundException, UserNotFoundException, PlaceNotFoundException {
+        Optional<List<PlaceEntity>> foundPlaces = findPlaces(memberDto);
 
-        if (placeEntities.isPresent())
-            return placeEntities.get();
+        if (foundPlaces.isPresent())
+            return foundPlaces.get();
         else
             throw new PlaceNotFoundException(PlaceCrudStatusEnum.PLACES_NOT_FOUND.toString());
+    }
+
+    private PlaceEntity findPlace(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException, PlaceNotFoundException {
+        MemberEntity member = findMemberEntity(getMemberFromDto(dto));
+        Optional<PlaceEntity> foundPlace = placeRepository.findByMemberAndPlaceNameAndDescriptionAndWebsiteAndLocation(member, dto.getPlaceName(), dto.getDescription(), dto.getLocation(), dto.getWebsite());
+
+        if (foundPlace.isPresent())
+            return foundPlace.get();
+        else
+            throw new PlaceNotFoundException(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString());
+    }
+
+    private Optional<List<PlaceEntity>> findPlaces(MemberDto memberDto) throws MemberNotFoundException, UserNotFoundException {
+        MemberEntity member = findMemberEntity(memberDto);
+
+        return placeRepository.findAllByMember(member);
+    }
+
+    @Deprecated
+    @Override
+    public List<PlaceEntity> findEntities(PlaceDto dto) throws PlaceNotFoundException, MemberNotFoundException, UserNotFoundException {
+        return findAllEntitiesByMember(getMemberFromDto(dto));
     }
 
     public List<PlaceEntity> findAllEntities() {
@@ -59,18 +78,10 @@ class PlaceCrudFinder implements CrudEntityFinder<PlaceDto, PlaceEntity> {
         return entities;
     }
 
-    private Optional<List<PlaceEntity>> findPlaces(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException {
-        MemberEntity member = findMemberEntity(dto.getMember());
-
-        return placeRepository.findAllByMember(member);
-    }
-
-
     @Override
     public boolean isExist(PlaceDto dto) {
         try {
-            findEntity(dto);
-            return true;
+            return findEntity(dto) != null;
         } catch (PlaceNotFoundException | MemberNotFoundException | UserNotFoundException e) {
             return false;
         }

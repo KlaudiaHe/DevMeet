@@ -12,7 +12,8 @@ public enum MemberCrudStatusEnum {
     MEMBER_NOT_FOUND("Member not found"),
     MEMBER_FOUND_BUT_NOT_ACTIVE("Member was found but is not active"),
     METHOD_NOT_IMPLEMENTED("Method not implemented"),
-    MEMBER_USER_NOT_FOUND("Incorrect values. Member or group doesn't match");
+    MEMBER_USER_NOT_FOUND("Incorrect values. Member or group doesn't match"),
+    MEMBER_USER_NOT_ACTIVE("User not active");
 
     private String status;
 
