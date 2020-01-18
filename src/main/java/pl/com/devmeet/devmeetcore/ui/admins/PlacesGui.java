@@ -6,6 +6,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudFacade;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
 
@@ -22,6 +23,7 @@ class PlacesGui extends VerticalLayout {
     private H1 header;
     private Grid<PlaceDto> placeGrid;
 
+    @Autowired
     public PlacesGui(PlaceCrudFacade place) {
         this.place = place;
         placeList = new ArrayList<>();
