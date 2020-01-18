@@ -13,8 +13,10 @@ import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
+import pl.com.devmeet.devmeetcore.ui.normal_users.availability_view.AvailabilityView;
 import pl.com.devmeet.devmeetcore.ui.normal_users.group_view.GroupsView;
 import pl.com.devmeet.devmeetcore.ui.normal_users.messenger_view.MessengerView;
+import pl.com.devmeet.devmeetcore.ui.normal_users.place_view.PlaceView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,9 @@ public class MainViewNormalUser extends AppLayout {
         final List<Tab> tabs = new ArrayList<>();
         tabs.add(createTab("Groups", GroupsView.class));
         tabs.add(createTab("Messenger", MessengerView.class));
+        tabs.add(createTab("Place", PlaceView.class));
+        tabs.add(createTab("Availability", AvailabilityView.class));
+
         return tabs.toArray(new Tab[tabs.size()]);
     }
 
