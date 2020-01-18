@@ -20,6 +20,7 @@ import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberUserNotActiveException;
 import pl.com.devmeet.devmeetcore.messenger_associated.message.status_and_exceptions.MessageArgumentNotSpecifiedException;
 import pl.com.devmeet.devmeetcore.messenger_associated.message.status_and_exceptions.MessageCrudStatusEnum;
 import pl.com.devmeet.devmeetcore.messenger_associated.message.status_and_exceptions.MessageFoundButNotActiveException;
@@ -31,6 +32,7 @@ import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exce
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.*;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -157,9 +159,9 @@ public class MessageCrudFacadeTest {
         UserEntity userEntityFirst = null;
         UserEntity userEntitySecond = null;
         try {
-            userEntityFirst = userCrudFacade.findEntity(userCrudFacade.add(firstUser));
-            userEntitySecond = userCrudFacade.findEntity(userCrudFacade.add(secondUser));
-        } catch (UserNotFoundException | UserAlreadyExistsException e) {
+            userEntityFirst = userCrudFacade.findEntity(userCrudFacade.activation(userCrudFacade.add(firstUser)));
+            userEntitySecond = userCrudFacade.findEntity(userCrudFacade.activation(userCrudFacade.add(secondUser)));
+        } catch (UserNotFoundException | UserAlreadyExistsException | UserAlreadyActiveException e) {
             e.printStackTrace();
         }
 
@@ -167,14 +169,14 @@ public class MessageCrudFacadeTest {
         MemberEntity memberEntityFirst = null;
         try {
             memberEntityFirst = memberCrudFacade.findEntity(memberCrudFacade.add(memberSender));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberUserNotActiveException e) {
             e.printStackTrace();
         }
 
         MemberEntity memberEntitySecond = null;
         try {
             memberEntitySecond = memberCrudFacade.findEntity(memberCrudFacade.add(memberReceiver));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberUserNotActiveException e) {
             e.printStackTrace();
         }
 

@@ -133,9 +133,11 @@ public class PlaceCrudFacadeTest {
     }
 
     @Test
-    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberNotFoundException, UserAlreadyExistsException {
+    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberNotFoundException, UserAlreadyExistsException, UserAlreadyActiveException {
         MemberCrudFacade memberCrudFacade = initMemberCrudFacade();
-        initUserCrudFacade().add(testUserDto);
+        UserCrudFacade userCrudFacade = initUserCrudFacade();
+        userCrudFacade.add(testUserDto);
+        userCrudFacade.activation(testUserDto);
         MemberEntity memberEntity = memberCrudFacade.findEntityByUser(testUserDto);
         assertThat(memberEntity).isNotNull();
     }

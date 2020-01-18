@@ -20,6 +20,7 @@ import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberUserNotActiveException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerInfoStatusEnum;
@@ -123,7 +124,7 @@ public class MessengerCrudFacadeTest {
         MemberEntity memberEntityFirst = null;
         try {
             memberEntityFirst = memberCrudFacade.findEntity(memberCrudFacade.add(firstTestMemberDto));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberUserNotActiveException e) {
             e.printStackTrace();
         }
 

@@ -27,19 +27,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 public class MemberCrudFacadeTest {
 
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private MessengerRepository messengerRepository;
-    @Autowired
-    private GroupCrudRepository groupCrudRepository;
+//    @Autowired
+//    private MemberRepository memberRepository;
+//    @Autowired
+//    private UserRepository userRepository;
+//    @Autowired
+//    private MessengerRepository messengerRepository;
+//    @Autowired
+//    private GroupCrudRepository groupCrudRepository;
 
     UserDto testUserDto;
     MemberDto testMemberDto;
 
+    @Autowired
     private MemberCrudFacade memberCrudFacade;
+
+    private UserCrudFacade userCrudFacade;
 
     @Before
     public void setUp() {
@@ -61,7 +64,8 @@ public class MemberCrudFacadeTest {
     }
 
     private UserCrudFacade initUserCrudFacade() {
-        return new UserCrudFacade(userRepository);
+//        return new UserCrudFacade(userRepository);
+        return userCrudFacade;
     }
 
     private MemberDto createMember() throws UserNotFoundException, MemberAlreadyExistsException, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified, MemberUserNotActiveException {
@@ -69,7 +73,8 @@ public class MemberCrudFacadeTest {
     }
 
     private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository);
+//        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository);
+        return memberCrudFacade;
     }
 
     private UserEntity initTestDatabaseByAddingUser() {

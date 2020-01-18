@@ -20,10 +20,12 @@ import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberUserNotActiveException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.user.domain.*;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -102,8 +104,12 @@ public class AvailabilityCrudFacadeTest {
         UserEntity testUser = null;
         try {
             testUser = userCrudFacade
-                    .findEntity(userCrudFacade.add(testUserDto));
-        } catch (UserNotFoundException | UserAlreadyExistsException e) {
+                    .findEntity(
+                            userCrudFacade.activation(
+                                    userCrudFacade.add(testUserDto)
+                            )
+                    );
+        } catch (UserNotFoundException | UserAlreadyExistsException | UserAlreadyActiveException e) {
             e.printStackTrace();
         }
 
@@ -111,7 +117,7 @@ public class AvailabilityCrudFacadeTest {
         try {
             memberEntity = memberCrudFacade
                     .findEntity(memberCrudFacade.add(testMemberDto));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
+        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberUserNotActiveException e) {
             e.printStackTrace();
         }
 
@@ -128,9 +134,11 @@ public class AvailabilityCrudFacadeTest {
     }
 
     @Test
-    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException, UserAlreadyExistsException {
+    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException, UserAlreadyExistsException, MemberUserNotActiveException, UserAlreadyActiveException {
         MemberCrudFacade memberCrudFacade = initMemberCrudFacade();
-        initUserCrudFacade().add(testUserDto);
+        UserCrudFacade userCrudFacade = initUserCrudFacade();
+        userCrudFacade.add(testUserDto);
+        userCrudFacade.activation(testUserDto);
         MemberEntity memberEntity = memberCrudFacade.findEntity(memberCrudFacade.add(testMemberDto));
         assertThat(memberEntity).isNotNull();
     }
