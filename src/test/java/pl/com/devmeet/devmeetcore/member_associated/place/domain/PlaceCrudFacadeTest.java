@@ -33,31 +33,22 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/*
-todo Przetestowac wiazanie kilku Place do jedego Membera i czy dziala wyszukiwanie tych Places
- */
-
 @DataJpaTest
 @RunWith(SpringRunner.class)
-
 public class PlaceCrudFacadeTest {
 
-    @Autowired
-    private PlaceCrudRepository repository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private MessengerRepository messengerRepository;
-    @Autowired
-    private GroupCrudRepository groupCrudRepository;
+    @Autowired private PlaceCrudRepository repository;
+    @Autowired private MemberRepository memberRepository;
+    @Autowired private UserRepository userRepository;
+    @Autowired private MessengerRepository messengerRepository;
+    @Autowired private GroupCrudRepository groupCrudRepository;
 
     private PlaceCrudFacade placeCrudFacade;
     private MemberCrudFacade memberCrudFacade;
     private UserCrudFacade userCrudFacade;
 
-    private PlaceDto testPlaceDto;
+    private PlaceDto testPlaceDto1;
+    private PlaceDto testPlaceDto2;
     private MemberDto testMemberDto;
     private UserDto testUserDto;
     private AvailabilityDto testAvailabilityDto;
@@ -76,18 +67,33 @@ public class PlaceCrudFacadeTest {
                 .nick("Wasacz")
                 .build();
 
-        testPlaceDto = PlaceDto.builder()
+        testPlaceDto1 = PlaceDto.builder()
                 .member(testMemberDto)
-                .placeName("Centrum Zarządzania Innowacjami i Transferem Technologii Politechniki Warszawskiej")
-                .description("openspace koło Metra Politechniki")
-                .website("cziitt.pw.edu.pl")
-                .location("Rektorska 4, 00-614 Warszawa")
+                .placeName("FOCUS")
+                .description("Centrum konferencyjne FOCUS - budynek z drzewem na piętrze")
+                .website("http://www.budynekfocus.com/pl")
+                .location("Aleja Armii Ludowej 26, 00-609 Warszawa")
                 //    .availability(testAvailabilityDto)
                 .placeVotes(null)
                 .creationTime(null)
                 .modificationTime(null)
                 .isActive(true)
                 .build();
+
+        testPlaceDto2 = PlaceDto.builder()
+                .member(testMemberDto)
+                .placeName("Wydział Matematyki, Informatyki i Mechaniki Uniwersytetu Warszawskiego – wydział Uniwersytetu Warszawskiego")
+                .description("MeetUp tup! tup! tup! jeb!")
+                .website("https://www.mimuw.edu.pl/")
+                .location("Stefana Banacha 2, 02-097 Warszawa")
+                //    .availability(testAvailabilityDto)
+                .placeVotes(null)
+                .creationTime(null)
+                .modificationTime(null)
+                .isActive(true)
+                .build();
+
+
     }
 
     private UserCrudFacade initUserCrudFacade() {
@@ -160,9 +166,14 @@ public class PlaceCrudFacadeTest {
     public void WHEN_try_to_create_non_existing_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
         initTestDB();
         placeCrudFacade = initPlaceCrudFacade();
-        PlaceDto created = placeCrudFacade.add(testPlaceDto);
+        PlaceDto created = placeCrudFacade.add(testPlaceDto1);
         assertThat(created.getMember().getUser()).isNotNull();
-        assertThat(created).isNotNull();
+
+        assertThat(created.getPlaceName()).isEqualTo(testPlaceDto1.getPlaceName());
+        assertThat(created.getDescription()).isEqualTo(testPlaceDto1.getDescription());
+        assertThat(created.getWebsite()).isEqualTo(testPlaceDto1.getWebsite());
+        assertThat(created.getLocation()).isEqualTo(testPlaceDto1.getLocation());
+
         assertThat(created.getCreationTime()).isNotNull();
         assertThat(created.getModificationTime()).isNull();
         assertThat(created.isActive()).isTrue();
@@ -173,12 +184,12 @@ public class PlaceCrudFacadeTest {
         initTestDB();
         placeCrudFacade = initPlaceCrudFacade();
         try {
-            placeCrudFacade.add(testPlaceDto);
+            placeCrudFacade.add(testPlaceDto1);
         } catch (MemberNotFoundException | UserNotFoundException | PlaceAlreadyExistsException e) {
             Assert.fail();
         }
         try {
-            placeCrudFacade.add(testPlaceDto);
+            placeCrudFacade.add(testPlaceDto1);
             Assert.fail();
         } catch (PlaceAlreadyExistsException e) {
             assertThat(e)
@@ -190,12 +201,11 @@ public class PlaceCrudFacadeTest {
     @Test
     public void WHEN_found_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException {
         initTestDB();
-        PlaceDto created;
         PlaceDto found;
         placeCrudFacade = initPlaceCrudFacade();
+        placeCrudFacade.add(testPlaceDto1);
 
-        created = placeCrudFacade.add(testPlaceDto);
-        found = placeCrudFacade.find(testPlaceDto);
+        found = placeCrudFacade.find(testPlaceDto1);
         assertThat(found).isNotNull();
     }
 
@@ -204,7 +214,7 @@ public class PlaceCrudFacadeTest {
         initTestDB();
         placeCrudFacade = initPlaceCrudFacade();
         try {
-            placeCrudFacade.find(testPlaceDto);
+            placeCrudFacade.find(testPlaceDto1);
             Assert.fail();
         } catch (PlaceNotFoundException e) {
             assertThat(e)
@@ -218,17 +228,19 @@ public class PlaceCrudFacadeTest {
         initTestDB();
         List<PlaceDto> found;
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
-        placeCrudFacade.add(testPlaceDto);
+        placeCrudFacade.add(testPlaceDto1);
+        placeCrudFacade.add(testPlaceDto2);
         found = placeCrudFacade.findAll();
-        assertThat(found).isNotNull();
+
+        assertThat(found.size()).isGreaterThanOrEqualTo(2);
     }
 
     @Test
     public void WHEN_try_to_update_existing_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException {
         initTestDB();
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
-        PlaceDto created = placeCrudFacade.add(testPlaceDto);
-        PlaceDto updated = placeCrudFacade.update(testPlaceDto, placeUpdatedValues(testPlaceDto));
+        PlaceDto created = placeCrudFacade.add(testPlaceDto1);
+        PlaceDto updated = placeCrudFacade.update(testPlaceDto1, placeUpdatedValues(testPlaceDto1));
         assertThat(updated.getMember()).isEqualToComparingFieldByField(created.getMember());
         assertThat(updated.getPlaceName()).isEqualTo(created.getPlaceName());
         assertThat(updated.getDescription()).isNotEqualTo(created.getDescription());
@@ -254,7 +266,7 @@ public class PlaceCrudFacadeTest {
         initTestDB();
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
         try {
-            placeCrudFacade.update(testPlaceDto, placeUpdatedValues(testPlaceDto));
+            placeCrudFacade.update(testPlaceDto1, placeUpdatedValues(testPlaceDto1));
         } catch (PlaceNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(PlaceNotFoundException.class)
@@ -266,8 +278,8 @@ public class PlaceCrudFacadeTest {
     public void WHEN_delete_existing_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException, PlaceFoundButNotActiveException {
         initTestDB();
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
-        PlaceDto created = placeCrudFacade.add(testPlaceDto);
-        PlaceDto deleted = placeCrudFacade.delete(testPlaceDto);
+        PlaceDto created = placeCrudFacade.add(testPlaceDto1);
+        PlaceDto deleted = placeCrudFacade.delete(testPlaceDto1);
 
         assertThat(deleted).isNotNull();
         assertThat(deleted.isActive()).isNotEqualTo(created.isActive());
@@ -281,7 +293,7 @@ public class PlaceCrudFacadeTest {
         PlaceCrudFacade placeCrudFacade = initPlaceCrudFacade();
 
         try {
-            placeCrudFacade.delete(testPlaceDto);
+            placeCrudFacade.delete(testPlaceDto1);
         } catch (PlaceNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(PlaceNotFoundException.class)

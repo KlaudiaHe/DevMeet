@@ -28,9 +28,7 @@ public class PlaceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-/*
-todo Podobno problem z wiazaniem Membera -> Coś nie tak z mapowaniem albo reacjami?
- */
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private MemberEntity member;
 
