@@ -1,6 +1,7 @@
 package pl.com.devmeet.devmeetcore.ui.admins;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -43,6 +44,10 @@ class GroupsGui extends VerticalLayout {
         groupGrid.removeColumnByKey("modificationTime");
         groupGrid.removeColumnByKey("active");
 
+        groupGrid.addThemeVariants(
+                GridVariant.LUMO_NO_BORDER,
+                GridVariant.LUMO_NO_ROW_BORDERS,
+                GridVariant.LUMO_ROW_STRIPES);
         refreshGrid(groupList);
 
         radioButtonGroup.addValueChangeListener(e -> {

@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeetcore.user.domain;
+package pl.com.devmeet.devmeetcore.ui.admins;
 
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -12,12 +12,13 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import pl.com.devmeet.devmeetcore.user.api.UserService;
+import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Route("admin/users")
-class UserGui extends VerticalLayout {
+class UsersGui extends VerticalLayout {
 
     private UserService service;
     private List<UserDto> userList;
@@ -28,12 +29,12 @@ class UserGui extends VerticalLayout {
     private TextField textFieldEmail;
     private ComboBox<String> comboBoxIsActive;
 
-    public UserGui(UserService service) {
+    public UsersGui(UserService service) {
         this.service = service;
         userList = new ArrayList<>();
         userList = service.findAll();
         setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
-        Notification.show("User", 2000, Notification.Position.MIDDLE);
+        Notification.show("Users", 2000, Notification.Position.MIDDLE);
 
         FormLayout filtersLayout = new FormLayout();
         header1 = new H1("devmeet app - users");
