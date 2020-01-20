@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeetcore.group_associated.group;
+package pl.com.devmeet.devmeetcore.api;
 
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,25 +22,25 @@ class GroupApi {
     private MemberCrudFacade member;
 
     @Autowired
-    public GroupApi(GroupCrudFacade group, MemberCrudFacade member) {
+    private GroupApi(GroupCrudFacade group, MemberCrudFacade member) {
         this.group = group;
         this.member = member;
     }
 
     @GetMapping
-    public ResponseEntity<List<GroupDto>> getAllOrFiltered(@RequestParam(required = false) String searchText) {
+    private ResponseEntity<List<GroupDto>> getAllOrFiltered(@RequestParam(required = false) String searchText) {
         return new ResponseEntity<>(group.findBySearchText(searchText), HttpStatus.OK);
     }
 
     @SneakyThrows
     @GetMapping("{id}")
-    public ResponseEntity<GroupDto> getById(@PathVariable Long id) {
+    private ResponseEntity<GroupDto> getById(@PathVariable Long id) {
         return new ResponseEntity<>(group.findById(id), HttpStatus.OK);
     }
 
     @SneakyThrows
     @PostMapping
-    public ResponseEntity<GroupDto> add(@RequestBody GroupDto newGroup) {
+    private ResponseEntity<GroupDto> add(@RequestBody GroupDto newGroup) {
         this.group.add(newGroup);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -52,8 +52,8 @@ class GroupApi {
 
     @SneakyThrows
     @PutMapping("/{id}")
-    public ResponseEntity<GroupDto> update(@PathVariable Long id,
-                                           @RequestBody GroupDto updatedGroup) {
+    private ResponseEntity<GroupDto> update(@PathVariable Long id,
+                                            @RequestBody GroupDto updatedGroup) {
         if (!id.equals(updatedGroup.getId()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "id from path does not match with id in body!");
         group.update(group.findById(id), updatedGroup);
@@ -62,7 +62,7 @@ class GroupApi {
 
     @SneakyThrows
     @DeleteMapping("/{id}")
-    public HttpStatus deactivateById(@PathVariable Long id) {
+    private HttpStatus deactivateById(@PathVariable Long id) {
         group.delete(group.findById(id));
         return HttpStatus.OK;
     }

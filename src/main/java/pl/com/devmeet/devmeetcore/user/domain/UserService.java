@@ -1,14 +1,10 @@
-package pl.com.devmeet.devmeetcore.user.api;
+package pl.com.devmeet.devmeetcore.user.domain;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import pl.com.devmeet.devmeetcore.user.domain.UserCrudFacade;
-import pl.com.devmeet.devmeetcore.user.domain.UserDto;
-import pl.com.devmeet.devmeetcore.user.domain.UserEntity;
-import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,22 +67,20 @@ public class UserService {
     }
 
     // update
-//    UserDto update(UserDto user) {
-//        Optional<UserEntity> first = repository.findById(user.getId());
-//        if (first.isPresent()) {
-//            if (user.getEmail() == null) {
-//                user.setEmail(first.get().getEmail());
-//            } else checkEmailDuplication(user);
-//            if (user.getPassword() == null) user.setPassword(first.get().getPassword());
-//            if (user.getLogin() == null) user.setLogin(first.get().getLogin());
-//            if (user.getPhone() == null) user.setPhone(first.get().getPhone());
-//            user.setCreationTime(first.get().getCreationTime());
-//            user.setModificationTime(DateTime.now());
-//            return mapAndSave(user);
-//        } else
-//            throw new ResponseStatusException(HttpStatus.CONFLICT,
-//                    "Resource with id (" + user.getId() + ") Not found");
-//    }
+    public UserDto update(UserDto user) {
+        Optional<UserEntity> first = repository.findById(user.getId());
+        if (first.isPresent()) {
+            if (user.getEmail() == null) {
+                user.setEmail(first.get().getEmail());
+            } else checkEmailDuplication(user);
+            if (user.getPassword() == null) user.setPassword(first.get().getPassword());
+            user.setCreationTime(first.get().getCreationTime());
+            user.setModificationTime(DateTime.now());
+            return mapAndSave(user);
+        } else
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Resource with id (" + user.getId() + ") Not found");
+    }
 
     // delete
 
@@ -105,15 +99,15 @@ public class UserService {
         UserEntity savedUser = repository.save(userEntity);
         return UserCrudFacade.map(savedUser);
     }
-//
-//    private void checkEmailDuplication(UserDto user) {
-//        Optional<UserEntity> userByEmail = repository.findByEmail(user.getEmail());
-//        if (userByEmail.isPresent()) {
-//            if (!userByEmail.get().getId().equals(userByEmail.get().))
-//                throw new ResponseStatusException(HttpStatus.CONFLICT,
-//                        "Email: " + user.getEmail() + " already assigned for user id = " + userByEmail.get().getId());
-//        }
-//    }
+
+    private void checkEmailDuplication(UserDto user) {
+        Optional<UserEntity> userByEmail = repository.findByEmail(user.getEmail());
+        if (userByEmail.isPresent()) {
+            if (!userByEmail.get().getId().equals(user.getId()))
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "Email: " + user.getEmail() + " already assigned for user id = " + userByEmail.get().getId());
+        }
+    }
 
 
 }

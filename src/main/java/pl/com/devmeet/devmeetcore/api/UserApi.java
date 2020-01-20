@@ -1,13 +1,16 @@
-package pl.com.devmeet.devmeetcore.user.api;
+package pl.com.devmeet.devmeetcore.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.devmeet.devmeetcore.user.domain.UserCrudFacade;
 import pl.com.devmeet.devmeetcore.user.domain.UserDto;
-import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
+import pl.com.devmeet.devmeetcore.user.domain.UserService;
 
+import java.net.URI;
 import java.util.List;
 
 @CrossOrigin
@@ -27,7 +30,7 @@ class UserApi {
 
     // get
 
-    @GetMapping("/all")
+    @GetMapping
     public List<UserDto> findAllUsers() {
         return userCrudFacade.findAll();
     }
@@ -39,16 +42,12 @@ class UserApi {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-//    @GetMapping("/email/{email}")
-//    public ResponseEntity<UserDto> getByEmail(@PathVariable String email) {
-//        try {
-//            return userCrudFacade.findByEmail(email)
-//                    .map(ResponseEntity::ok)
-//                    .orElse(ResponseEntity.notFound().build());
-//        } catch (UserNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserDto> getByEmail(@PathVariable String email) {
+        return userService.findByEmail(email)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 
     @GetMapping("/is-active/{isActive}")
     public List<UserDto> getAllIsActive(@PathVariable String isActive) {
@@ -58,30 +57,30 @@ class UserApi {
 
     // add
 
-//    @PostMapping
-//    public ResponseEntity<UserDto> add(@RequestBody UserDto user) {
-//        UserDto added = userService.add(user);
-//        URI uri = ServletUriComponentsBuilder
-//                .fromCurrentRequest()
-//                .path("/{id}")
-//                .buildAndExpand(added.getId())
-//                .toUri();
-//        return ResponseEntity.created(uri).body(added);
-//    }
+    @PostMapping
+    public ResponseEntity<UserDto> add(@RequestBody UserDto user) {
+        UserDto added = userService.add(user);
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(added.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(added);
+    }
 
     // update
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<UserDto> update(@PathVariable Long id,
-//                                          @RequestBody UserDto user) {
-//        if (!id.equals(user.getId()))
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "id from path does not match with id in body!");
-//
-//        if (userService.update(user) != null) {
-//            return new ResponseEntity<>(user, HttpStatus.OK);
-//        }
-//        return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> update(@PathVariable Long id,
+                                          @RequestBody UserDto user) {
+        if (!id.equals(user.getId()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "id from path does not match with id in body!");
+
+        if (userService.update(user) != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
+    }
 
     // delete
     @DeleteMapping("/{id}")
