@@ -61,18 +61,18 @@ public class AvailabilityCrudFacadeTest {
     @Before
     public void setUp() {
 
-        testUserDto = new UserDto().builder()
-                .email("mailik@gmail.com")
+        testUserDto = UserDto.builder()
+                .email("testavailabilityuser@gmail.com")
                 .password("multiPass")
                 .isActive(true)
                 .build();
 
-        testMemberDto = new MemberDto().builder()
+        testMemberDto = MemberDto.builder()
                 .user(testUserDto)
-                .nick("Wasacz")
+                .nick("WEK666")
                 .build();
 
-        testAvailabilityDto = new AvailabilityDto().builder()
+        testAvailabilityDto = AvailabilityDto.builder()
                 .member(testMemberDto)
                 .beginTime(new DateTime(2020, 3, 3, 15, 0, 0))
                 .endTime(new DateTime(2020, 3, 3, 16, 0, 0))

@@ -57,14 +57,14 @@ public class PlaceCrudFacadeTest {
     public void setUp() {
 
         testUserDto = UserDto.builder()
-                .email("mailik@gmail.com")
+                .email("testplaceuser@gmail.com")
                 .password("multiPass")
                 .isActive(true)
                 .build();
 
         testMemberDto = MemberDto.builder()
                 .user(testUserDto)
-                .nick("Wasacz")
+                .nick("serpentyna123")
                 .build();
 
         testPlaceDto1 = PlaceDto.builder()
