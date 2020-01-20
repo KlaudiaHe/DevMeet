@@ -89,4 +89,7 @@ class PlaceCrudFinder implements CrudEntityFinder<PlaceDto, PlaceEntity> {
         }
     }
 
+    public Optional<PlaceEntity> findById(Long id) {
+        return placeRepository.findById(id);
+    }
 }

@@ -40,7 +40,7 @@ public class GroupCrudFacadeTest {
     @Before
     public void setUp() {
 
-        testGroup = new GroupDto().builder()
+        testGroup = GroupDto.builder()
                 .groupName("Java test group")
                 .website("www.testWebsite.com")
                 .description("Welcome to test group")

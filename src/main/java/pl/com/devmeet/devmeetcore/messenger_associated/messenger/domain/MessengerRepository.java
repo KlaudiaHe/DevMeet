@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface MessengerRepository extends PagingAndSortingRepository<MessengerEntity, UUID> {
+public interface MessengerRepository extends PagingAndSortingRepository<MessengerEntity, Long> {
 
     Optional<MessengerEntity> findByGroup(GroupEntity groupEntity);
 

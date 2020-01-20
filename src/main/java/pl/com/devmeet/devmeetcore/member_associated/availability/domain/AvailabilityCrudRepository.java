@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface AvailabilityCrudRepository extends PagingAndSortingRepository<AvailabilityEntity, UUID> {
+public interface AvailabilityCrudRepository extends PagingAndSortingRepository<AvailabilityEntity, Long> {
 
     Optional<AvailabilityEntity> findByMember(MemberEntity member);
     Optional<List<AvailabilityEntity>> findAllByMember(MemberEntity member);}

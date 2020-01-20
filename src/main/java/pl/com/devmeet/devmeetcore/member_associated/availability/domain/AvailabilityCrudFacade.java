@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudFacadeInterface;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
+import pl.com.devmeet.devmeetcore.member_associated.availability.AvailabilityFacade;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityException;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;
@@ -15,6 +16,7 @@ import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudMapper.mapDtoList;
 
@@ -86,6 +88,11 @@ public class AvailabilityCrudFacade implements CrudFacadeInterface<AvailabilityD
 
     public AvailabilityDto find(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
         return map(initFinder().findEntity(dto));
+    }
+
+    public Optional<AvailabilityDto> findById (Long id){
+        return initFinder().findById(id)
+                .map(AvailabilityCrudFacade::map);
     }
 
     public List<AvailabilityDto> findAll(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {

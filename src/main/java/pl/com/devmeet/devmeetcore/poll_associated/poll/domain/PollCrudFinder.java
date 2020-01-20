@@ -25,7 +25,7 @@ class PollCrudFinder implements CrudEntityFinder<PollDto, PollEntity> {
     public PollEntity findEntity(PollDto dto) throws PollNotFoundException, GroupNotFoundException {
         Optional<PollEntity> poll = findPoll(dto);
 
-        if(poll.isPresent())
+        if (poll.isPresent())
             return poll.get();
 
         throw new PollNotFoundException(PollCrudStatusEnum.POLL_NOT_FOUND.toString());
@@ -62,5 +62,9 @@ class PollCrudFinder implements CrudEntityFinder<PollDto, PollEntity> {
     @Override
     public boolean isExist(PollDto dto) {
         return false;
+    }
+
+    public Optional<PollEntity> findById(Long id) {
+        return pollCrudRepository.findById(id);
     }
 }

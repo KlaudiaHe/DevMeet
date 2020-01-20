@@ -18,6 +18,7 @@ import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MemberCrudFacade implements CrudFacadeInterface<MemberDto, MemberEntity> {
@@ -85,6 +86,10 @@ public class MemberCrudFacade implements CrudFacadeInterface<MemberDto, MemberEn
         return map(initCreator().createEntity(dto));
     }
 
+    public Optional<MemberDto> findById(Long id){
+        return initFinder().findById(id)
+                .map(MemberCrudFacade::map);
+    }
 
     public MemberDto find(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         return map(findEntity(dto));

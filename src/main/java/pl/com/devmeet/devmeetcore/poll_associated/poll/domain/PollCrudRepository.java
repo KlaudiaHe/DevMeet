@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface PollCrudRepository extends PagingAndSortingRepository<PollEntity, UUID> {
+public interface PollCrudRepository extends PagingAndSortingRepository<PollEntity, Long> {
 
     Optional<PollEntity> findByGroup(GroupEntity groupEntity);
 

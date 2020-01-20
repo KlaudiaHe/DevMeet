@@ -75,4 +75,8 @@ class AvailabilityVoteCrudFinder implements CrudEntityFinder<AvailabilityVoteDto
             return false;
         }
     }
+
+    public Optional<AvailabilityVoteEntity> findById(Long id) {
+        return voteRepository.findById(id);
+    }
 }

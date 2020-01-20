@@ -103,4 +103,8 @@ class MessengerCrudFinder implements CrudEntityFinder<MessengerDto, MessengerEnt
             return false;
         }
     }
+
+    public Optional<MessengerEntity> findById(Long id) {
+        return messengerRepository.findById(id);
+    }
 }

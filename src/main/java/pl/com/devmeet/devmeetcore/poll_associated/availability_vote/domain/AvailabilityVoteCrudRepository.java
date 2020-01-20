@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface AvailabilityVoteCrudRepository extends PagingAndSortingRepository<AvailabilityVoteEntity, UUID> {
+public interface AvailabilityVoteCrudRepository extends PagingAndSortingRepository<AvailabilityVoteEntity, Long> {
 
     Optional<List<AvailabilityVoteEntity>> findAllByPoll(PollEntity pollEntity);
 

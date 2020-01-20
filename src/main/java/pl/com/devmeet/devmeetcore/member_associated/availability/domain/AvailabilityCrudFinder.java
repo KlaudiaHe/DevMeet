@@ -33,6 +33,11 @@ class AvailabilityCrudFinder implements CrudEntityFinder<AvailabilityDto, Availa
             throw new AvailabilityNotFoundException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString());
     }
 
+    public Optional<AvailabilityEntity> findById(Long id) {
+        return availabilityRepository.findById(id);
+
+    }
+
     private MemberEntity findMemberEntity(MemberDto member) throws MemberNotFoundException, UserNotFoundException {
         return memberFinder.findMember(member);
     }

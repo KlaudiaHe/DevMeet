@@ -16,6 +16,7 @@ import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,6 +89,11 @@ public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, Messag
 
     public MessageDto find(MessageDto dto) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {
         return map(findEntity(dto));
+    }
+
+    public Optional<MessageDto> findById(Long id) {
+        return initFinder().findById(id)
+                .map(MessageCrudFacade::map);
     }
 
     public List<MessageDto> findAll(MessageDto dto) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {

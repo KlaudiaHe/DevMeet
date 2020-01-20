@@ -50,6 +50,10 @@ class MessageCrudFinder implements CrudEntityFinder<MessageDto, MessageEntity> {
         throw new MessageNotFoundException(MessageCrudStatusEnum.MESSAGES_NOT_FOUND_BY_MEMBER.toString());
     }
 
+    public Optional<MessageEntity> findById(Long id) {
+        return repository.findById(id);
+    }
+
     public List<MessageEntity> findEntitiesByGroupForGroupChat(MessageDto dto) throws MessageNotFoundException, UserNotFoundException, GroupNotFoundException, MessengerNotFoundException, MemberNotFoundException, MessageArgumentNotSpecifiedException {
         MessengerEntity receiver = findReceiver(dto);
 

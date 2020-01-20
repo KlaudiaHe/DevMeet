@@ -6,7 +6,7 @@ import pl.com.devmeet.devmeetcore.user.domain.UserEntity;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface MemberRepository extends PagingAndSortingRepository<MemberEntity, UUID> {
+public interface MemberRepository extends PagingAndSortingRepository<MemberEntity, Long> {
 
     MemberEntity findByNick(String nick);
 

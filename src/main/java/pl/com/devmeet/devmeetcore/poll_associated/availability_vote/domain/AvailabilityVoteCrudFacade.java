@@ -22,7 +22,9 @@ import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.status_and_excepti
 import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
+import java.nio.file.OpenOption;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<AvailabilityVoteDto, AvailabilityVoteEntity> {
@@ -104,6 +106,11 @@ public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<Availabil
 
     public AvailabilityVoteDto find(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, GroupNotFoundException, PollNotFoundException {
         return map(findEntity(dto));
+    }
+
+    public Optional<AvailabilityVoteDto> findById(Long id) {
+        return initVoteFinder().findById(id)
+                .map(AvailabilityVoteCrudFacade::map);
     }
 
     public List<AvailabilityVoteDto> findAll(AvailabilityVoteDto dto) throws GroupNotFoundException, AvailabilityVoteNotFoundException, PollNotFoundException {

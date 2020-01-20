@@ -15,6 +15,7 @@ import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.status_and_excepti
 import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PollCrudFacade implements CrudFacadeInterface<PollDto, PollEntity> {
@@ -35,34 +36,34 @@ public class PollCrudFacade implements CrudFacadeInterface<PollDto, PollEntity> 
     }
 
     private PollGroupFinder initGroupFinder() {
-        return new PollGroupFinder().builder()
+        return PollGroupFinder.builder()
                 .groupCrudFacade(new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository, messengerRepository))
                 .build();
     }
 
     private PollCrudSaver initSaver() {
-        return new PollCrudSaver().builder()
+        return PollCrudSaver.builder()
                 .pollCrudRepository(pollCrudRepository)
                 .pollGroupFinder(initGroupFinder())
                 .build();
     }
 
     private PollCrudFinder initFinder() {
-        return new PollCrudFinder().builder()
+        return PollCrudFinder.builder()
                 .pollCrudRepository(pollCrudRepository)
                 .groupFinder(initGroupFinder())
                 .build();
     }
 
     private PollCrudCreator initCreator() {
-        return new PollCrudCreator().builder()
+        return PollCrudCreator.builder()
                 .pollCrudSaver(initSaver())
                 .pollCrudFinder(initFinder())
                 .build();
     }
 
     private PollCrudDeleter initDeleter() {
-        return new PollCrudDeleter().builder()
+        return PollCrudDeleter.builder()
                 .pollCrudSaver(initSaver())
                 .pollCrudFinder(initFinder())
                 .build();
@@ -75,6 +76,11 @@ public class PollCrudFacade implements CrudFacadeInterface<PollDto, PollEntity> 
 
     public PollDto find(PollDto dto) throws GroupNotFoundException, PollNotFoundException {
         return map(findEntity(dto));
+    }
+
+    public Optional<PollDto> findById(Long id) {
+        return initFinder().findById(id)
+                .map(PollCrudFacade::map);
     }
 
     public List<PollDto> findAll(PollDto dto) {

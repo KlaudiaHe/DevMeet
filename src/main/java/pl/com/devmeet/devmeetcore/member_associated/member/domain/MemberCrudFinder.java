@@ -68,4 +68,8 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
             return false;
         }
     }
+
+    public Optional<MemberEntity> findById(Long id) {
+        return memberRepository.findById(id);
+    }
 }

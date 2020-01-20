@@ -20,6 +20,7 @@ import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -108,6 +109,11 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
     @Deprecated
     public MessengerDto find(MessengerDto messengerDto) throws MessengerNotFoundException, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
         return map(findEntity(messengerDto));
+    }
+
+    public Optional<MessengerDto> findById(Long id) {
+        return initFinder().findById(id)
+                .map(MessengerCrudFacade::map);
     }
 
     @Override

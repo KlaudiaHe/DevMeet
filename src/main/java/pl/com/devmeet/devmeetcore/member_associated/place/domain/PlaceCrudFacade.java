@@ -16,6 +16,7 @@ import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudMapper.mapDtoList;
 
@@ -89,6 +90,11 @@ public class PlaceCrudFacade implements CrudFacadeInterface<PlaceDto, PlaceEntit
 
     public PlaceDto find(PlaceDto dto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
         return map(initFinder().findEntity(dto));
+    }
+
+    public Optional<PlaceDto> findById(Long id) {
+        return initFinder().findById(id)
+                .map(PlaceCrudFacade::map);
     }
 
     public List<PlaceDto> findAll() {

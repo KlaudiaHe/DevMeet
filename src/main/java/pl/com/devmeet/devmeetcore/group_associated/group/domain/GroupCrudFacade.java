@@ -1,5 +1,6 @@
 package pl.com.devmeet.devmeetcore.group_associated.group.domain;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudFacadeInterface;
@@ -159,6 +160,4 @@ public class GroupCrudFacade implements CrudFacadeInterface<GroupDto, GroupEntit
     public GroupDto findById(Long id) throws GroupNotFoundException { // todo - może zwracać Optional<GroupDto> zamiast rzucać wyjątki???
         return map(findEntityById(id));
     }
-
-
 }
