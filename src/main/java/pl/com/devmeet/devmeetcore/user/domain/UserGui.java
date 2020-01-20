@@ -25,7 +25,7 @@ class UserGui extends VerticalLayout {
     // vaadin components
     private H1 header1;
     private Grid<UserDto> userGrid;
-    private TextField textFieldEmailorPhone;
+    private TextField textFieldEmail;
     private ComboBox<String> comboBoxIsActive;
 
     public UserGui(UserService service) {
@@ -36,23 +36,21 @@ class UserGui extends VerticalLayout {
         Notification.show("User", 2000, Notification.Position.MIDDLE);
 
         FormLayout filtersLayout = new FormLayout();
-        header1 = new H1("devmeet app - user");
+        header1 = new H1("devmeet app - users");
         comboBoxIsActive = new ComboBox<>("Activated");
         comboBoxIsActive.setItems("yes", "no");
-//        comboBoxIsActive.addValueChangeListener();
-//        textFieldEmailorPhone = new TextField("Email or Phone", e -> filterUserList());
-        textFieldEmailorPhone = new TextField("Email or Phone");
-        textFieldEmailorPhone.setPlaceholder("filter");
-        textFieldEmailorPhone.setValueChangeMode(ValueChangeMode.EAGER);
-        textFieldEmailorPhone.setClearButtonVisible(true);
-        filtersLayout.add(textFieldEmailorPhone, comboBoxIsActive);
+        comboBoxIsActive.addValueChangeListener(e -> filterUserList());
+        comboBoxIsActive.setClearButtonVisible(true);
+        textFieldEmail = new TextField("Email", e -> filterUserList());
+        textFieldEmail.setPlaceholder("filter");
+        textFieldEmail.setValueChangeMode(ValueChangeMode.EAGER);
+        textFieldEmail.setClearButtonVisible(true);
+        filtersLayout.add(textFieldEmail, comboBoxIsActive);
 
         userGrid = new Grid<>(UserDto.class);
-        userGrid.removeColumnByKey("id");
-        userGrid.removeColumnByKey("password");
-        userGrid.removeColumnByKey("active");
+//        userGrid.removeColumnByKey("password");
+//        userGrid.removeColumnByKey("active");
         userGrid.removeColumnByKey("creationTime");
-        userGrid.removeColumnByKey("loginTime");
         userGrid.removeColumnByKey("modificationTime");
 
         userGrid.addThemeVariants(
@@ -64,18 +62,18 @@ class UserGui extends VerticalLayout {
         add(header1, filtersLayout, userGrid);
     }
 
-//    private void filterUserList() {
-//        if (comboBoxIsActive.getValue() != null) {
-//            if (comboBoxIsActive.getValue().equals("yes"))
-//                userList = service.findAllByIsActive(true);
-//            if (comboBoxIsActive.getValue().equals("no"))
-//                userList = service.findAllByIsActive(false);
-//        } else if (textFieldEmailorPhone.getValue() != null
-//                && !textFieldEmailorPhone.getValue().isEmpty()) {
-//            userList = service.findAllByEmailAndPhone(textFieldEmailorPhone.getValue());
-//        } else userList = service.findAll();
-//        refreshGrid(userList);
-//    }
+    private void filterUserList() {
+        if (comboBoxIsActive.getValue() != null) {
+            if (comboBoxIsActive.getValue().equals("yes"))
+                userList = service.findAllByIsActive(true);
+            if (comboBoxIsActive.getValue().equals("no"))
+                userList = service.findAllByIsActive(false);
+        } else if (textFieldEmail.getValue() != null
+                && !textFieldEmail.getValue().isEmpty()) {
+            userList = service.findEmailLike(textFieldEmail.getValue());
+        } else userList = service.findAll();
+        refreshGrid(userList);
+    }
 
     private void refreshGrid(List<UserDto> userList) {
         userGrid.setItems(userList);

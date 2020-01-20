@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import pl.com.devmeet.devmeetcore.user.domain.*;
+import pl.com.devmeet.devmeetcore.user.domain.UserCrudFacade;
+import pl.com.devmeet.devmeetcore.user.domain.UserDto;
+import pl.com.devmeet.devmeetcore.user.domain.UserEntity;
+import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +26,7 @@ public class UserService {
 
     // find
 
-    Optional<UserDto> findById(Long id) {
+    public Optional<UserDto> findById(Long id) {
         return repository.findById(id)
                 .map(UserCrudFacade::map);
     }
@@ -35,26 +38,19 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-//    List<UserDto> findByPhone(String phone) {
-//        return repository.findByPhone(phone)
-//                .stream()
-//                .map(UserMapper::toDto)
-//                .collect(Collectors.toList());
-//    }
-
-    Optional<UserDto> findByEmail(String email) {
+    public Optional<UserDto> findByEmail(String email) {
         return repository.findByEmail(email)
                 .map(UserCrudFacade::map);
     }
 
-//    List<UserDto> findAllByEmailAndPhone(String text) {
-//        return repository.findAllByEmailAndPhone(text)
-//                .stream()
-//                .map(UserMapper::toDto)
-//                .collect(Collectors.toList());
-//    }
+    public List<UserDto> findEmailLike(String text) {
+        return repository.findEmailLike(text)
+                .stream()
+                .map(UserCrudFacade::map)
+                .collect(Collectors.toList());
+    }
 
-    List<UserDto> findAllByIsActive(Boolean isActive) {
+    public List<UserDto> findAllByIsActive(Boolean isActive) {
         return repository.findAllByIsActive(isActive)
                 .stream()
                 .map(UserCrudFacade::map)
@@ -63,7 +59,7 @@ public class UserService {
 
     // add
 
-    UserDto add(UserDto user) {
+    public UserDto add(UserDto user) {
         if (user.getPassword() != null
                 && user.getEmail() != null) { // add more ifs statements if required
 //            checkEmailDuplication(user);
@@ -94,7 +90,7 @@ public class UserService {
 
     // delete
 
-    boolean delete(Long id) {
+    public boolean delete(Long id) {
         if (repository.findById(id).isPresent()) {
             repository.deleteById(id);
             return true;
