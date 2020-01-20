@@ -14,6 +14,7 @@ public class UserDto {
 
 //    private DefaultUserLoginTypeEnum login;
 //    private String phone;
+private Long id;
     private String email;
     private String password;
 

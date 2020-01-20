@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeetcore.member_associated.place;
+package pl.com.devmeet.devmeetcore.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudFacade;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDtoApi;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceMapperApi;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 

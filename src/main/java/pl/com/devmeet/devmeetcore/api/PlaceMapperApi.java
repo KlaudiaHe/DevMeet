@@ -1,13 +1,15 @@
-package pl.com.devmeet.devmeetcore.member_associated.place.domain;
+package pl.com.devmeet.devmeetcore.api;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
+import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
+import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDtoApi;
 
 @Component
-public class PlaceMapperApi {
+class PlaceMapperApi {
 
-    public ModelMapper getModelMapper() {
+    ModelMapper getModelMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.addMappings(new PropertyMap<PlaceDto, PlaceDtoApi>() {
             @Override
