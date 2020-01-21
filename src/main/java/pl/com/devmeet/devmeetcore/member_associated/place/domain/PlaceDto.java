@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 public class PlaceDto {
 
+    private Long id;
     private MemberDto member;
 
     private String placeName;

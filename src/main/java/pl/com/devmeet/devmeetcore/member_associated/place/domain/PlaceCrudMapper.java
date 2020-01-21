@@ -9,6 +9,7 @@ class PlaceCrudMapper {
 
     public static PlaceDto map(PlaceEntity entity) {
         return entity != null ? new PlaceDto().builder()
+                .id(entity.getId())
                 .member(MemberCrudFacade.map(entity.getMember()))
                 .placeName(entity.getPlaceName())
                 .description(entity.getDescription())
@@ -23,6 +24,7 @@ class PlaceCrudMapper {
 
     public static PlaceEntity map(PlaceDto dto) {
         return dto != null ? new PlaceEntity().builder()
+                .id(dto.getId())
                 .member(MemberCrudFacade.map(dto.getMember()))
                 .placeName(dto.getPlaceName())
                 .description(dto.getDescription())
