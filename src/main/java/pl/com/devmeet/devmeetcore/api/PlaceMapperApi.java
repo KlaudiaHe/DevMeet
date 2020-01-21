@@ -7,9 +7,9 @@ import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDtoApi;
 
 @Component
-class PlaceMapperApi {
+public class PlaceMapperApi {
 
-    ModelMapper getModelMapper() {
+    public ModelMapper getModelMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.addMappings(new PropertyMap<PlaceDto, PlaceDtoApi>() {
             @Override

@@ -7,8 +7,10 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.com.devmeet.devmeetcore.api.PlaceMapperApi;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudFacade;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
+import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDtoApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,28 +19,34 @@ import java.util.List;
 class PlacesGui extends VerticalLayout {
 
     private PlaceCrudFacade place;
-    private List<PlaceDto> placeList;
+    private List<PlaceDtoApi> placeList;
+    private PlaceMapperApi placeMapperApi;
 
     // vaadin components
     private H1 header;
-    private Grid<PlaceDto> placeGrid;
+    private Grid<PlaceDtoApi> placeGrid;
 
     @Autowired
-    public PlacesGui(PlaceCrudFacade place) {
+    public PlacesGui(PlaceCrudFacade place, PlaceMapperApi placeMapperApi) {
         this.place = place;
+        this.placeMapperApi = placeMapperApi;
         placeList = new ArrayList<>();
-        placeList = place.findAll();
+        List<PlaceDto> all = place.findAll();
+        for (PlaceDto placeDto : all) {
+            placeList.add(placeMapperApi
+                    .getModelMapper()
+                    .map(placeDto, PlaceDtoApi.class));
+        }
         setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
         Notification.show("Places", 2000, Notification.Position.MIDDLE);
 
         header = new H1("devmeet app - places");
 
-        placeGrid = new Grid<>(PlaceDto.class);
+        placeGrid = new Grid<>(PlaceDtoApi.class);
+        placeGrid.removeColumnByKey("id");
         placeGrid.removeColumnByKey("creationTime");
         placeGrid.removeColumnByKey("modificationTime");
         placeGrid.removeColumnByKey("active");
-        //todo - wyrugować z PlaceDto typy złożone inaczej będzie ciężko cokolwiek pokazać.
-        placeGrid.removeColumnByKey("memberId");
 
         refreshGrid(placeList);
 
@@ -46,7 +54,7 @@ class PlacesGui extends VerticalLayout {
 
     }
 
-    private void refreshGrid(List<PlaceDto> placeList) {
+    private void refreshGrid(List<PlaceDtoApi> placeList) {
         placeGrid.setItems(placeList);
         placeGrid.getDataProvider().refreshAll();
     }

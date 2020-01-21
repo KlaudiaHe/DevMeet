@@ -33,7 +33,7 @@ public class UserEntity {
 
 //    private String phone;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MemberEntity member;
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
