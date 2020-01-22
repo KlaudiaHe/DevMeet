@@ -64,14 +64,16 @@ class UsersGui extends VerticalLayout {
     }
 
     private void filterUserList() {
-        if (comboBoxIsActive.getValue() != null) {
+        if (textFieldEmail.getValue() != null
+                && !textFieldEmail.getValue().trim().isEmpty()) {
+            comboBoxIsActive.clear();
+            userList = service.findEmailLike(textFieldEmail.getValue());
+        } else if (comboBoxIsActive.getValue() != null
+                && textFieldEmail.getValue().trim().isEmpty()) {
             if (comboBoxIsActive.getValue().equals("yes"))
                 userList = service.findAllByIsActive(true);
             if (comboBoxIsActive.getValue().equals("no"))
                 userList = service.findAllByIsActive(false);
-        } else if (textFieldEmail.getValue() != null
-                && !textFieldEmail.getValue().isEmpty()) {
-            userList = service.findEmailLike(textFieldEmail.getValue());
         } else userList = service.findAll();
         refreshGrid(userList);
     }
