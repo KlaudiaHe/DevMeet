@@ -36,4 +36,5 @@ build/
 
 ### Vaadin ###
 /node_modules/*
+/node/*
 
