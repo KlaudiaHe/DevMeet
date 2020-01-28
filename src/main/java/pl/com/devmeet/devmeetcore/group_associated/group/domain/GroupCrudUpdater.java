@@ -50,7 +50,7 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
     }
 
     private GroupEntity mapDtoToEntity(GroupDto dto) {
-        return GroupCrudFacade.map(dto);
+        return GroupCrudService.map(dto);
     }
 
     private GroupEntity updateAllowedParameters(GroupEntity oldEntity, GroupEntity newEntity) {

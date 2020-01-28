@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudFacadeInterface;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
@@ -21,7 +21,7 @@ import java.util.Optional;
 import static pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudMapper.mapDtoList;
 
 @Service
-public class PlaceCrudFacade implements CrudFacadeInterface<PlaceDto, PlaceEntity> {
+public class PlaceCrudService implements CrudFacadeInterface<PlaceDto, PlaceEntity> {
 
     private PlaceCrudRepository placeRepository;
     private MemberRepository memberRepository;
@@ -30,7 +30,7 @@ public class PlaceCrudFacade implements CrudFacadeInterface<PlaceDto, PlaceEntit
     private GroupCrudRepository groupCrudRepository;
 
     @Autowired
-    public PlaceCrudFacade(PlaceCrudRepository placeRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository, GroupCrudRepository groupCrudRepository) {
+    public PlaceCrudService(PlaceCrudRepository placeRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository, GroupCrudRepository groupCrudRepository) {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
@@ -40,7 +40,7 @@ public class PlaceCrudFacade implements CrudFacadeInterface<PlaceDto, PlaceEntit
 
     private PlaceMemberFinder initMemberFinder() {
         return PlaceMemberFinder.builder()
-                .memberCrudFacade(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository))
+                .memberCrudService(new MemberCrudService(memberRepository, userRepository, messengerRepository, groupCrudRepository))
                 .build();
     }
 
@@ -94,7 +94,7 @@ public class PlaceCrudFacade implements CrudFacadeInterface<PlaceDto, PlaceEntit
 
     public Optional<PlaceDto> findById(Long id) {
         return initFinder().findById(id)
-                .map(PlaceCrudFacade::map);
+                .map(PlaceCrudService::map);
     }
 
     public List<PlaceDto> findAll() {

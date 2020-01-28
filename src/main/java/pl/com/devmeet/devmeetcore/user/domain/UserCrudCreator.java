@@ -33,7 +33,7 @@ class UserCrudCreator {
             }
 
         } catch (UserNotFoundException e) {
-            return saveUserEntity(setDefaultValuesToNewUserEntity(UserCrudFacade.map(dto)));
+            return saveUserEntity(setDefaultValuesToNewUserEntity(UserCrudService.map(dto)));
         }
         throw new UserAlreadyExistsException(UserCrudStatusEnum.USER_ALREADY_EXISTS.toString());
     }

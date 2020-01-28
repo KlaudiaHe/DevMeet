@@ -8,7 +8,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.router.Route;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
 
 import java.util.ArrayList;
@@ -17,14 +17,14 @@ import java.util.List;
 @Route("admin/groups")
 class GroupsGui extends VerticalLayout {
 
-    private GroupCrudFacade group;
+    private GroupCrudService group;
     private List<GroupDto> groupList;
 
     // vaadin components
     private H1 header;
     private Grid<GroupDto> groupGrid;
 
-    public GroupsGui(GroupCrudFacade group) {
+    public GroupsGui(GroupCrudService group) {
         this.group = group;
         groupList = new ArrayList<>();
         groupList = group.findAll();

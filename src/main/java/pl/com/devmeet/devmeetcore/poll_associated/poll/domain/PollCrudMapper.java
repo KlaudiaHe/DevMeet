@@ -1,6 +1,6 @@
 package pl.com.devmeet.devmeetcore.poll_associated.poll.domain;
 
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,7 +9,7 @@ class PollCrudMapper {
 
     public static PollDto map (PollEntity entity){
         return entity != null ? new PollDto().builder()
-                .group(GroupCrudFacade.map(entity.getGroup()))
+                .group(GroupCrudService.map(entity.getGroup()))
                 .creationTime(entity.getCreationTime())
                 .active(entity.isActive())
                 .build() : null;
@@ -17,7 +17,7 @@ class PollCrudMapper {
 
     public static PollEntity map (PollDto dto){
         return dto != null ? new PollEntity().builder()
-                .group(GroupCrudFacade.map(dto.getGroup()))
+                .group(GroupCrudService.map(dto.getGroup()))
                 .creationTime(dto.getCreationTime())
                 .active(dto.isActive())
                 .build() : null;

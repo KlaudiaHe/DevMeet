@@ -1,14 +1,14 @@
 package pl.com.devmeet.devmeetcore.messenger_associated.message.domain;
 
-import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerCrudFacade;
+import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerCrudService;
 
 class MessageMapper {
 
     static MessageDto toDto(MessageEntity messageEntity) {
 
         return messageEntity != null ? MessageDto.builder()
-                .sender(MessengerCrudFacade.map(messageEntity.getSender()))
-                .receiver(MessengerCrudFacade.map(messageEntity.getReceiver()))
+                .sender(MessengerCrudService.map(messageEntity.getSender()))
+                .receiver(MessengerCrudService.map(messageEntity.getReceiver()))
                 .message(messageEntity.getMessage())
                 .modificationTime(messageEntity.getModificationTime())
                 .creationTime(messageEntity.getCreationTime())
@@ -18,8 +18,8 @@ class MessageMapper {
 
     static MessageEntity toEntity(MessageDto messageDto) {
         return messageDto != null ? MessageEntity.builder()
-                .sender(MessengerCrudFacade.map(messageDto.getSender()))
-                .receiver(MessengerCrudFacade.map(messageDto.getReceiver()))
+                .sender(MessengerCrudService.map(messageDto.getSender()))
+                .receiver(MessengerCrudService.map(messageDto.getReceiver()))
                 .message(messageDto.getMessage())
                 .modificationTime(messageDto.getModificationTime())
                 .creationTime(messageDto.getCreationTime())

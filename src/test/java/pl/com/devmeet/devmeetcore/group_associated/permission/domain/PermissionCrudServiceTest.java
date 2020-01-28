@@ -7,14 +7,14 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeetcore.group_associated.permission.domain.status_and_exceptions.*;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-public class PermissionCrudFacadeTest {
+public class PermissionCrudServiceTest {
 
     @Autowired
     private PermissionCrudRepository permissionCrudRepository;
@@ -46,10 +46,10 @@ public class PermissionCrudFacadeTest {
     @Autowired
     private MessengerRepository messengerRepository;
 
-    private PermissionCrudFacade permissionCrudFacade;
-    private GroupCrudFacade groupCrudFacade;
-    private MemberCrudFacade memberCrudFacade;
-    private UserCrudFacade userCrudFacade;
+    private PermissionCrudService permissionCrudService;
+    private GroupCrudService groupCrudService;
+    private MemberCrudService memberCrudService;
+    private UserCrudService userCrudService;
 
     private GroupDto testGroupDto;
     private MemberDto testMemberDto;
@@ -94,33 +94,33 @@ public class PermissionCrudFacadeTest {
                 .build();
     }
 
-    private UserCrudFacade initUserCrudFacade() {
-        return new UserCrudFacade(userRepository);
+    private UserCrudService initUserCrudFacade() {
+        return new UserCrudService(userRepository);
     }
 
-    private GroupCrudFacade initGroupCrudFacade() {
-        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository, messengerRepository);
+    private GroupCrudService initGroupCrudFacade() {
+        return new GroupCrudService(groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
-    private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository);
+    private MemberCrudService initMemberCrudFacade() {
+        return new MemberCrudService(memberRepository, userRepository, messengerRepository, groupCrudRepository);
     }
 
-    private PermissionCrudFacade initPermissionCrudFacade() {
-        return new PermissionCrudFacade(permissionCrudRepository, groupCrudRepository, memberRepository, userRepository, messengerRepository);
+    private PermissionCrudService initPermissionCrudFacade() {
+        return new PermissionCrudService(permissionCrudRepository, groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private boolean initTestDB() {
-        userCrudFacade = initUserCrudFacade();
-        groupCrudFacade = initGroupCrudFacade();
-        memberCrudFacade = initMemberCrudFacade();
+        userCrudService = initUserCrudFacade();
+        groupCrudService = initGroupCrudFacade();
+        memberCrudService = initMemberCrudFacade();
 
         UserEntity testUser = null;
         try {
-            testUser = userCrudFacade
+            testUser = userCrudService
                     .findEntity(
-                            userCrudFacade.activation(
-                                    userCrudFacade.add(testUserDto)
+                            userCrudService.activation(
+                                    userCrudService.add(testUserDto)
                             )
                     );
         } catch (UserNotFoundException | UserAlreadyExistsException | UserAlreadyActiveException e) {
@@ -129,8 +129,8 @@ public class PermissionCrudFacadeTest {
 
         GroupEntity groupEntity = null;
         try {
-            groupEntity = groupCrudFacade
-                    .findEntityByGroup(groupCrudFacade
+            groupEntity = groupCrudService
+                    .findEntityByGroup(groupCrudService
                             .add(testGroupDto));
         } catch (GroupNotFoundException | GroupAlreadyExistsException | UserNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
@@ -139,8 +139,8 @@ public class PermissionCrudFacadeTest {
 
         MemberEntity memberEntity = null;
         try {
-            memberEntity = memberCrudFacade
-                    .findEntity(memberCrudFacade
+            memberEntity = memberCrudService
+                    .findEntity(memberCrudService
                             .add(testMemberDto));
         } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberUserNotActiveException e) {
             e.printStackTrace();
@@ -153,7 +153,7 @@ public class PermissionCrudFacadeTest {
 
     @Test
     public void USER_CRUD_FACADE_WR() throws UserAlreadyExistsException, UserNotFoundException {
-        UserCrudFacade userFacade = initUserCrudFacade();
+        UserCrudService userFacade = initUserCrudFacade();
         UserDto testUser = userFacade.add(testUserDto);
         UserEntity userEntity = userFacade.findEntity(testUser);
 
@@ -162,7 +162,7 @@ public class PermissionCrudFacadeTest {
 
     @Test
     public void GROUP_CRUD_FACADE_WR() throws GroupAlreadyExistsException, GroupNotFoundException, UserNotFoundException, MessengerArgumentNotSpecified, MemberNotFoundException, MessengerAlreadyExistsException {
-        GroupCrudFacade groupFacade = initGroupCrudFacade();
+        GroupCrudService groupFacade = initGroupCrudFacade();
         GroupEntity groupEntity = groupFacade.findEntityByGroup(groupFacade.add(testGroupDto));
 
         assertThat(groupEntity).isNotNull();
@@ -170,10 +170,10 @@ public class PermissionCrudFacadeTest {
 
     @Test
     public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException, UserAlreadyExistsException, MemberUserNotActiveException, UserAlreadyActiveException {
-        MemberCrudFacade memberFacade = initMemberCrudFacade();
-        UserCrudFacade userCrudFacade = initUserCrudFacade();
-        userCrudFacade.add(testUserDto);
-        userCrudFacade.activation(testUserDto);
+        MemberCrudService memberFacade = initMemberCrudFacade();
+        UserCrudService userCrudService = initUserCrudFacade();
+        userCrudService.add(testUserDto);
+        userCrudService.activation(testUserDto);
         MemberEntity memberEntity = memberFacade.findEntity(memberFacade.add(testMemberDto));
 
         assertThat(memberEntity).isNotNull();
@@ -190,9 +190,9 @@ public class PermissionCrudFacadeTest {
         PermissionDto created;
         initTestDB();
 
-        permissionCrudFacade = initPermissionCrudFacade();
+        permissionCrudService = initPermissionCrudFacade();
 
-        created = permissionCrudFacade.add(testPermissionDto);
+        created = permissionCrudService.add(testPermissionDto);
 
         assertThat(created.getMember()).isNotNull();
         assertThat(created.getGroup()).isNotNull();
@@ -210,15 +210,15 @@ public class PermissionCrudFacadeTest {
     @Test
     public void WHEN_try_to_create_existing_permission_to_group_THEN_EntityAlreadyExistsException() throws UserNotFoundException, MemberNotFoundException, GroupNotFoundException {
         initTestDB();
-        permissionCrudFacade = initPermissionCrudFacade();
+        permissionCrudService = initPermissionCrudFacade();
         try {
-            permissionCrudFacade.add(testPermissionDto);
+            permissionCrudService.add(testPermissionDto);
         } catch (UserNotFoundException | MemberNotFoundException | PermissionAlreadyExistsException | GroupNotFoundException e) {
             Assert.fail();
         }
 
         try {
-            permissionCrudFacade.add(testPermissionDto);
+            permissionCrudService.add(testPermissionDto);
             Assert.fail();
         } catch (PermissionAlreadyExistsException e) {
             assertThat(e)
@@ -232,11 +232,11 @@ public class PermissionCrudFacadeTest {
         initTestDB();
         PermissionDto created;
         PermissionDto found = null;
-        permissionCrudFacade = initPermissionCrudFacade();
+        permissionCrudService = initPermissionCrudFacade();
 
-        created = permissionCrudFacade.add(testPermissionDto);
+        created = permissionCrudService.add(testPermissionDto);
 
-        found = permissionCrudFacade.find(testPermissionDto);
+        found = permissionCrudService.find(testPermissionDto);
 
 
         assertThat(found).isNotNull();
@@ -245,9 +245,9 @@ public class PermissionCrudFacadeTest {
     @Test
     public void WHEN_try_to_find_not_existing_permission_THEN_return_EntityNotFoundException() throws UserNotFoundException, MemberNotFoundException, GroupNotFoundException {
         initTestDB();
-        permissionCrudFacade = initPermissionCrudFacade();
+        permissionCrudService = initPermissionCrudFacade();
         try {
-            permissionCrudFacade.find(testPermissionDto);
+            permissionCrudService.find(testPermissionDto);
             Assert.fail();
         } catch (PermissionNotFoundException e) {
             assertThat(e)
@@ -258,9 +258,9 @@ public class PermissionCrudFacadeTest {
 
     @Test
     public void WHEN_try_to_find_all_permissions_THEN_return_UnsupportedOperationException() {
-        PermissionCrudFacade permissionCrudFacade = initPermissionCrudFacade();
+        PermissionCrudService permissionCrudService = initPermissionCrudFacade();
         try {
-            permissionCrudFacade.findAll(testPermissionDto);
+            permissionCrudService.findAll(testPermissionDto);
         } catch (PermissionMethodNotImplemented e) {
             assertThat(e)
                     .isInstanceOf(PermissionMethodNotImplemented.class)
@@ -271,9 +271,9 @@ public class PermissionCrudFacadeTest {
     @Test
     public void WHEN_update_existing_permission_THEN_return_permission() throws UserNotFoundException, GroupNotFoundException, PermissionAlreadyExistsException, MemberNotFoundException, PermissionNotFoundException, PermissionException {
         initTestDB();
-        PermissionCrudFacade permissionCrudFacade = initPermissionCrudFacade();
-        PermissionDto created = permissionCrudFacade.add(testPermissionDto);
-        PermissionDto updated = permissionCrudFacade.update(testPermissionDto, permissionUpdatedValues(testPermissionDto));
+        PermissionCrudService permissionCrudService = initPermissionCrudFacade();
+        PermissionDto created = permissionCrudService.add(testPermissionDto);
+        PermissionDto updated = permissionCrudService.update(testPermissionDto, permissionUpdatedValues(testPermissionDto));
 
         assertThat(updated.isPossibleToVote()).isFalse();
         assertThat(updated.isPossibleToMessaging()).isFalse();
@@ -302,9 +302,9 @@ public class PermissionCrudFacadeTest {
     @Test
     public void WHEN_try_to_update_not_existing_permission_THEN_return_EntityNotFoundException() throws UserNotFoundException, GroupNotFoundException, MemberNotFoundException, PermissionException {
         initTestDB();
-        PermissionCrudFacade permissionCrudFacade = initPermissionCrudFacade();
+        PermissionCrudService permissionCrudService = initPermissionCrudFacade();
         try {
-            permissionCrudFacade.update(testPermissionDto, permissionUpdatedValues(testPermissionDto));
+            permissionCrudService.update(testPermissionDto, permissionUpdatedValues(testPermissionDto));
         } catch (PermissionNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(PermissionNotFoundException.class)
@@ -315,9 +315,9 @@ public class PermissionCrudFacadeTest {
     @Test
     public void WHEN_delete_existing_permission_THEN_return_permission() throws UserNotFoundException, GroupNotFoundException, PermissionAlreadyExistsException, MemberNotFoundException, PermissionNotFoundException {
         initTestDB();
-        PermissionCrudFacade permissionCrudFacade = initPermissionCrudFacade();
-        PermissionDto created = permissionCrudFacade.add(testPermissionDto);
-        PermissionDto deleted = permissionCrudFacade.delete(testPermissionDto);
+        PermissionCrudService permissionCrudService = initPermissionCrudFacade();
+        PermissionDto created = permissionCrudService.add(testPermissionDto);
+        PermissionDto deleted = permissionCrudService.delete(testPermissionDto);
 
         assertThat(deleted).isNotNull();
         assertThat(deleted.isActive()).isNotEqualTo(created.isActive());
@@ -328,10 +328,10 @@ public class PermissionCrudFacadeTest {
     @Test
     public void WHEN_delete_not_existing_permission_THEN_return_EntityNotFoundException() throws UserNotFoundException, GroupNotFoundException, PermissionAlreadyExistsException, MemberNotFoundException {
         initTestDB();
-        PermissionCrudFacade permissionCrudFacade = initPermissionCrudFacade();
+        PermissionCrudService permissionCrudService = initPermissionCrudFacade();
 
         try {
-            permissionCrudFacade.delete(testPermissionDto);
+            permissionCrudService.delete(testPermissionDto);
         } catch (PermissionNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(PermissionNotFoundException.class)

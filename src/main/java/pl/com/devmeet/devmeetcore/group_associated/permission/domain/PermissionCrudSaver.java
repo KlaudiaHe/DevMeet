@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudEntitySaver;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
@@ -32,7 +32,7 @@ class PermissionCrudSaver implements CrudEntitySaver<PermissionEntity, Permissio
         GroupEntity groupEntity = permissionEntity.getGroup();
 
         if (groupEntity.getId() == null)
-            groupEntity = groupFinder.findGroup(GroupCrudFacade.map(permissionEntity.getGroup()));
+            groupEntity = groupFinder.findGroup(GroupCrudService.map(permissionEntity.getGroup()));
 
         permissionEntity.setGroup(groupEntity);
         return permissionEntity;
@@ -42,7 +42,7 @@ class PermissionCrudSaver implements CrudEntitySaver<PermissionEntity, Permissio
         MemberEntity memberEntity = permissionEntity.getMember();
 
         if (memberEntity.getId() == null)
-            memberEntity = memberFinder.findMember(MemberCrudFacade.map(permissionEntity.getMember()));
+            memberEntity = memberFinder.findMember(MemberCrudService.map(permissionEntity.getMember()));
 
         permissionEntity.setMember(memberEntity);
         return permissionEntity;

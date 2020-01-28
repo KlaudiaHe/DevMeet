@@ -34,7 +34,7 @@ class MessageCrudCreator implements CrudEntityCreator<MessageDto, MessageEntity>
         return messageCrudSaver.saveEntity(
                 setDefaultValuesWhenMessageNotExists(
                         messengersConnector
-                                .connectMessengers(MessageCrudFacade.map(dto), sender, receiver)));
+                                .connectMessengers(MessageCrudService.map(dto), sender, receiver)));
 
     }
 

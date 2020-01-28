@@ -52,7 +52,7 @@ class PermissionCrudUpdater implements CrudEntityUpdater<PermissionDto, Permissi
     }
 
     private PermissionEntity mapDtoToEntity(PermissionDto dto) {
-        return PermissionCrudFacade.map(dto);
+        return PermissionCrudService.map(dto);
     }
 
     private PermissionEntity updateAllowedParameters(PermissionEntity oldEntity, PermissionEntity newEntity) {

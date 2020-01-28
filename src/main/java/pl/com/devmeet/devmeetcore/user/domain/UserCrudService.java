@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserCrudFacade implements CrudFacadeInterface<UserDto, UserEntity> {
+public class UserCrudService implements CrudFacadeInterface<UserDto, UserEntity> {
 
     private UserRepository repository;
 
     @Autowired
-    public UserCrudFacade(UserRepository repository) {
+    public UserCrudService(UserRepository repository) {
         this.repository = repository;
     }
 
@@ -129,7 +129,7 @@ public class UserCrudFacade implements CrudFacadeInterface<UserDto, UserEntity> 
 
     private List<UserDto> map(List<UserEntity> userEntities) {
         return userEntities.stream()
-                .map(UserCrudFacade::map)
+                .map(UserCrudService::map)
                 .collect(Collectors.toList());
     }
 }

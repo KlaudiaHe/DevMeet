@@ -37,7 +37,7 @@ class AvailabilityCrudUpdater implements CrudEntityUpdater<AvailabilityDto, Avai
         throw new AvailabilityException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString());    }
 
     private AvailabilityEntity mapDtoToEntity(AvailabilityDto dto) {
-        return AvailabilityCrudFacade.map(dto);
+        return AvailabilityCrudService.map(dto);
     }
 
     private AvailabilityEntity updateAllowedParameters(AvailabilityEntity oldEntity, AvailabilityEntity newEntity) {

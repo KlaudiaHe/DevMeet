@@ -14,7 +14,7 @@ import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_a
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityCrudInfoStatusEnum;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityException;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @RunWith(SpringRunner.class)
 
-public class AvailabilityCrudFacadeTest {
+public class AvailabilityCrudServiceTest {
 
     @Autowired
     private AvailabilityCrudRepository repository;
@@ -49,9 +49,9 @@ public class AvailabilityCrudFacadeTest {
     @Autowired
     private GroupCrudRepository groupCrudRepository;
 
-    private AvailabilityCrudFacade availabilityCrudFacade;
-    private MemberCrudFacade memberCrudFacade;
-    private UserCrudFacade userCrudFacade;
+    private AvailabilityCrudService availabilityCrudService;
+    private MemberCrudService memberCrudService;
+    private UserCrudService userCrudService;
 
     private AvailabilityDto testAvailabilityDto;
     private MemberDto testMemberDto;
@@ -76,7 +76,7 @@ public class AvailabilityCrudFacadeTest {
                 .member(testMemberDto)
                 .beginTime(new DateTime(2020, 3, 3, 15, 0, 0))
                 .endTime(new DateTime(2020, 3, 3, 16, 0, 0))
-                .availabilityVote(null)
+//                .availabilityVote(null)
                 .remoteWork(true)
                 .creationTime(null)
                 .modificationTime(null)
@@ -84,29 +84,29 @@ public class AvailabilityCrudFacadeTest {
                 .build();
     }
 
-    private UserCrudFacade initUserCrudFacade() {
-        return new UserCrudFacade(userRepository);
+    private UserCrudService initUserCrudFacade() {
+        return new UserCrudService(userRepository);
     }
 
-    private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository); // tworzy obiekt fasady
+    private MemberCrudService initMemberCrudFacade() {
+        return new MemberCrudService(memberRepository, userRepository, messengerRepository, groupCrudRepository); // tworzy obiekt fasady
     }
 
-    private AvailabilityCrudFacade initAvailabilityCrudFacade() {
-        return new AvailabilityCrudFacade(repository, memberRepository, userRepository, messengerRepository, groupCrudRepository);
+    private AvailabilityCrudService initAvailabilityCrudFacade() {
+        return new AvailabilityCrudService(repository, memberRepository, userRepository, messengerRepository, groupCrudRepository);
     }
 
 
     private boolean initTestDB() {
-        userCrudFacade = initUserCrudFacade();
-        memberCrudFacade = initMemberCrudFacade();
+        userCrudService = initUserCrudFacade();
+        memberCrudService = initMemberCrudFacade();
 
         UserEntity testUser = null;
         try {
-            testUser = userCrudFacade
+            testUser = userCrudService
                     .findEntity(
-                            userCrudFacade.activation(
-                                    userCrudFacade.add(testUserDto)
+                            userCrudService.activation(
+                                    userCrudService.add(testUserDto)
                             )
                     );
         } catch (UserNotFoundException | UserAlreadyExistsException | UserAlreadyActiveException e) {
@@ -115,8 +115,8 @@ public class AvailabilityCrudFacadeTest {
 
         MemberEntity memberEntity = null;
         try {
-            memberEntity = memberCrudFacade
-                    .findEntity(memberCrudFacade.add(testMemberDto));
+            memberEntity = memberCrudService
+                    .findEntity(memberCrudService.add(testMemberDto));
         } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberUserNotActiveException e) {
             e.printStackTrace();
         }
@@ -127,19 +127,19 @@ public class AvailabilityCrudFacadeTest {
 
     @Test
     public void USER_CRUD_FACADE_WR() throws UserAlreadyExistsException, UserNotFoundException {
-        UserCrudFacade userCrudFacade = initUserCrudFacade();
-        UserDto testUser = userCrudFacade.add(testUserDto);
-        UserEntity userEntity = userCrudFacade.findEntity(testUser);
+        UserCrudService userCrudService = initUserCrudFacade();
+        UserDto testUser = userCrudService.add(testUserDto);
+        UserEntity userEntity = userCrudService.findEntity(testUser);
         assertThat(userEntity).isNotNull();
     }
 
     @Test
     public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberAlreadyExistsException, MemberNotFoundException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException, UserAlreadyExistsException, MemberUserNotActiveException, UserAlreadyActiveException {
-        MemberCrudFacade memberCrudFacade = initMemberCrudFacade();
-        UserCrudFacade userCrudFacade = initUserCrudFacade();
-        userCrudFacade.add(testUserDto);
-        userCrudFacade.activation(testUserDto);
-        MemberEntity memberEntity = memberCrudFacade.findEntity(memberCrudFacade.add(testMemberDto));
+        MemberCrudService memberCrudService = initMemberCrudFacade();
+        UserCrudService userCrudService = initUserCrudFacade();
+        userCrudService.add(testUserDto);
+        userCrudService.activation(testUserDto);
+        MemberEntity memberEntity = memberCrudService.findEntity(memberCrudService.add(testMemberDto));
         assertThat(memberEntity).isNotNull();
     }
 
@@ -152,8 +152,8 @@ public class AvailabilityCrudFacadeTest {
     @Test
     public void WHEN_try_to_create_non_existing_availability_THEN_return_availability() throws MemberNotFoundException, AvailabilityAlreadyExistsException, UserNotFoundException {
         initTestDB();
-        availabilityCrudFacade = initAvailabilityCrudFacade();
-        AvailabilityDto created = availabilityCrudFacade.add(testAvailabilityDto);
+        availabilityCrudService = initAvailabilityCrudFacade();
+        AvailabilityDto created = availabilityCrudService.add(testAvailabilityDto);
 
         assertThat(created.getMember()).isNotNull();
         assertThat(created).isNotNull();
@@ -165,14 +165,14 @@ public class AvailabilityCrudFacadeTest {
     @Test
     public void WHEN_try_to_create_existing_availability_THEN_EntityAlreadyExistsException() throws MemberNotFoundException, UserNotFoundException {
         initTestDB();
-        availabilityCrudFacade = initAvailabilityCrudFacade();
+        availabilityCrudService = initAvailabilityCrudFacade();
         try {
-            availabilityCrudFacade.add(testAvailabilityDto);
+            availabilityCrudService.add(testAvailabilityDto);
         } catch (AvailabilityAlreadyExistsException e) {
             Assert.fail();
         }
         try {
-            availabilityCrudFacade.add(testAvailabilityDto);
+            availabilityCrudService.add(testAvailabilityDto);
             Assert.fail();
         } catch (AvailabilityAlreadyExistsException e) {
             assertThat(e)
@@ -186,19 +186,19 @@ public class AvailabilityCrudFacadeTest {
         initTestDB();
         AvailabilityDto created;
         AvailabilityDto found = null;
-        availabilityCrudFacade = initAvailabilityCrudFacade();
+        availabilityCrudService = initAvailabilityCrudFacade();
 
-        created = availabilityCrudFacade.add(testAvailabilityDto);
-        found = availabilityCrudFacade.find(testAvailabilityDto);
+        created = availabilityCrudService.add(testAvailabilityDto);
+        found = availabilityCrudService.find(testAvailabilityDto);
         assertThat(found).isNotNull();
     }
 
     @Test
     public void WHEN_try_to_find_non_existing_availability_THEN_return_EntityNotFoundException() throws MemberNotFoundException, UserNotFoundException {
         initTestDB();
-        availabilityCrudFacade = initAvailabilityCrudFacade();
+        availabilityCrudService = initAvailabilityCrudFacade();
         try {
-            availabilityCrudFacade.find(testAvailabilityDto);
+            availabilityCrudService.find(testAvailabilityDto);
             Assert.fail();
         } catch (AvailabilityNotFoundException e) {
             assertThat(e)
@@ -211,18 +211,18 @@ public class AvailabilityCrudFacadeTest {
     public void WHEN_try_to_find_all_availabilities_THEN_return_availabilities() throws MemberNotFoundException, AvailabilityAlreadyExistsException, UserNotFoundException, AvailabilityNotFoundException {
         initTestDB();
         List<AvailabilityDto> found = null;
-        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
-        availabilityCrudFacade.add(testAvailabilityDto);
-        found = availabilityCrudFacade.findAll(testAvailabilityDto);
+        AvailabilityCrudService availabilityCrudService = initAvailabilityCrudFacade();
+        availabilityCrudService.add(testAvailabilityDto);
+        found = availabilityCrudService.findAll(testAvailabilityDto);
         assertThat(found).isNotNull();
     }
 
     @Test
     public void WHEN_try_to_update_existing_availability_THEN_return_availability() throws MemberNotFoundException, AvailabilityAlreadyExistsException, UserNotFoundException, AvailabilityNotFoundException, AvailabilityException {
         initTestDB();
-        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
-        AvailabilityDto created = availabilityCrudFacade.add(testAvailabilityDto);
-        AvailabilityDto updated = availabilityCrudFacade.update(testAvailabilityDto, availabilityUpdatedValues(testAvailabilityDto));
+        AvailabilityCrudService availabilityCrudService = initAvailabilityCrudFacade();
+        AvailabilityDto created = availabilityCrudService.add(testAvailabilityDto);
+        AvailabilityDto updated = availabilityCrudService.update(testAvailabilityDto, availabilityUpdatedValues(testAvailabilityDto));
 
 
         assertThat(updated.isRemoteWork()).isFalse();
@@ -230,7 +230,7 @@ public class AvailabilityCrudFacadeTest {
         assertThat(updated.getMember()).isEqualToComparingFieldByField(created.getMember());
         assertThat(updated.getBeginTime()).isEqualTo(created.getBeginTime());
         assertThat(updated.getEndTime()).isEqualTo(created.getEndTime());
-        assertThat(updated.getAvailabilityVote()).isEqualTo(created.getAvailabilityVote());
+//        assertThat(updated.getAvailabilityVote()).isEqualTo(created.getAvailabilityVote());
         assertThat(updated.getCreationTime()).isEqualTo(created.getCreationTime());
         assertThat(updated.isActive()).isEqualTo(created.isActive());
         //    assertThat(updated.getModificationTime()).isNotEqualTo(created.getModificationTime());
@@ -244,9 +244,9 @@ public class AvailabilityCrudFacadeTest {
     @Test
     public void WHEN_try_to_update_non_existing_availability_THEN_return_EntityNotFoundException() throws UserNotFoundException, MemberNotFoundException, AvailabilityException {
         initTestDB();
-        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
+        AvailabilityCrudService availabilityCrudService = initAvailabilityCrudFacade();
         try {
-            availabilityCrudFacade.update(testAvailabilityDto, availabilityUpdatedValues(testAvailabilityDto));
+            availabilityCrudService.update(testAvailabilityDto, availabilityUpdatedValues(testAvailabilityDto));
         } catch (AvailabilityNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(AvailabilityNotFoundException.class)
@@ -257,9 +257,9 @@ public class AvailabilityCrudFacadeTest {
     @Test
     public void WHEN_delete_existing_availability_THEN_return_availability() throws MemberNotFoundException, AvailabilityAlreadyExistsException, UserNotFoundException, AvailabilityNotFoundException {
         initTestDB();
-        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
-        AvailabilityDto created = availabilityCrudFacade.add(testAvailabilityDto);
-        AvailabilityDto deleted = availabilityCrudFacade.delete(testAvailabilityDto);
+        AvailabilityCrudService availabilityCrudService = initAvailabilityCrudFacade();
+        AvailabilityDto created = availabilityCrudService.add(testAvailabilityDto);
+        AvailabilityDto deleted = availabilityCrudService.delete(testAvailabilityDto);
 
         assertThat(deleted).isNotNull();
         assertThat(deleted.isActive()).isNotEqualTo(created.isActive());
@@ -270,10 +270,10 @@ public class AvailabilityCrudFacadeTest {
     @Test
     public void WHEN_try_to_delete_non_existing_availability_THEN_return_EntityNotFoundException() throws UserNotFoundException, AvailabilityAlreadyExistsException, MemberNotFoundException {
         initTestDB();
-        AvailabilityCrudFacade availabilityCrudFacade = initAvailabilityCrudFacade();
+        AvailabilityCrudService availabilityCrudService = initAvailabilityCrudFacade();
 
         try {
-            availabilityCrudFacade.delete(testAvailabilityDto);
+            availabilityCrudService.delete(testAvailabilityDto);
         } catch (AvailabilityNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(AvailabilityNotFoundException.class)

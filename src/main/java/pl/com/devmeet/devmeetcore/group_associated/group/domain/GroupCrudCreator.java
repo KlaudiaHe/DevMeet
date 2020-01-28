@@ -34,7 +34,7 @@ class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
 
         } catch (GroupNotFoundException e) {
             group = groupCrudSaver.saveEntity(
-                    setDefaultValuesWhenGroupNotExists(GroupCrudFacade.map(dto))
+                    setDefaultValuesWhenGroupNotExists(GroupCrudService.map(dto))
             );
             createMessengerForGroup(dto);
 

@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-public class GroupCrudFacadeTest {
+public class GroupCrudServiceTest {
 
     @Autowired
     private GroupCrudRepository groupRepository;
@@ -53,8 +53,8 @@ public class GroupCrudFacadeTest {
                 .build();
     }
 
-    private GroupCrudFacade initGroupFacade() {
-        return new GroupCrudFacade(groupRepository, memberRepository, userRepository, messengerRepository);
+    private GroupCrudService initGroupFacade() {
+        return new GroupCrudService(groupRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private GroupDto createGroup() throws GroupAlreadyExistsException, UserNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
@@ -93,9 +93,9 @@ public class GroupCrudFacadeTest {
     @Test
     public void WHEN_create_exist_group_but_not_active_THEN_return_group() throws GroupAlreadyExistsException, GroupNotFoundException, GroupFoundButNotActiveException, UserNotFoundException, MessengerArgumentNotSpecified, MemberNotFoundException, MessengerAlreadyExistsException, MessengerNotFoundException {
         GroupDto createdFirst = createGroup();
-        GroupCrudFacade groupCrudFacade = initGroupFacade();
-        GroupDto deletedFirst = groupCrudFacade.delete(testGroup);
-        GroupDto createdSecond = groupCrudFacade.add(modifiedTestGroup(createdFirst));
+        GroupCrudService groupCrudService = initGroupFacade();
+        GroupDto deletedFirst = groupCrudService.delete(testGroup);
+        GroupDto createdSecond = groupCrudService.add(modifiedTestGroup(createdFirst));
 
         assertThat(createdFirst).isNotNull();
         assertThat(deletedFirst).isNotNull();

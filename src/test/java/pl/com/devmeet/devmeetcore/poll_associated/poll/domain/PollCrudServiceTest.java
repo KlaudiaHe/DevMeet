@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudErrorEnum;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupEntity;
@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-public class PollCrudFacadeTest {
+public class PollCrudServiceTest {
 
     @Autowired
     private PollCrudRepository pollCrudRepository;
@@ -44,8 +44,8 @@ public class PollCrudFacadeTest {
     @Autowired
     private MessengerRepository messengerRepository;
 
-    private PollCrudFacade pollCrudFacade;
-    private GroupCrudFacade groupCrudFacade;
+    private PollCrudService pollCrudService;
+    private GroupCrudService groupCrudService;
 
     private PollDto testPollDto;
     private GroupDto testGroupDto;
@@ -74,21 +74,21 @@ public class PollCrudFacadeTest {
                 .build();
     }
 
-    private GroupCrudFacade initGroupCrudFacade() {
-        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository, messengerRepository);
+    private GroupCrudService initGroupCrudFacade() {
+        return new GroupCrudService(groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
-    private PollCrudFacade initPollCrudFacade() {
-        return new PollCrudFacade(pollCrudRepository, groupCrudRepository, memberRepository, userRepository, messengerRepository);
+    private PollCrudService initPollCrudFacade() {
+        return new PollCrudService(pollCrudRepository, groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
     private boolean initTestDB() {
-        groupCrudFacade = initGroupCrudFacade();
+        groupCrudService = initGroupCrudFacade();
 
         GroupEntity groupEntity = null;
         try {
-            groupEntity = groupCrudFacade
-                    .findEntityByGroup(groupCrudFacade
+            groupEntity = groupCrudService
+                    .findEntityByGroup(groupCrudService
                             .add(testGroupDto));
         } catch (GroupNotFoundException | GroupAlreadyExistsException | UserNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
@@ -117,15 +117,15 @@ public class PollCrudFacadeTest {
     @Test
     public void WHEN_try_to_create_existing_poll_THEN_return_EntityAlreadyExistsException() throws GroupNotFoundException {
         initTestDB();
-        PollCrudFacade pollCrudFacade = initPollCrudFacade();
+        PollCrudService pollCrudService = initPollCrudFacade();
         try {
-            pollCrudFacade.add(testPollDto);
+            pollCrudService.add(testPollDto);
         } catch (PollAlreadyExistsException | GroupNotFoundException e) {
             Assert.fail();
         }
 
         try {
-            pollCrudFacade.add(testPollDto);
+            pollCrudService.add(testPollDto);
             Assert.fail();
         } catch (PollAlreadyExistsException e) {
             assertThat(e)
@@ -137,9 +137,9 @@ public class PollCrudFacadeTest {
     @Test
     public void WHEN_found_active_poll_THEN_return_poll() throws PollAlreadyExistsException, GroupNotFoundException, PollNotFoundException {
         initTestDB();
-        PollCrudFacade pollCrudFacade = initPollCrudFacade();
-        PollDto pollDto = pollCrudFacade.add(testPollDto);
-        PollDto found = pollCrudFacade.find(pollDto);
+        PollCrudService pollCrudService = initPollCrudFacade();
+        PollDto pollDto = pollCrudService.add(testPollDto);
+        PollDto found = pollCrudService.find(pollDto);
 
         assertThat(found).isNotNull();
         assertThat(found.isActive()).isTrue();
@@ -160,9 +160,9 @@ public class PollCrudFacadeTest {
 
     @Test
     public void readAll_not_support() {
-        PollCrudFacade pollCrudFacade = initPollCrudFacade();
+        PollCrudService pollCrudService = initPollCrudFacade();
         try {
-            pollCrudFacade.update(testPollDto, testPollDto);
+            pollCrudService.update(testPollDto, testPollDto);
             Assert.fail();
         } catch (PollUnsupportedOperationException e) {
             assertThat(e)
@@ -174,9 +174,9 @@ public class PollCrudFacadeTest {
 
     @Test
     public void update_not_support() {
-        PollCrudFacade pollCrudFacade = initPollCrudFacade();
+        PollCrudService pollCrudService = initPollCrudFacade();
         try {
-            pollCrudFacade.update(testPollDto, testPollDto);
+            pollCrudService.update(testPollDto, testPollDto);
             Assert.fail();
         } catch (PollUnsupportedOperationException e) {
             assertThat(e)
@@ -188,9 +188,9 @@ public class PollCrudFacadeTest {
     @Test
     public void WHEN_delete_active_poll_THEN_return_poll() throws PollAlreadyExistsException, GroupNotFoundException, PollNotFoundException {
         initTestDB();
-        PollCrudFacade pollCrudFacade = initPollCrudFacade();
-        pollCrudFacade.add(testPollDto);
-        PollDto deleted = pollCrudFacade.delete(testPollDto);
+        PollCrudService pollCrudService = initPollCrudFacade();
+        pollCrudService.add(testPollDto);
+        PollDto deleted = pollCrudService.delete(testPollDto);
 
         assertThat(deleted).isNotNull();
         assertThat(deleted.isActive()).isFalse();
@@ -199,16 +199,16 @@ public class PollCrudFacadeTest {
     @Test
     public void WHEN_delete_not_active_poll_THEN_return_EntityAlreadyExistsException() throws GroupNotFoundException {
         initTestDB();
-        PollCrudFacade pollCrudFacade = initPollCrudFacade();
+        PollCrudService pollCrudService = initPollCrudFacade();
 
         try {
-            pollCrudFacade.add(testPollDto);
+            pollCrudService.add(testPollDto);
         } catch (PollAlreadyExistsException e) {
             Assert.fail();
         }
 
         try {
-            pollCrudFacade.delete(testPollDto);
+            pollCrudService.delete(testPollDto);
         } catch (PollNotFoundException | PollAlreadyExistsException e) {
             Assert.fail();
         }

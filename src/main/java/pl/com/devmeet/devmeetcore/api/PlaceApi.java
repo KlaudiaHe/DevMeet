@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDtoApi;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
@@ -21,12 +21,12 @@ import java.util.List;
 @RequestMapping("/api/v1/places")
 class PlaceApi {
 
-    private PlaceCrudFacade place;
+    private PlaceCrudService place;
     private PlaceMapperApi modelMapper;
     private List<PlaceDtoApi> placeDtoApiList;
 
     @Autowired
-    PlaceApi(PlaceCrudFacade place, PlaceMapperApi modelMapper) {
+    PlaceApi(PlaceCrudService place, PlaceMapperApi modelMapper) {
         this.place = place;
         this.modelMapper = modelMapper;
         placeDtoApiList = new ArrayList<>();

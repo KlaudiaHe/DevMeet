@@ -29,7 +29,7 @@ class AvailabilityVoteCrudCreator implements CrudEntityCreator<AvailabilityVoteD
         try {
             voteEntity = voteCrudFinder.findEntity(dto);
         }catch (AvailabilityVoteNotFoundException e){
-            voteEntity = setDefaultValuesWhenVoteNotExist(AvailabilityVoteCrudFacade.map(dto));
+            voteEntity = setDefaultValuesWhenVoteNotExist(AvailabilityVoteCrudService.map(dto));
             return voteCrudSaver.saveEntity(voteEntity);
         }
 

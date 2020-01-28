@@ -2,7 +2,7 @@ package pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
@@ -18,9 +18,9 @@ import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_excep
 class MessengerGroupFinder {
 
     @NonNull
-    private GroupCrudFacade groupCrudFacade;
+    private GroupCrudService groupCrudService;
 
     public GroupEntity findGroup (GroupDto groupDto) throws GroupNotFoundException {
-        return groupCrudFacade.findEntityByGroup(groupDto);
+        return groupCrudService.findEntityByGroup(groupDto);
     }
 }

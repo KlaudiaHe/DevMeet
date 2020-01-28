@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pl.com.devmeet.devmeetcore.user.domain.UserCrudFacade;
+import pl.com.devmeet.devmeetcore.user.domain.UserCrudService;
 import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.UserService;
 
@@ -20,19 +20,19 @@ class UserApi {
 
     private UserService userService;
 
-    private UserCrudFacade userCrudFacade;
+    private UserCrudService userCrudService;
 
     @Autowired
-    public UserApi(UserService userService, UserCrudFacade userCrudFacade) {
+    public UserApi(UserService userService, UserCrudService userCrudService) {
         this.userService = userService;
-        this.userCrudFacade = userCrudFacade;
+        this.userCrudService = userCrudService;
     }
 
     // get
 
     @GetMapping
     public List<UserDto> findAllUsers() {
-        return userCrudFacade.findAll();
+        return userCrudService.findAll();
     }
 
     @GetMapping("{id}")

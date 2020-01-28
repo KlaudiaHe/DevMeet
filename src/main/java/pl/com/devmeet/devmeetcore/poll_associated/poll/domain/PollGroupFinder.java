@@ -3,7 +3,7 @@ package pl.com.devmeet.devmeetcore.poll_associated.poll.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
@@ -13,9 +13,9 @@ import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_excep
 @Builder
 class PollGroupFinder {
 
-    private GroupCrudFacade groupCrudFacade;
+    private GroupCrudService groupCrudService;
 
     public GroupEntity findGroup(GroupDto dto) throws GroupNotFoundException {
-        return groupCrudFacade.findEntityByGroup(dto);
+        return groupCrudService.findEntityByGroup(dto);
     }
 }

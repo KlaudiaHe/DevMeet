@@ -27,7 +27,7 @@ public class MeetingCrudUpdater implements CrudEntityUpdater<MeetingDto, Meeting
     }
 
     private MeetingEntity mapToEntity(MeetingDto meetingDto) {
-        return MeetingCrudFacade.mapToEntity(meetingDto);
+        return MeetingCrudService.mapToEntity(meetingDto);
     }
 
     private MeetingEntity updateAllParameters(MeetingEntity oldMeetingEntity, MeetingEntity newMeetingEntity) {

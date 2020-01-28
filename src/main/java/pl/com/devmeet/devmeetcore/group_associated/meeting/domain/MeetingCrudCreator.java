@@ -19,7 +19,7 @@ public class MeetingCrudCreator implements CrudEntityCreator<MeetingDto, Meeting
         if (meetingCrudFinder.isExist(dto)) {
             throw new MeetingAlreadyExistsException("Meeting already exists");
         } else {
-            meetingEntity = meetingCrudSaver.saveEntity(MeetingCrudFacade.mapToEntity(dto));
+            meetingEntity = meetingCrudSaver.saveEntity(MeetingCrudService.mapToEntity(dto));
         }
 
         return meetingEntity;

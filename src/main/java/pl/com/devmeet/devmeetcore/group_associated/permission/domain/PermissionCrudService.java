@@ -3,11 +3,11 @@ package pl.com.devmeet.devmeetcore.group_associated.permission.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudFacadeInterface;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeetcore.group_associated.permission.domain.status_and_exceptions.*;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerRepository;
@@ -17,7 +17,7 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 import java.util.List;
 
 @Service
-public class PermissionCrudFacade implements CrudFacadeInterface<PermissionDto, PermissionEntity> {
+public class PermissionCrudService implements CrudFacadeInterface<PermissionDto, PermissionEntity> {
 
     private PermissionCrudRepository permissionRepository;
     private GroupCrudRepository groupRepository;
@@ -26,7 +26,7 @@ public class PermissionCrudFacade implements CrudFacadeInterface<PermissionDto, 
     private MessengerRepository messengerRepository;
 
     @Autowired
-    public PermissionCrudFacade(PermissionCrudRepository permissionRepository, GroupCrudRepository groupRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository) {
+    public PermissionCrudService(PermissionCrudRepository permissionRepository, GroupCrudRepository groupRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository) {
         this.permissionRepository = permissionRepository;
         this.groupRepository = groupRepository;
         this.memberRepository = memberRepository;
@@ -36,13 +36,13 @@ public class PermissionCrudFacade implements CrudFacadeInterface<PermissionDto, 
 
     private PermissionGroupFinder initGroupFinder() {
         return  PermissionGroupFinder.builder()
-                .groupCrudFacade(new GroupCrudFacade(groupRepository, memberRepository, userRepository, messengerRepository))
+                .groupCrudService(new GroupCrudService(groupRepository, memberRepository, userRepository, messengerRepository))
                 .build();
     }
 
     private PermissionMemberFinder initMemberFinder() {
         return PermissionMemberFinder.builder()
-                .memberCrudFacade(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupRepository))
+                .memberCrudService(new MemberCrudService(memberRepository, userRepository, messengerRepository, groupRepository))
                 .build();
     }
 

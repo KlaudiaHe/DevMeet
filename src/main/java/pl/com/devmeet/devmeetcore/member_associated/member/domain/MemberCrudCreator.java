@@ -52,7 +52,7 @@ class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEntity> {
     }
 
     private MemberEntity mapToEntity(MemberDto dto) {
-        return MemberCrudFacade.map(dto);
+        return MemberCrudService.map(dto);
     }
 
     private MemberEntity setDefaultValuesIfMemberNotExist(MemberEntity entity) {

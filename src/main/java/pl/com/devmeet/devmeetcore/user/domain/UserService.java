@@ -24,32 +24,32 @@ public class UserService {
 
     public Optional<UserDto> findById(Long id) {
         return repository.findById(id)
-                .map(UserCrudFacade::map);
+                .map(UserCrudService::map);
     }
 
     public List<UserDto> findAll() {
         return repository.findAll()
                 .stream()
-                .map(UserCrudFacade::map)
+                .map(UserCrudService::map)
                 .collect(Collectors.toList());
     }
 
     public Optional<UserDto> findByEmail(String email) {
         return repository.findByEmail(email)
-                .map(UserCrudFacade::map);
+                .map(UserCrudService::map);
     }
 
     public List<UserDto> findEmailLike(String text) {
         return repository.findEmailLike(text)
                 .stream()
-                .map(UserCrudFacade::map)
+                .map(UserCrudService::map)
                 .collect(Collectors.toList());
     }
 
     public List<UserDto> findAllByIsActive(Boolean isActive) {
         return repository.findAllByIsActive(isActive)
                 .stream()
-                .map(UserCrudFacade::map)
+                .map(UserCrudService::map)
                 .collect(Collectors.toList());
     }
 
@@ -95,9 +95,9 @@ public class UserService {
     // custom methods
 
     private UserDto mapAndSave(UserDto user) {
-        UserEntity userEntity = UserCrudFacade.map(user);
+        UserEntity userEntity = UserCrudService.map(user);
         UserEntity savedUser = repository.save(userEntity);
-        return UserCrudFacade.map(savedUser);
+        return UserCrudService.map(savedUser);
     }
 
     private void checkEmailDuplication(UserDto user) {

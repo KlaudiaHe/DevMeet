@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudEntitySaver;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 
@@ -27,7 +27,7 @@ class PollCrudSaver implements CrudEntitySaver<PollEntity, PollEntity> {
         GroupEntity groupEntity = pollEntity.getGroup();
 
         if (groupEntity.getId() == null)
-            groupEntity = pollGroupFinder.findGroup(GroupCrudFacade.map(groupEntity));
+            groupEntity = pollGroupFinder.findGroup(GroupCrudService.map(groupEntity));
 
         pollEntity.setGroup(groupEntity);
         return pollEntity;

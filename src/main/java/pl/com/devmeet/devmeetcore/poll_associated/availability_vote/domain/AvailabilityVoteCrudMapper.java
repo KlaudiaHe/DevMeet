@@ -1,8 +1,8 @@
 package pl.com.devmeet.devmeetcore.poll_associated.availability_vote.domain;
 
-import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudFacade;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
-import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudService;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
+import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollCrudService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,9 +11,9 @@ class AvailabilityVoteCrudMapper {
 
     public static AvailabilityVoteEntity map (AvailabilityVoteDto dto){
         return dto != null ? AvailabilityVoteEntity.builder()
-                .poll(PollCrudFacade.map(dto.getPoll()))
-                .availability(AvailabilityCrudFacade.map(dto.getAvailability()))
-                .member(MemberCrudFacade.map(dto.getMember()))
+                .poll(PollCrudService.map(dto.getPoll()))
+                .availability(AvailabilityCrudService.map(dto.getAvailability()))
+                .member(MemberCrudService.map(dto.getMember()))
                 .creationTime(dto.getCreationTime())
                 .isActive(dto.isActive())
                 .build() : null;
@@ -21,9 +21,9 @@ class AvailabilityVoteCrudMapper {
 
     public static AvailabilityVoteDto map (AvailabilityVoteEntity entity){
         return entity != null ? AvailabilityVoteDto.builder()
-                .poll(PollCrudFacade.map(entity.getPoll()))
-                .availability(AvailabilityCrudFacade.map(entity.getAvailability()))
-                .member(MemberCrudFacade.map(entity.getMember()))
+                .poll(PollCrudService.map(entity.getPoll()))
+                .availability(AvailabilityCrudService.map(entity.getAvailability()))
+                .member(MemberCrudService.map(entity.getMember()))
                 .creationTime(entity.getCreationTime())
                 .isActive(entity.isActive())
                 .build() : null;

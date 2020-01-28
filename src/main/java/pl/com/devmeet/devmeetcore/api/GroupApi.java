@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 
 import java.net.URI;
 import java.util.List;
@@ -18,11 +18,11 @@ import java.util.List;
 @RequestMapping("/api/v1/groups")
 class GroupApi {
 
-    private GroupCrudFacade group;
-    private MemberCrudFacade member;
+    private GroupCrudService group;
+    private MemberCrudService member;
 
     @Autowired
-    private GroupApi(GroupCrudFacade group, MemberCrudFacade member) {
+    private GroupApi(GroupCrudService group, MemberCrudService member) {
         this.group = group;
         this.member = member;
     }

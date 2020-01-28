@@ -36,7 +36,7 @@ class PlaceCrudUpdater implements CrudEntityUpdater<PlaceDto, PlaceEntity> {
     }
 
     private PlaceEntity mapDtoToEntity(PlaceDto dto) {
-        return PlaceCrudFacade.map(dto);
+        return PlaceCrudService.map(dto);
     }
 
     private PlaceEntity updateAllowedParameters(PlaceEntity oldEntity, PlaceEntity newEntity) {

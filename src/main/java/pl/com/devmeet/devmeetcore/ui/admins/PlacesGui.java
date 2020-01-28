@@ -8,7 +8,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.devmeet.devmeetcore.api.PlaceMapperApi;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDtoApi;
 
@@ -18,7 +18,7 @@ import java.util.List;
 @Route("admin/places")
 class PlacesGui extends VerticalLayout {
 
-    private PlaceCrudFacade place;
+    private PlaceCrudService place;
     private List<PlaceDtoApi> placeList;
     private PlaceMapperApi placeMapperApi;
 
@@ -27,7 +27,7 @@ class PlacesGui extends VerticalLayout {
     private Grid<PlaceDtoApi> placeGrid;
 
     @Autowired
-    public PlacesGui(PlaceCrudFacade place, PlaceMapperApi placeMapperApi) {
+    public PlacesGui(PlaceCrudService place, PlaceMapperApi placeMapperApi) {
         this.place = place;
         this.placeMapperApi = placeMapperApi;
         placeList = new ArrayList<>();

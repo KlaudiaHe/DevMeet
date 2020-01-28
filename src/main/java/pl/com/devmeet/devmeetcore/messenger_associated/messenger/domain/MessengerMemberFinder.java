@@ -2,7 +2,7 @@ package pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
@@ -19,9 +19,9 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 class MessengerMemberFinder {
 
     @NonNull
-    private MemberCrudFacade memberCrudFacade;
+    private MemberCrudService memberCrudService;
 
     public MemberEntity findMember(MemberDto memberDto) throws MemberNotFoundException, UserNotFoundException {
-        return memberCrudFacade.findEntity(memberDto);
+        return memberCrudService.findEntity(memberDto);
     }
 }

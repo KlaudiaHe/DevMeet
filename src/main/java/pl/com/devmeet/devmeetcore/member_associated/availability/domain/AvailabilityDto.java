@@ -20,7 +20,7 @@ public class AvailabilityDto {
 
 //    private PlaceDto place;
 
-    private AvailabilityVoteEntity availabilityVote;
+//    private AvailabilityVoteEntity availabilityVote;
 
     private DateTime creationTime;
     private DateTime modificationTime;
