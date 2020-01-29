@@ -11,6 +11,7 @@ class AvailabilityVoteCrudMapper {
 
     public static AvailabilityVoteEntity map (AvailabilityVoteDto dto){
         return dto != null ? AvailabilityVoteEntity.builder()
+                .Id(dto.getId())
                 .poll(PollCrudService.map(dto.getPoll()))
                 .availability(AvailabilityCrudService.map(dto.getAvailability()))
                 .member(MemberCrudService.map(dto.getMember()))
@@ -21,6 +22,7 @@ class AvailabilityVoteCrudMapper {
 
     public static AvailabilityVoteDto map (AvailabilityVoteEntity entity){
         return entity != null ? AvailabilityVoteDto.builder()
+                .id(entity.getId())
                 .poll(PollCrudService.map(entity.getPoll()))
                 .availability(AvailabilityCrudService.map(entity.getAvailability()))
                 .member(MemberCrudService.map(entity.getMember()))

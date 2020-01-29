@@ -23,19 +23,19 @@ class PollCrudFinder implements CrudEntityFinder<PollDto, PollEntity> {
 
     @Override
     public PollEntity findEntity(PollDto dto) throws PollNotFoundException, GroupNotFoundException {
-        Optional<PollEntity> poll = findPoll(dto);
-
-        if (poll.isPresent())
-            return poll.get();
-
-        throw new PollNotFoundException(PollCrudStatusEnum.POLL_NOT_FOUND.toString());
+        if (dto.getId() != null)
+            return findById(dto.getId())
+                    .orElseThrow(() -> new PollNotFoundException(PollCrudStatusEnum.POLL_NOT_FOUND.toString()));
+        else
+            return findPollByGroup(dto)
+                    .orElseThrow(() -> new PollNotFoundException(PollCrudStatusEnum.POLL_NOT_FOUND.toString()));
     }
 
     private GroupEntity findGroupEntity(GroupDto group) throws GroupNotFoundException {
         return groupFinder.findGroup(group);
     }
 
-    private Optional<PollEntity> findPoll(PollDto dto) throws GroupNotFoundException {
+    private Optional<PollEntity> findPollByGroup(PollDto dto) throws GroupNotFoundException {
         GroupEntity group;
         group = findGroupEntity(dto.getGroup());
 
