@@ -26,11 +26,12 @@ class AvailabilityCrudFinder implements CrudEntityFinder<AvailabilityDto, Availa
 
     @Override
     public AvailabilityEntity findEntity(AvailabilityDto dto) throws AvailabilityNotFoundException, MemberNotFoundException, UserNotFoundException {
-        Optional<AvailabilityEntity> availability = findAvailability(dto);
-        if (availability.isPresent())
-            return availability.get();
+        if (dto.getId() != null)
+            return findById(dto.getId())
+                    .orElseThrow(() -> new AvailabilityNotFoundException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString()));
         else
-            throw new AvailabilityNotFoundException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString());
+            return findAvailabilityByMember(dto)
+                    .orElseThrow(() -> new AvailabilityNotFoundException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString()));
     }
 
     public Optional<AvailabilityEntity> findById(Long id) {
@@ -42,7 +43,7 @@ class AvailabilityCrudFinder implements CrudEntityFinder<AvailabilityDto, Availa
         return memberFinder.findMember(member);
     }
 
-    private Optional<AvailabilityEntity> findAvailability(AvailabilityDto dto) throws MemberNotFoundException, UserNotFoundException {
+    private Optional<AvailabilityEntity> findAvailabilityByMember(AvailabilityDto dto) throws MemberNotFoundException, UserNotFoundException {
         MemberEntity member = findMemberEntity(dto.getMember());
 
         return availabilityRepository.findByMember(member);
@@ -68,7 +69,7 @@ class AvailabilityCrudFinder implements CrudEntityFinder<AvailabilityDto, Availa
     @Override
     public boolean isExist(AvailabilityDto dto) {
         try {
-            return findAvailability(dto).isPresent();
+            return findAvailabilityByMember(dto).isPresent();
         } catch (MemberNotFoundException | UserNotFoundException e) {
             return false;
         }

@@ -67,13 +67,4 @@ class GroupCrudFinder {
         groupCrudRepository.findAll().forEach(entities::add);
         return entities;
     }
-
-    private MemberEntity findMember(MemberDto memberDto) throws MemberNotFoundException, UserNotFoundException {
-        return memberFinder.findMember(memberDto);
-    }
-
-    private void checkIsGroupNameNotEmpty(String groupName) throws GroupArgumentsNotSpecifiedException {
-        if (groupName.isEmpty())
-            throw new GroupArgumentsNotSpecifiedException(GroupCrudStatusEnum.ARGUMENTS_NOT_SPECIFIED.toString());
-    }
 }

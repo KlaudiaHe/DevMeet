@@ -9,12 +9,10 @@ import java.util.stream.Collectors;
 class MemberMapper {
 
     static MemberEntity map(MemberDto dto) {
-        return dto != null ? new MemberEntity().builder()
+        return dto != null ? MemberEntity.builder()
+                .Id(dto.getId())
                 .user(UserCrudService.map(dto.getUser()))
                 .nick(dto.getNick())
-//                      .groups(dto.getGroups())
-//                      .availabilities(dto.getAvailabilities())
-//                      .places(dto.getPlaces())
                 .messenger(MessengerCrudService.map(dto.getMessenger()))
                 .creationTime(dto.getCreationTime())
                 .modificationTime(dto.getModificationTime())
@@ -23,12 +21,10 @@ class MemberMapper {
     }
 
     static MemberDto map(MemberEntity memberEntity) {
-        return memberEntity != null ? new MemberDto().builder()
+        return memberEntity != null ? MemberDto.builder()
+                .id(memberEntity.getId())
                 .user(UserCrudService.map(memberEntity.getUser()))
                 .nick(memberEntity.getNick())
-                //      .groups(memberEntity.getGroups())
-                //      .availabilities(memberEntity.getAvailabilities())
-                //      .places(memberEntity.getPlaces())
                 .messenger(MessengerCrudService.map(memberEntity.getMessenger()))
                 .creationTime(memberEntity.getCreationTime())
                 .modificationTime(memberEntity.getModificationTime())

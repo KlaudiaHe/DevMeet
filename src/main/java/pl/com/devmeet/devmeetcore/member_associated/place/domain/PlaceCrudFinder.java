@@ -26,7 +26,11 @@ class PlaceCrudFinder implements CrudEntityFinder<PlaceDto, PlaceEntity> {
 
     @Override
     public PlaceEntity findEntity(PlaceDto dto) throws PlaceNotFoundException, MemberNotFoundException, UserNotFoundException {
-        return findPlace(dto);
+        if (dto.getId() != null)
+            return findById(dto.getId())
+                    .orElseThrow(() -> new PlaceNotFoundException(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString()));
+        else
+            return findPlaceByMember(dto);
     }
 
     private MemberEntity findMemberEntity(MemberDto member) throws MemberNotFoundException, UserNotFoundException {
@@ -50,7 +54,7 @@ class PlaceCrudFinder implements CrudEntityFinder<PlaceDto, PlaceEntity> {
             throw new PlaceNotFoundException(PlaceCrudStatusEnum.PLACES_NOT_FOUND.toString());
     }
 
-    private PlaceEntity findPlace(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException, PlaceNotFoundException {
+    private PlaceEntity findPlaceByMember(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException, PlaceNotFoundException {
         MemberEntity member = findMemberEntity(getMemberFromDto(dto));
         Optional<PlaceEntity> foundPlace = placeRepository
 //                .findByMemberAndPlaceNameAndDescriptionAndWebsiteAndLocation(member, dto.getPlaceName(), dto.getDescription(), dto.getLocation(), dto.getWebsite());

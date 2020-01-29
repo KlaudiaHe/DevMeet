@@ -8,7 +8,8 @@ import java.util.stream.Collectors;
 class AvailabilityCrudMapper {
 
     public static AvailabilityDto map(AvailabilityEntity entity) {
-        return entity != null ? new AvailabilityDto().builder()
+        return entity != null ? AvailabilityDto.builder()
+                .id(entity.getId())
                 .member(MemberCrudService.map(entity.getMember()))
                 .beginTime(entity.getBeginTime())
                 .endTime(entity.getEndTime())
@@ -21,7 +22,8 @@ class AvailabilityCrudMapper {
     }
 
     public static AvailabilityEntity map(AvailabilityDto dto) {
-        return dto != null ? new AvailabilityEntity().builder()
+        return dto != null ? AvailabilityEntity.builder()
+                .Id(dto.getId())
                 .member(MemberCrudService.map(dto.getMember()))
                 .beginTime(dto.getBeginTime())
                 .endTime(dto.getEndTime())

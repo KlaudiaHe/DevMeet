@@ -24,7 +24,7 @@ class PlaceCrudMapper {
 
     public static PlaceEntity map(PlaceDto dto) {
         return dto != null ? new PlaceEntity().builder()
-                .id(dto.getId())
+                .Id(dto.getId())
                 .member(MemberCrudService.map(dto.getMember()))
                 .placeName(dto.getPlaceName())
                 .description(dto.getDescription())

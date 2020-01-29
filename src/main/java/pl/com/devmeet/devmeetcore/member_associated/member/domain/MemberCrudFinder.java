@@ -29,6 +29,15 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
     @Deprecated
     @Override
     public MemberEntity findEntity(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
+        if (dto.getId() != null)
+            return findById(dto.getId())
+                    .orElseThrow(() -> new MemberNotFoundException(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString()));
+        else
+            return findEntityByUser(dto);
+
+    }
+
+    public MemberEntity findEntityByUser(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         UserDto userDto;
 
         try {
