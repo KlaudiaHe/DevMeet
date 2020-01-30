@@ -31,21 +31,28 @@ class MessengerCrudFinder implements CrudEntityFinder<MessengerDto, MessengerEnt
     public MessengerEntity findEntity(MessengerDto dto) throws MessengerNotFoundException, MemberNotFoundException, UserNotFoundException, GroupNotFoundException {
         MemberEntity foundMember;
         GroupEntity foundGroup;
-        MemberDto memberDto = checkMemberIsNotNull(dto);
-        GroupDto groupDto = checkGroupIsNotNull(dto);
+        MemberDto memberDto;
+        GroupDto groupDto;
 
-        if (memberDto != null && groupDto == null) {
+        if (dto.getId() != null)
+            return findById(dto.getId())
+                    .orElseThrow(() -> new MessengerNotFoundException(MessengerInfoStatusEnum.MESSENGER_NOT_FOUND_BY_ID.toString()));
+
+        else {
+            memberDto = checkMemberIsNotNullAndGet(dto);
+            groupDto = checkGroupIsNotNullAndGet(dto);
+
+            if (memberDto != null && groupDto == null) {
                 foundMember = findMember(memberDto);
                 return findMemberMessenger(foundMember);
 
-
-        } else if (groupDto != null && memberDto == null) {
+            } else if (groupDto != null && memberDto == null) {
                 foundGroup = findGroup(groupDto);
                 return findGroupMessenger(foundGroup);
+            }
 
+            throw new MessengerNotFoundException(MessengerInfoStatusEnum.NOT_SPECIFIED_MEMBER_OR_GROUP.toString());
         }
-
-        throw new MessengerNotFoundException(MessengerInfoStatusEnum.NOT_SPECIFIED_MEMBER_OR_GROUP.toString());
     }
 
     @Override
@@ -53,7 +60,7 @@ class MessengerCrudFinder implements CrudEntityFinder<MessengerDto, MessengerEnt
         return null;
     }
 
-    public MemberDto checkMemberIsNotNull(MessengerDto messengerDto) {
+    public MemberDto checkMemberIsNotNullAndGet(MessengerDto messengerDto) {
         try {
             return messengerDto.getMember();
         } catch (NullPointerException e) {
@@ -61,7 +68,7 @@ class MessengerCrudFinder implements CrudEntityFinder<MessengerDto, MessengerEnt
         }
     }
 
-    public GroupDto checkGroupIsNotNull(MessengerDto messengerDto) {
+    public GroupDto checkGroupIsNotNullAndGet(MessengerDto messengerDto) {
         try {
             return messengerDto.getGroup();
         } catch (NullPointerException e) {

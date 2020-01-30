@@ -12,6 +12,7 @@ import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.Messenge
 @Builder
 public class MessageDto {
 
+    private Long id;
     private MessengerDto sender;
 
     private MessengerDto receiver;

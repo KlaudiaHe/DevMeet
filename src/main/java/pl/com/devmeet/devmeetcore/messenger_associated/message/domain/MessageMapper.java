@@ -7,6 +7,7 @@ class MessageMapper {
     static MessageDto toDto(MessageEntity messageEntity) {
 
         return messageEntity != null ? MessageDto.builder()
+                .id(messageEntity.getId())
                 .sender(MessengerCrudService.map(messageEntity.getSender()))
                 .receiver(MessengerCrudService.map(messageEntity.getReceiver()))
                 .message(messageEntity.getMessage())
@@ -18,6 +19,7 @@ class MessageMapper {
 
     static MessageEntity toEntity(MessageDto messageDto) {
         return messageDto != null ? MessageEntity.builder()
+                .Id(messageDto.getId())
                 .sender(MessengerCrudService.map(messageDto.getSender()))
                 .receiver(MessengerCrudService.map(messageDto.getReceiver()))
                 .message(messageDto.getMessage())

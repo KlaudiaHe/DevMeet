@@ -27,14 +27,12 @@ class MessageCrudFinder implements CrudEntityFinder<MessageDto, MessageEntity> {
 
     @Override
     public MessageEntity findEntity(MessageDto dto) throws UserNotFoundException, GroupNotFoundException, MessengerNotFoundException, MemberNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {
-        MessengerEntity sender = findSender(dto);
-
-        Optional<MessageEntity> found = repository.findBySenderAndMessage(sender, dto.getMessage());
-
-        if (found.isPresent())
-            return found.get();
-
-        throw new MessageNotFoundException(MessageCrudStatusEnum.MESSAGE_NOT_FOUND_BY_SENDER_AND_MESSAGE.toString());
+        if (dto.getId() != null)
+            return findById(dto.getId())
+                    .orElseThrow(() -> new MessageNotFoundException(MessageCrudStatusEnum.MESSAGE_NOT_FOUND_BY_SENDER_AND_MESSAGE.toString()));
+        else
+            return repository.findBySenderAndMessage(findSender(dto), dto.getMessage())
+                    .orElseThrow(() -> new MessageNotFoundException(MessageCrudStatusEnum.MESSAGE_NOT_FOUND_BY_SENDER_AND_MESSAGE.toString()));
     }
 
 
