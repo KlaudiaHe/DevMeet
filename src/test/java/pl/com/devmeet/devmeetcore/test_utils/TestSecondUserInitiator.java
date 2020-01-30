@@ -1,7 +1,6 @@
 package pl.com.devmeet.devmeetcore.test_utils;
 
-import pl.com.devmeet.devmeetcore.user.domain.DefaultUserLoginTypeEnum;
-import pl.com.devmeet.devmeetcore.user.domain.UserCrudFacade;
+import pl.com.devmeet.devmeetcore.user.domain.UserCrudService;
 import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
@@ -9,7 +8,7 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyE
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 
-class TestSecondUserInitiator implements TestObjectInitiator<UserRepository, UserCrudFacade, UserDto> {
+class TestSecondUserInitiator implements TestObjectInitiator<UserRepository, UserCrudService, UserDto> {
 
     private UserRepository repository;
     private UserDto testUserDto;
@@ -19,14 +18,14 @@ class TestSecondUserInitiator implements TestObjectInitiator<UserRepository, Use
     }
 
     @Override
-    public UserCrudFacade initFacade() {
-        return new UserCrudFacade(repository);
+    public UserCrudService initFacade() {
+        return new UserCrudService(repository);
     }
 
     @Override
     public UserDto initAndSaveTestObject() throws UserAlreadyExistsException, UserNotFoundException, UserAlreadyActiveException {
-        UserCrudFacade userCrudFacade = initFacade();
-        userCrudFacade.add(testUserDto);
-        return userCrudFacade.activation(testUserDto);
+        UserCrudService userCrudService = initFacade();
+        userCrudService.add(testUserDto);
+        return userCrudService.activation(testUserDto);
     }
 }

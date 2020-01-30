@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudErrorEnum;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudFacadeInterface;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PollCrudFacade implements CrudFacadeInterface<PollDto, PollEntity> {
+public class PollCrudService implements CrudFacadeInterface<PollDto, PollEntity> {
 
     private PollCrudRepository pollCrudRepository;
     private GroupCrudRepository groupCrudRepository;
@@ -27,7 +27,7 @@ public class PollCrudFacade implements CrudFacadeInterface<PollDto, PollEntity> 
     private MessengerRepository messengerRepository;
 
     @Autowired
-    public PollCrudFacade(PollCrudRepository pollCrudRepository, GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository) {
+    public PollCrudService(PollCrudRepository pollCrudRepository, GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository) {
         this.pollCrudRepository = pollCrudRepository;
         this.groupCrudRepository = groupCrudRepository;
         this.memberRepository = memberRepository;
@@ -37,7 +37,7 @@ public class PollCrudFacade implements CrudFacadeInterface<PollDto, PollEntity> 
 
     private PollGroupFinder initGroupFinder() {
         return PollGroupFinder.builder()
-                .groupCrudFacade(new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository, messengerRepository))
+                .groupCrudService(new GroupCrudService(groupCrudRepository, memberRepository, userRepository, messengerRepository))
                 .build();
     }
 
@@ -80,7 +80,7 @@ public class PollCrudFacade implements CrudFacadeInterface<PollDto, PollEntity> 
 
     public Optional<PollDto> findById(Long id) {
         return initFinder().findById(id)
-                .map(PollCrudFacade::map);
+                .map(PollCrudService::map);
     }
 
     public List<PollDto> findAll(PollDto dto) {

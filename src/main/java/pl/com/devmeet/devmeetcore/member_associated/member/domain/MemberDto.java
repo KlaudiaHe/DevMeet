@@ -18,15 +18,16 @@ import java.util.List;
 @Builder
 public class MemberDto {
 
+    private Long id;
     private UserDto user;
     private String nick;
 
     private MessengerDto messenger;
 
-    private List<GroupDto> groups;
+//    private List<GroupDto> groups;
 
-    private List<AvailabilityDto> availabilities;
-    private List<PlaceDto> places;
+//    private List<AvailabilityDto> availabilities;
+//    private List<PlaceDto> places;
 
     private DateTime creationTime;
     private DateTime modificationTime;

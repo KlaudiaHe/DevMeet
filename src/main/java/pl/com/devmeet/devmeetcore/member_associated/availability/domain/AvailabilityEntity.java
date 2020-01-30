@@ -13,6 +13,7 @@ import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.poll_associated.availability_vote.domain.AvailabilityVoteEntity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -44,8 +45,8 @@ public class AvailabilityEntity {
 //    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST, orphanRemoval = true)
 //    private PlaceEntity place;
 
-    @OneToOne(mappedBy = "availability", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private AvailabilityVoteEntity availabilityVote;
+    @OneToMany(mappedBy = "availability", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<AvailabilityVoteEntity> availabilityVote;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)

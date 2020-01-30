@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, MessageEntity> {
+public class MessageCrudService implements CrudFacadeInterface<MessageDto, MessageEntity> {
 
     private MessageRepository messageRepository;
 
@@ -30,7 +30,7 @@ public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, Messag
     private UserRepository userRepository;
 
     @Autowired
-    public MessageCrudFacade(MessageRepository messageRepository, MessengerRepository messengerRepository, GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository) {
+    public MessageCrudService(MessageRepository messageRepository, MessengerRepository messengerRepository, GroupCrudRepository groupCrudRepository, MemberRepository memberRepository, UserRepository userRepository) {
         this.messageRepository = messageRepository;
         this.messengerRepository = messengerRepository;
         this.groupCrudRepository = groupCrudRepository;
@@ -93,7 +93,7 @@ public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, Messag
 
     public Optional<MessageDto> findById(Long id) {
         return initFinder().findById(id)
-                .map(MessageCrudFacade::map);
+                .map(MessageCrudService::map);
     }
 
     public List<MessageDto> findAll(MessageDto dto) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageNotFoundException, MessageArgumentNotSpecifiedException {
@@ -132,7 +132,7 @@ public class MessageCrudFacade implements CrudFacadeInterface<MessageDto, Messag
 
     public static List<MessageDto> mapToDtos(List<MessageEntity> entities) {
         return entities.stream()
-                .map(MessageCrudFacade::map)
+                .map(MessageCrudService::map)
                 .collect(Collectors.toList());
     }
 }

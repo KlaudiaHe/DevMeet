@@ -17,6 +17,7 @@ import java.util.List;
 @Builder
 public class MessengerDto {
 
+    private Long id;
     private MemberDto member;
     private GroupDto group;
 

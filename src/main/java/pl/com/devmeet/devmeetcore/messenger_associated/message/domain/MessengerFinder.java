@@ -7,7 +7,7 @@ import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudReposit
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
-import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerCrudFacade;
+import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerCrudService;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerDto;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerEntity;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerRepository;
@@ -35,7 +35,7 @@ class MessengerFinder {
         return initFacade().findEntity(messengerDto);
     }
 
-    private MessengerCrudFacade initFacade() {
-        return new MessengerCrudFacade(messengerRepository, userRepository, memberRepository, groupCrudRepository);
+    private MessengerCrudService initFacade() {
+        return new MessengerCrudService(messengerRepository, userRepository, memberRepository, groupCrudRepository);
     }
 }

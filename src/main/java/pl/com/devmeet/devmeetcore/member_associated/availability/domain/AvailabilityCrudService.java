@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudFacadeInterface;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
-import pl.com.devmeet.devmeetcore.member_associated.availability.AvailabilityFacade;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityException;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerRepository;
@@ -21,7 +20,7 @@ import java.util.Optional;
 import static pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudMapper.mapDtoList;
 
 @Service
-public class AvailabilityCrudFacade implements CrudFacadeInterface<AvailabilityDto, AvailabilityEntity> {
+public class AvailabilityCrudService implements CrudFacadeInterface<AvailabilityDto, AvailabilityEntity> {
 
     private AvailabilityCrudRepository availabilityRepository;
     private MemberRepository memberRepository;
@@ -30,7 +29,7 @@ public class AvailabilityCrudFacade implements CrudFacadeInterface<AvailabilityD
     private GroupCrudRepository groupCrudRepository;
 
     @Autowired
-    public AvailabilityCrudFacade(AvailabilityCrudRepository availabilityRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository, GroupCrudRepository groupCrudRepository) {
+    public AvailabilityCrudService(AvailabilityCrudRepository availabilityRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository, GroupCrudRepository groupCrudRepository) {
         this.availabilityRepository = availabilityRepository;
         this.memberRepository = memberRepository;
         this.userRepository = userRepository;
@@ -40,7 +39,7 @@ public class AvailabilityCrudFacade implements CrudFacadeInterface<AvailabilityD
 
     private AvailabilityMemberFinder initMemberFinder() {
         return AvailabilityMemberFinder.builder()
-                .memberCrudFacade(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository))
+                .memberCrudService(new MemberCrudService(memberRepository, userRepository, messengerRepository, groupCrudRepository))
                 .build();
     }
 
@@ -87,16 +86,16 @@ public class AvailabilityCrudFacade implements CrudFacadeInterface<AvailabilityD
     }
 
     public AvailabilityDto find(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
-        return map(initFinder().findEntity(dto));
+        return map(initFinder().findEntityByIdOrByMember(dto));
     }
 
     public Optional<AvailabilityDto> findById (Long id){
         return initFinder().findById(id)
-                .map(AvailabilityCrudFacade::map);
+                .map(AvailabilityCrudService::map);
     }
 
     public List<AvailabilityDto> findAll(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
-        return mapDtoList(initFinder().findEntities(dto));
+        return mapDtoList(initFinder().findEntitiesByMember(dto));
     }
 
     @Override
@@ -110,11 +109,11 @@ public class AvailabilityCrudFacade implements CrudFacadeInterface<AvailabilityD
     }
 
     public AvailabilityEntity findEntity(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
-        return initFinder().findEntity(dto);
+        return initFinder().findEntityByIdOrByMember(dto);
     }
 
     public List<AvailabilityEntity> findEntities(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
-        return initFinder().findEntities(dto);
+        return initFinder().findEntitiesByMember(dto);
     }
 
     public static AvailabilityDto map(AvailabilityEntity entity) {

@@ -10,6 +10,7 @@ package pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exc
 public enum MessengerInfoStatusEnum {
     MESSENGER_NOT_FOUND_BY_MEMBER("Messenger not found by member"),
     MESSENGER_NOT_FOUND_BY_GROUP("Messenger not found by group"),
+    MESSENGER_NOT_FOUND_BY_ID("Messenger not found by id"),
     NOT_SPECIFIED_MEMBER_OR_GROUP("Member or group not specified"),
     NOT_SPECIFIED_GROUP("Group not specified"),
     MESSENGERS_OF_MEMBERS_NOT_FOUND("Messengers of members are not found"),

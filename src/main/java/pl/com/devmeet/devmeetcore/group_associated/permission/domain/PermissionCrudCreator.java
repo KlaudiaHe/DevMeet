@@ -32,7 +32,7 @@ class PermissionCrudCreator implements CrudEntityCreator<PermissionDto, Permissi
             }
 
         } catch (PermissionNotFoundException e) {
-            permission = setDefaultValuesWhenPermissionNotExist(PermissionCrudFacade.map(dto));
+            permission = setDefaultValuesWhenPermissionNotExist(PermissionCrudService.map(dto));
             return permissionCrudSaver.saveEntity(permission);
         }
 

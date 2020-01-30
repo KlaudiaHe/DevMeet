@@ -5,13 +5,13 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudEntitySaver;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityEntity;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
-import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollCrudFacade;
+import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollCrudService;
 import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollEntity;
 import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.status_and_exceptions.PollNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
@@ -42,7 +42,7 @@ class AvailabilityVoteCrudSaver implements CrudEntitySaver<AvailabilityVoteEntit
         MemberEntity memberEntity = voteEntity.getMember();
 
         if (memberEntity.getId() == null)
-            memberEntity = memberFinder.findMember(MemberCrudFacade.map(memberEntity));
+            memberEntity = memberFinder.findMember(MemberCrudService.map(memberEntity));
 
         voteEntity.setMember(memberEntity);
         return voteEntity;
@@ -52,7 +52,7 @@ class AvailabilityVoteCrudSaver implements CrudEntitySaver<AvailabilityVoteEntit
         AvailabilityEntity availabilityEntity = voteEntity.getAvailability();
 
         if (availabilityEntity.getId() == null)
-            availabilityEntity = availabilityFinder.findAvailability(AvailabilityCrudFacade.map(availabilityEntity));
+            availabilityEntity = availabilityFinder.findAvailability(AvailabilityCrudService.map(availabilityEntity));
 
         voteEntity.setAvailability(availabilityEntity);
         return voteEntity;
@@ -62,7 +62,7 @@ class AvailabilityVoteCrudSaver implements CrudEntitySaver<AvailabilityVoteEntit
         PollEntity pollEntity = voteEntity.getPoll();
 
         if (pollEntity.getId() == null)
-            pollEntity = pollFinder.findPoll(PollCrudFacade.map(pollEntity));
+            pollEntity = pollFinder.findPoll(PollCrudService.map(pollEntity));
 
         voteEntity.setPoll(pollEntity);
         return voteEntity;

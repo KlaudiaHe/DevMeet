@@ -1,7 +1,7 @@
 package pl.com.devmeet.devmeetcore.group_associated.meeting.domain;
 
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
+import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,10 +15,10 @@ public class MeetingMapper {
                 .beginTime(meetingEntity.getCreationTime())
                 .creationTime(meetingEntity.getCreationTime())
                 .endTime(meetingEntity.getEndTime())
-                .group(GroupCrudFacade.map(meetingEntity.getGroup()))
+                .group(GroupCrudService.map(meetingEntity.getGroup()))
                 .isActive(meetingEntity.isActive())
                 .meetingNumber(meetingEntity.getMeetingNumber())
-                .place(PlaceCrudFacade.map(meetingEntity.getPlace()))
+                .place(PlaceCrudService.map(meetingEntity.getPlace()))
                 .build() : null;
 
     }
@@ -29,9 +29,9 @@ public class MeetingMapper {
                 .beginTime(meetingDto.getBeginTime())
                 .creationTime(meetingDto.getCreationTime())
                 .endTime(meetingDto.getEndTime())
-                .group(GroupCrudFacade.map(meetingDto.getGroup()))
+                .group(GroupCrudService.map(meetingDto.getGroup()))
                 .isActive(meetingDto.isActive())
-                .place(PlaceCrudFacade.map(meetingDto.getPlace()))
+                .place(PlaceCrudService.map(meetingDto.getPlace()))
                 .meetingNumber(meetingDto.getMeetingNumber())
                 .build() : null;
     }

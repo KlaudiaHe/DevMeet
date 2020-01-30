@@ -44,11 +44,11 @@ class MessengerMemberOrGroupConnector {
     }
 
     private MemberDto checkMemberIsNotNull(MessengerDto messengerDto) {
-        return messengerCrudFinder.checkMemberIsNotNull(messengerDto);
+        return messengerCrudFinder.checkMemberIsNotNullAndGet(messengerDto);
     }
 
     private GroupDto checkGroupIsNotNull(MessengerDto messengerDto) {
-        return messengerCrudFinder.checkGroupIsNotNull(messengerDto);
+        return messengerCrudFinder.checkGroupIsNotNullAndGet(messengerDto);
     }
 
     private MemberEntity findMember(MemberDto member) throws MemberNotFoundException, UserNotFoundException {

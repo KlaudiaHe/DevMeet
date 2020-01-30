@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudFacadeInterface;
 import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, MessengerEntity> {
+public class MessengerCrudService implements CrudFacadeInterface<MessengerDto, MessengerEntity> {
 
     private MessengerRepository messengerRepository;
     private UserRepository userRepository;
@@ -32,10 +32,10 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
     private GroupCrudRepository groupRepository;
 
     @Autowired
-    public MessengerCrudFacade(MessengerRepository messengerRepository,
-                               UserRepository userRepository,
-                               MemberRepository memberRepository,
-                               GroupCrudRepository groupRepository) {
+    public MessengerCrudService(MessengerRepository messengerRepository,
+                                UserRepository userRepository,
+                                MemberRepository memberRepository,
+                                GroupCrudRepository groupRepository) {
 
         this.messengerRepository = messengerRepository;
         this.userRepository = userRepository;
@@ -44,11 +44,11 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
     }
 
     private MessengerMemberFinder initMemberFinder() {
-        return new MessengerMemberFinder(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupRepository));
+        return new MessengerMemberFinder(new MemberCrudService(memberRepository, userRepository, messengerRepository, groupRepository));
     }
 
     private MessengerGroupFinder initGroupFinder() {
-        return new MessengerGroupFinder(new GroupCrudFacade(groupRepository, memberRepository, userRepository, messengerRepository));
+        return new MessengerGroupFinder(new GroupCrudService(groupRepository, memberRepository, userRepository, messengerRepository));
     }
 
     private MessengerCrudSaver initSaver() {
@@ -113,7 +113,7 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
 
     public Optional<MessengerDto> findById(Long id) {
         return initFinder().findById(id)
-                .map(MessengerCrudFacade::map);
+                .map(MessengerCrudService::map);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class MessengerCrudFacade implements CrudFacadeInterface<MessengerDto, Me
 
     private List<MessengerDto> mapToDtos(List<MessengerEntity> entities) {
         return entities.stream()
-                .map(MessengerCrudFacade::map)
+                .map(MessengerCrudService::map)
                 .collect(Collectors.toList());
     }
 

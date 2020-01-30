@@ -8,10 +8,10 @@ import pl.com.devmeet.devmeetcore.poll_associated.availability_vote.domain.Avail
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
+@Data
 public class AvailabilityDto {
 
+    private Long id;
     private MemberDto member;
 
     private DateTime beginTime;
@@ -20,7 +20,7 @@ public class AvailabilityDto {
 
 //    private PlaceDto place;
 
-    private AvailabilityVoteEntity availabilityVote;
+//    private AvailabilityVoteEntity availabilityVote;
 
     private DateTime creationTime;
     private DateTime modificationTime;

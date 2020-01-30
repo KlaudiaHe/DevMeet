@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
@@ -25,7 +25,7 @@ import pl.com.devmeet.devmeetcore.messenger_associated.message.status_and_except
 import pl.com.devmeet.devmeetcore.messenger_associated.message.status_and_exceptions.MessageCrudStatusEnum;
 import pl.com.devmeet.devmeetcore.messenger_associated.message.status_and_exceptions.MessageFoundButNotActiveException;
 import pl.com.devmeet.devmeetcore.messenger_associated.message.status_and_exceptions.MessageNotFoundException;
-import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerCrudFacade;
+import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerCrudService;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerDto;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
@@ -43,7 +43,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-public class MessageCrudFacadeTest {
+public class MessageCrudServiceTest {
 
     @Autowired
     MessageRepository messageRepository;
@@ -56,11 +56,11 @@ public class MessageCrudFacadeTest {
     @Autowired
     UserRepository userRepository;
 
-    private UserCrudFacade userCrudFacade;
-    private MemberCrudFacade memberCrudFacade;
-    private GroupCrudFacade groupCrudFacade;
-    private MessengerCrudFacade messengerCrudFacade;
-    private MessageCrudFacade messageCrudFacade;
+    private UserCrudService userCrudService;
+    private MemberCrudService memberCrudService;
+    private GroupCrudService groupCrudService;
+    private MessengerCrudService messengerCrudService;
+    private MessageCrudService messageCrudService;
 
     private GroupDto testGroupAndReceiverGroup;
     private MessengerDto groupsReceiverMessenger;
@@ -125,24 +125,24 @@ public class MessageCrudFacadeTest {
         this.groupsReceiverMessenger = testGroupForMembersAndGroupReceiverBuilder.getMessengerDto();
     }
 
-    private UserCrudFacade initUserCrudFacade() {
-        return new UserCrudFacade(userRepository);
+    private UserCrudService initUserCrudFacade() {
+        return new UserCrudService(userRepository);
     }
 
-    private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupCrudRepository);
+    private MemberCrudService initMemberCrudFacade() {
+        return new MemberCrudService(memberRepository, userRepository, messengerRepository, groupCrudRepository);
     }
 
-    private GroupCrudFacade initGroupCrudFacade() {
-        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository, messengerRepository);
+    private GroupCrudService initGroupCrudFacade() {
+        return new GroupCrudService(groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
-    private MessengerCrudFacade initMessengerCrudFacade() {
-        return new MessengerCrudFacade(messengerRepository, userRepository, memberRepository, groupCrudRepository);
+    private MessengerCrudService initMessengerCrudFacade() {
+        return new MessengerCrudService(messengerRepository, userRepository, memberRepository, groupCrudRepository);
     }
 
-    private MessageCrudFacade initMessageCrudFacade() {
-        return new MessageCrudFacade(
+    private MessageCrudService initMessageCrudFacade() {
+        return new MessageCrudService(
                 messageRepository,
                 messengerRepository,
                 groupCrudRepository,
@@ -151,16 +151,16 @@ public class MessageCrudFacadeTest {
     }
 
     private boolean initTestDB() {
-        userCrudFacade = initUserCrudFacade();
-        memberCrudFacade = initMemberCrudFacade();
-        groupCrudFacade = initGroupCrudFacade();
-        messengerCrudFacade = initMessengerCrudFacade();
+        userCrudService = initUserCrudFacade();
+        memberCrudService = initMemberCrudFacade();
+        groupCrudService = initGroupCrudFacade();
+        messengerCrudService = initMessengerCrudFacade();
 
         UserEntity userEntityFirst = null;
         UserEntity userEntitySecond = null;
         try {
-            userEntityFirst = userCrudFacade.findEntity(userCrudFacade.activation(userCrudFacade.add(firstUser)));
-            userEntitySecond = userCrudFacade.findEntity(userCrudFacade.activation(userCrudFacade.add(secondUser)));
+            userEntityFirst = userCrudService.findEntity(userCrudService.activation(userCrudService.add(firstUser)));
+            userEntitySecond = userCrudService.findEntity(userCrudService.activation(userCrudService.add(secondUser)));
         } catch (UserNotFoundException | UserAlreadyExistsException | UserAlreadyActiveException e) {
             e.printStackTrace();
         }
@@ -168,21 +168,21 @@ public class MessageCrudFacadeTest {
 
         MemberEntity memberEntityFirst = null;
         try {
-            memberEntityFirst = memberCrudFacade.findEntity(memberCrudFacade.add(memberSender));
+            memberEntityFirst = memberCrudService.findEntity(memberCrudService.add(memberSender));
         } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberUserNotActiveException e) {
             e.printStackTrace();
         }
 
         MemberEntity memberEntitySecond = null;
         try {
-            memberEntitySecond = memberCrudFacade.findEntity(memberCrudFacade.add(memberReceiver));
+            memberEntitySecond = memberCrudService.findEntity(memberCrudService.add(memberReceiver));
         } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberUserNotActiveException e) {
             e.printStackTrace();
         }
 
         GroupEntity groupEntity = null;
         try {
-            groupEntity = groupCrudFacade.findEntityByGroup(groupCrudFacade.add(testGroupAndReceiverGroup));
+            groupEntity = groupCrudService.findEntityByGroup(groupCrudService.add(testGroupAndReceiverGroup));
         } catch (GroupNotFoundException | GroupAlreadyExistsException | UserNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
@@ -196,13 +196,13 @@ public class MessageCrudFacadeTest {
 
     private List<MessageDto> saveMessagesInToDb(MessengerDto sender, MessengerDto receiver, String message, int numberOfTestMessages) throws UserNotFoundException, MessengerNotFoundException, MemberNotFoundException, GroupNotFoundException, MessageArgumentNotSpecifiedException {
         List<MessageDto> result = new ArrayList<>();
-        MessageCrudFacade messageCrudFacade = initMessageCrudFacade();
+        MessageCrudService messageCrudService = initMessageCrudFacade();
 
         List<MessageDto> messagesToSave = new TestMessagesGenerator(message)
                 .generateConversation(sender, receiver, numberOfTestMessages);
 
         for (MessageDto messageDto : messagesToSave) {
-            result.add(messageCrudFacade.add(messageDto));
+            result.add(messageCrudService.add(messageDto));
         }
 
         return result;

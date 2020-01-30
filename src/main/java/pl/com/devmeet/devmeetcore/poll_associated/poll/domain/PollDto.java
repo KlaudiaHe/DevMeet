@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 public class PollDto {
 
+    private Long id;
     private GroupDto group;
 
     private List<PlaceVoteDto> placeVotes;

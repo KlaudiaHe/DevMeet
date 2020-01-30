@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudFacadeInterface;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudRepository;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerRepository;
@@ -16,18 +16,17 @@ import pl.com.devmeet.devmeetcore.poll_associated.availability_vote.domain.statu
 import pl.com.devmeet.devmeetcore.poll_associated.availability_vote.domain.status_and_exceptions.AvailabilityVoteException;
 import pl.com.devmeet.devmeetcore.poll_associated.availability_vote.domain.status_and_exceptions.AvailabilityVoteFoundButNotActiveException;
 import pl.com.devmeet.devmeetcore.poll_associated.availability_vote.domain.status_and_exceptions.AvailabilityVoteNotFoundException;
-import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollCrudFacade;
+import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollCrudService;
 import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollCrudRepository;
 import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.status_and_exceptions.PollNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
-import java.nio.file.OpenOption;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<AvailabilityVoteDto, AvailabilityVoteEntity> {
+public class AvailabilityVoteCrudService implements CrudFacadeInterface<AvailabilityVoteDto, AvailabilityVoteEntity> {
 
     private AvailabilityVoteCrudRepository availabilityVoteRepository;
     private PollCrudRepository pollCrudRepository;
@@ -38,7 +37,7 @@ public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<Availabil
     private MessengerRepository messengerRepository;
 
     @Autowired
-    public AvailabilityVoteCrudFacade(AvailabilityVoteCrudRepository availabilityVoteRepository, PollCrudRepository pollCrudRepository, GroupCrudRepository groupRepository, AvailabilityCrudRepository availabilityRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository) {
+    public AvailabilityVoteCrudService(AvailabilityVoteCrudRepository availabilityVoteRepository, PollCrudRepository pollCrudRepository, GroupCrudRepository groupRepository, AvailabilityCrudRepository availabilityRepository, MemberRepository memberRepository, UserRepository userRepository, MessengerRepository messengerRepository) {
         this.availabilityVoteRepository = availabilityVoteRepository;
         this.pollCrudRepository = pollCrudRepository;
         this.groupRepository = groupRepository;
@@ -49,15 +48,15 @@ public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<Availabil
     }
 
     private AvailabilityVotePollFinder initPollFinder() {
-        return new AvailabilityVotePollFinder(new PollCrudFacade(pollCrudRepository, groupRepository, memberRepository, userRepository, messengerRepository));
+        return new AvailabilityVotePollFinder(new PollCrudService(pollCrudRepository, groupRepository, memberRepository, userRepository, messengerRepository));
     }
 
     private AvailabilityVoteMemberFinder initMemberFinder() {
-        return new AvailabilityVoteMemberFinder(new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupRepository));
+        return new AvailabilityVoteMemberFinder(new MemberCrudService(memberRepository, userRepository, messengerRepository, groupRepository));
     }
 
     private AvailabilityVoteAvailabilityFinder initAvailabilityFinder() {
-        return new AvailabilityVoteAvailabilityFinder(new AvailabilityCrudFacade(availabilityRepository, memberRepository, userRepository, messengerRepository, groupRepository));
+        return new AvailabilityVoteAvailabilityFinder(new AvailabilityCrudService(availabilityRepository, memberRepository, userRepository, messengerRepository, groupRepository));
     }
 
     private AvailabilityVoteCrudSaver initVoteSaver() {
@@ -110,7 +109,7 @@ public class AvailabilityVoteCrudFacade implements CrudFacadeInterface<Availabil
 
     public Optional<AvailabilityVoteDto> findById(Long id) {
         return initVoteFinder().findById(id)
-                .map(AvailabilityVoteCrudFacade::map);
+                .map(AvailabilityVoteCrudService::map);
     }
 
     public List<AvailabilityVoteDto> findAll(AvailabilityVoteDto dto) throws GroupNotFoundException, AvailabilityVoteNotFoundException, PollNotFoundException {

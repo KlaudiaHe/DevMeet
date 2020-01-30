@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
@@ -17,7 +17,7 @@ import pl.com.devmeet.devmeetcore.group_associated.meeting.domain.status_and_exc
 import pl.com.devmeet.devmeetcore.group_associated.meeting.domain.status_and_exceptions.MeetingNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudRepository;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-public class MeetingCrudFacadeTest {
+public class MeetingCrudServiceTest {
 
     @Autowired
     private GroupCrudRepository groupCrudRepository;
@@ -54,9 +54,9 @@ public class MeetingCrudFacadeTest {
     @Autowired
     private MessengerRepository messengerRepository;
 
-    private GroupCrudFacade groupCrudFacade;
-    private MeetingCrudFacade meetingCrudFacade;
-    private PlaceCrudFacade placeCrudFacade;
+    private GroupCrudService groupCrudService;
+    private MeetingCrudService meetingCrudService;
+    private PlaceCrudService placeCrudService;
 
     private MeetingDto meetingDto;
     private MeetingDto secondMeeting;
@@ -96,9 +96,9 @@ public class MeetingCrudFacadeTest {
                 .place(placeDto)
                 .build();
 
-        groupCrudFacade = initGroupCruFacade();
-        placeCrudFacade = initPlaceCrudFacade();
-        meetingCrudFacade = initMeetingCrudFacade();
+        groupCrudService = initGroupCruFacade();
+        placeCrudService = initPlaceCrudFacade();
+        meetingCrudService = initMeetingCrudFacade();
 
     }
 
@@ -119,16 +119,16 @@ public class MeetingCrudFacadeTest {
     }
 
 
-    private GroupCrudFacade initGroupCruFacade() {
-        return new GroupCrudFacade(groupCrudRepository, memberRepository, userRepository, messengerRepository);
+    private GroupCrudService initGroupCruFacade() {
+        return new GroupCrudService(groupCrudRepository, memberRepository, userRepository, messengerRepository);
     }
 
-    private PlaceCrudFacade initPlaceCrudFacade() {
-        return new PlaceCrudFacade(placeCrudRepository, memberRepository, userRepository, messengerRepository, groupCrudRepository);
+    private PlaceCrudService initPlaceCrudFacade() {
+        return new PlaceCrudService(placeCrudRepository, memberRepository, userRepository, messengerRepository, groupCrudRepository);
     }
 
-    private MeetingCrudFacade initMeetingCrudFacade() {
-        return new MeetingCrudFacade(meetingCrudRepository);
+    private MeetingCrudService initMeetingCrudFacade() {
+        return new MeetingCrudService(meetingCrudRepository);
     }
 
     @Test
@@ -152,7 +152,7 @@ public class MeetingCrudFacadeTest {
         }
 
         try {
-            meetingCrudFacade.add(existingMeetingDto);
+            meetingCrudService.add(existingMeetingDto);
             Assert.fail();
         } catch (MeetingAlreadyExistsException e) {
             assertThat(e)
@@ -163,7 +163,7 @@ public class MeetingCrudFacadeTest {
     @Test
     public void when_try_to_read_existing_meeting_then_read() throws MeetingNotFoundException, MeetingAlreadyExistsException {
         MeetingDto createdMeetingDto = createMeeting();
-        MeetingDto foundMeeting = meetingCrudFacade.find(createdMeetingDto);
+        MeetingDto foundMeeting = meetingCrudService.find(createdMeetingDto);
         assertThat(foundMeeting).isNotNull();
         assertThat(foundMeeting.getGroup().getGroupName()).isEqualTo("Dancing group");
         assertThat(foundMeeting.getMeetingNumber()).isEqualTo(1);
@@ -179,7 +179,7 @@ public class MeetingCrudFacadeTest {
         meetingDtosList.add(createdMeetingDto);
         meetingDtosList.add(createdSecondDto);
 
-        List<MeetingDto> meetingEntityList = meetingCrudFacade.readAll(groupDto);
+        List<MeetingDto> meetingEntityList = meetingCrudService.readAll(groupDto);
         assertThat(meetingEntityList).isNotNull();
         assertThat(meetingEntityList.size()).isEqualTo(2);
         assertThat(meetingEntityList.get(0).getMeetingNumber()).isEqualTo(1);
@@ -199,7 +199,7 @@ public class MeetingCrudFacadeTest {
                 .place(placeDto)
                 .build();
 
-        MeetingDto updatedMeetingDto = meetingCrudFacade.update(oldMeetingDto, newDto);
+        MeetingDto updatedMeetingDto = meetingCrudService.update(oldMeetingDto, newDto);
         assertThat(updatedMeetingDto.getMeetingNumber()).isEqualTo(1);
         assertThat(updatedMeetingDto.getEndTime().toLocalDate()).isEqualTo(DateTime.now().plusHours(4).toLocalDate());
     }
@@ -218,7 +218,7 @@ public class MeetingCrudFacadeTest {
                 .place(placeDto)
                 .build();
 
-        MeetingDto updatedMeetingDto = meetingCrudFacade.update(oldMeetingDto, newDto);
+        MeetingDto updatedMeetingDto = meetingCrudService.update(oldMeetingDto, newDto);
         assertThat(updatedMeetingDto.getMeetingNumber()).isEqualTo(1);
         assertThat(updatedMeetingDto.getEndTime().toLocalDate()).isEqualTo(DateTime.now().plusHours(4).toLocalDate());
     }
@@ -227,7 +227,7 @@ public class MeetingCrudFacadeTest {
     public void when_try_to_delete_existing_meeting_then_delete_meeting() throws MeetingAlreadyExistsException, MeetingNotFoundException {
 
         MeetingDto deletedMeeting = createMeeting();
-        MeetingDto meetingDto = meetingCrudFacade.delete(deletedMeeting);
+        MeetingDto meetingDto = meetingCrudService.delete(deletedMeeting);
         assertThat(meetingDto.isActive()).isFalse();
         assertThat(meetingDto.getEndTime()).isNull();
         assertThat(meetingDto.getBeginTime()).isNull();
@@ -238,7 +238,7 @@ public class MeetingCrudFacadeTest {
     public void when_try_to_delete_non_existing_meeting_then_throw_an_exception() {
 
         try {
-            meetingCrudFacade.delete(meetingDto);
+            meetingCrudService.delete(meetingDto);
             Assert.fail();
         } catch (MeetingNotFoundException e) {
             assertThat(e)
@@ -249,7 +249,7 @@ public class MeetingCrudFacadeTest {
     @Test
     public void findEntity() throws MeetingAlreadyExistsException, MeetingNotFoundException {
         MeetingDto meetingDto = createMeeting();
-        MeetingEntity foundMeeting = meetingCrudFacade.findEntity(meetingDto);
+        MeetingEntity foundMeeting = meetingCrudService.findEntity(meetingDto);
         assertThat(foundMeeting).isNotNull();
         assertThat(foundMeeting.getMeetingNumber()).isEqualTo(1);
     }
@@ -262,7 +262,7 @@ public class MeetingCrudFacadeTest {
 
         meetingDtosList.add(createdMeetingDto);
         meetingDtosList.add(createdSecondDto);
-        List<MeetingEntity> meetingEntityList = meetingCrudFacade.findEntities(groupDto);
+        List<MeetingEntity> meetingEntityList = meetingCrudService.findEntities(groupDto);
         assertThat(meetingEntityList).isNotNull();
         assertThat(meetingEntityList.size()).isEqualTo(2);
         assertThat(meetingEntityList.get(0).getMeetingNumber()).isEqualTo(1);
@@ -274,13 +274,13 @@ public class MeetingCrudFacadeTest {
 
         MeetingDto meetingDto = createMeeting();
 
-        boolean memberExists = meetingCrudFacade.isExist(meetingDto);
+        boolean memberExists = meetingCrudService.isExist(meetingDto);
         assertThat(memberExists).isTrue();
     }
 
     @Test
     public void WHEN_member_does_not_exist_THEN_return_false() {
-        boolean memberDoesNotExist = meetingCrudFacade.isExist(meetingDto);
+        boolean memberDoesNotExist = meetingCrudService.isExist(meetingDto);
         assertThat(memberDoesNotExist).isFalse();
     }
 }

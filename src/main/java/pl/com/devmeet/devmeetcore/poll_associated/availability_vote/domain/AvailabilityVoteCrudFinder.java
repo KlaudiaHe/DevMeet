@@ -27,10 +27,14 @@ class AvailabilityVoteCrudFinder implements CrudEntityFinder<AvailabilityVoteDto
 
     @Override
     public AvailabilityVoteEntity findEntity(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, GroupNotFoundException, PollNotFoundException {
-        return findMemberVoteInPoll(dto);
+        if (dto.getId() != null)
+            return findById(dto.getId())
+                    .orElseThrow(() -> new AvailabilityVoteNotFoundException(AvailabilityVoteCrudStatusEnum.AVAILABILITY_VOTE_NOT_FOUND.toString()));
+        else
+            return findVoteByMemberAndPoll(dto);
     }
 
-    private AvailabilityVoteEntity findMemberVoteInPoll(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, GroupNotFoundException, PollNotFoundException {
+    private AvailabilityVoteEntity findVoteByMemberAndPoll(AvailabilityVoteDto dto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, GroupNotFoundException, PollNotFoundException {
         MemberEntity memberEntity = findMember(dto);
         PollEntity pollEntity = findPoll(dto);
 

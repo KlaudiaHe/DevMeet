@@ -1,6 +1,6 @@
 package pl.com.devmeet.devmeetcore.test_utils;
 
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 
@@ -10,7 +10,7 @@ import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberReposito
  * Date: 30.11.2019
  * Time: 13:14
  */
-class TestFirstMemberInitiator implements TestObjectInitiator<MemberRepository, MemberCrudFacade, MemberDto> {
+class TestFirstMemberInitiator implements TestObjectInitiator<MemberRepository, MemberCrudService, MemberDto> {
 
     private MemberRepository repository;
     private MemberDto testMemberDto;
@@ -22,7 +22,7 @@ class TestFirstMemberInitiator implements TestObjectInitiator<MemberRepository, 
     }
 
     @Override
-    public MemberCrudFacade initFacade() {
+    public MemberCrudService initFacade() {
         return null;
     }
 

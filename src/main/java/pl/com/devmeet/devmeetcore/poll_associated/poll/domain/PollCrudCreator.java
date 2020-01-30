@@ -26,11 +26,11 @@ class PollCrudCreator implements CrudEntityCreator<PollDto, PollEntity> {
             poll = pollCrudFinder.findEntity(dto);
 
             if (!poll.isActive()) {
-                return pollCrudSaver.saveEntity(setDefaultValuesWhenPollExist(PollCrudFacade.map(dto)));
+                return pollCrudSaver.saveEntity(setDefaultValuesWhenPollExist(PollCrudService.map(dto)));
             }
 
         } catch (PollNotFoundException e) {
-            poll = setDefaultValuesWhenPollNotExist(PollCrudFacade.map(dto));
+            poll = setDefaultValuesWhenPollNotExist(PollCrudService.map(dto));
             return pollCrudSaver.saveEntity(poll);
         }
         throw new PollAlreadyExistsException(PollCrudStatusEnum.POLL_ALREADY_EXISTS.toString());

@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudEntityCreator;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
@@ -34,7 +33,7 @@ class PlaceCrudCreator implements CrudEntityCreator<PlaceDto, PlaceEntity> {
                 return placeCrudSaver.saveEntity(setDefaultValuesWhenPlaceExists(place));
 
         } catch (PlaceNotFoundException e) {
-            place = setDefaultValuesWhenPlaceNotExists(PlaceCrudFacade.map(dto));
+            place = setDefaultValuesWhenPlaceNotExists(PlaceCrudService.map(dto));
             return placeCrudSaver.saveEntity(
                     connectPlaceWithMember(place, foundMember)
             );

@@ -12,12 +12,12 @@ import java.util.List;
 import static pl.com.devmeet.devmeetcore.group_associated.meeting.domain.MeetingMapper.map;
 
 @Service
-public class MeetingCrudFacade implements CrudFacadeInterface<MeetingDto, MeetingEntity> {
+public class MeetingCrudService implements CrudFacadeInterface<MeetingDto, MeetingEntity> {
 
     private MeetingCrudRepository repository;
 
     @Autowired
-    public MeetingCrudFacade(MeetingCrudRepository repository) {
+    public MeetingCrudService(MeetingCrudRepository repository) {
         this.repository = repository;
     }
 

@@ -13,6 +13,7 @@ import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollDto;
 @Builder
 public class AvailabilityVoteDto {
 
+    private Long id;
     private PollDto poll;
 
     private AvailabilityDto availability;

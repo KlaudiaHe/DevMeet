@@ -8,19 +8,19 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudFacade;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupEntity;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudRepository;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityDto;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityEntity;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
@@ -31,7 +31,7 @@ import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.Messenge
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.poll_associated.availability_vote.domain.status_and_exceptions.*;
-import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollCrudFacade;
+import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollCrudService;
 import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollCrudRepository;
 import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollDto;
 import pl.com.devmeet.devmeetcore.poll_associated.poll.domain.PollEntity;
@@ -48,7 +48,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-public class AvailabilityVoteCrudFacadeTest {
+public class AvailabilityVoteCrudServiceTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -65,12 +65,12 @@ public class AvailabilityVoteCrudFacadeTest {
     @Autowired
     private MessengerRepository messengerRepository;
 
-    private UserCrudFacade userCrudFacade;
-    private MemberCrudFacade memberCrudFacade;
-    private AvailabilityCrudFacade availabilityCrudFacade;
-    private GroupCrudFacade groupCrudFacade;
-    private PollCrudFacade pollCrudFacade;
-    private AvailabilityVoteCrudFacade voteCrudFacade;
+    private UserCrudService userCrudService;
+    private MemberCrudService memberCrudService;
+    private AvailabilityCrudService availabilityCrudService;
+    private GroupCrudService groupCrudService;
+    private PollCrudService pollCrudService;
+    private AvailabilityVoteCrudService voteCrudFacade;
 
     private UserDto testUserDtoFirst;
     private UserDto testUserDtoSecond;
@@ -111,7 +111,7 @@ public class AvailabilityVoteCrudFacadeTest {
                 .member(testMemberDtoFirst)
                 .beginTime(new DateTime(2020, 3, 3, 15, 0, 0))
                 .endTime(new DateTime(2020, 3, 3, 16, 0, 0))
-                .availabilityVote(null)
+//                .availabilityVote(null)
                 .remoteWork(true)
                 .creationTime(null)
                 .modificationTime(null)
@@ -122,7 +122,7 @@ public class AvailabilityVoteCrudFacadeTest {
                 .member(testMemberDtoFirst)
                 .beginTime(new DateTime(2020, 2, 2, 17, 0, 0))
                 .endTime(new DateTime(2020, 2, 2, 18, 0, 0))
-                .availabilityVote(null)
+//                .availabilityVote(null)
                 .remoteWork(false)
                 .creationTime(null)
                 .modificationTime(null)
@@ -133,7 +133,7 @@ public class AvailabilityVoteCrudFacadeTest {
                 .member(testMemberDtoSecond)
                 .beginTime(new DateTime(2020, 3, 1, 18, 0, 0))
                 .endTime(new DateTime(2020, 3, 1, 20, 0, 0))
-                .availabilityVote(null)
+//                .availabilityVote(null)
                 .remoteWork(true)
                 .creationTime(null)
                 .modificationTime(null)
@@ -169,28 +169,28 @@ public class AvailabilityVoteCrudFacadeTest {
                 .build();
     }
 
-    private UserCrudFacade initUserCrudFacade() {
-        return new UserCrudFacade(userRepository);
+    private UserCrudService initUserCrudFacade() {
+        return new UserCrudService(userRepository);
     }
 
-    private MemberCrudFacade initMemberCrudFacade() {
-        return new MemberCrudFacade(memberRepository, userRepository, messengerRepository, groupRepository);
+    private MemberCrudService initMemberCrudFacade() {
+        return new MemberCrudService(memberRepository, userRepository, messengerRepository, groupRepository);
     }
 
-    private AvailabilityCrudFacade initAvailabilityCrudFacade() {
-        return new AvailabilityCrudFacade(availabilityRepository, memberRepository, userRepository, messengerRepository, groupRepository);
+    private AvailabilityCrudService initAvailabilityCrudFacade() {
+        return new AvailabilityCrudService(availabilityRepository, memberRepository, userRepository, messengerRepository, groupRepository);
     }
 
-    private GroupCrudFacade initGroupCrudFacade() {
-        return new GroupCrudFacade(groupRepository, memberRepository, userRepository, messengerRepository);
+    private GroupCrudService initGroupCrudFacade() {
+        return new GroupCrudService(groupRepository, memberRepository, userRepository, messengerRepository);
     }
 
-    private PollCrudFacade initPollCrudFacade() {
-        return new PollCrudFacade(pollCrudRepository, groupRepository, memberRepository, userRepository, messengerRepository);
+    private PollCrudService initPollCrudFacade() {
+        return new PollCrudService(pollCrudRepository, groupRepository, memberRepository, userRepository, messengerRepository);
     }
 
-    private AvailabilityVoteCrudFacade initVoteCrudFacade() {
-        return new AvailabilityVoteCrudFacade(
+    private AvailabilityVoteCrudService initVoteCrudFacade() {
+        return new AvailabilityVoteCrudService(
                 availabilityVoteRepository,
                 pollCrudRepository,
                 groupRepository,
@@ -201,19 +201,19 @@ public class AvailabilityVoteCrudFacadeTest {
     }
 
     private boolean initTestDB() {
-        userCrudFacade = initUserCrudFacade();
-        memberCrudFacade = initMemberCrudFacade();
-        groupCrudFacade = initGroupCrudFacade();
-        availabilityCrudFacade = initAvailabilityCrudFacade();
-        pollCrudFacade = initPollCrudFacade();
+        userCrudService = initUserCrudFacade();
+        memberCrudService = initMemberCrudFacade();
+        groupCrudService = initGroupCrudFacade();
+        availabilityCrudService = initAvailabilityCrudFacade();
+        pollCrudService = initPollCrudFacade();
         voteCrudFacade = initVoteCrudFacade();
 
         UserEntity userEntityFirst = null;
         try {
-            userEntityFirst = userCrudFacade
+            userEntityFirst = userCrudService
                     .findEntity(
-                            userCrudFacade.activation(
-                                    userCrudFacade.add(testUserDtoFirst)
+                            userCrudService.activation(
+                                    userCrudService.add(testUserDtoFirst)
                             )
                     );;
         } catch (UserNotFoundException | UserAlreadyExistsException | UserAlreadyActiveException e) {
@@ -221,10 +221,10 @@ public class AvailabilityVoteCrudFacadeTest {
         }
         UserEntity userEntitySecond = null;
         try {
-            userEntitySecond = userCrudFacade
+            userEntitySecond = userCrudService
                     .findEntity(
-                            userCrudFacade.activation(
-                                    userCrudFacade.add(testUserDtoSecond)
+                            userCrudService.activation(
+                                    userCrudService.add(testUserDtoSecond)
                             )
                     );;
         } catch (UserNotFoundException | UserAlreadyExistsException | UserAlreadyActiveException e) {
@@ -233,42 +233,42 @@ public class AvailabilityVoteCrudFacadeTest {
 
         MemberEntity memberEntityFirst = null;
         try {
-            memberEntityFirst = memberCrudFacade.findEntity(memberCrudFacade.add(testMemberDtoFirst));
+            memberEntityFirst = memberCrudService.findEntity(memberCrudService.add(testMemberDtoFirst));
         } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberUserNotActiveException e) {
             e.printStackTrace();
         }
 
         MemberEntity memberEntitySecond = null;
         try {
-            memberEntitySecond = memberCrudFacade.findEntity(memberCrudFacade.add(testMemberDtoSecond));
+            memberEntitySecond = memberCrudService.findEntity(memberCrudService.add(testMemberDtoSecond));
         } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberUserNotActiveException e) {
             e.printStackTrace();
         }
 
         AvailabilityEntity availabilityEntityFirst = null;
         try {
-            availabilityEntityFirst = availabilityCrudFacade.findEntity(availabilityCrudFacade.add(testAvailabilityDtoFirst));
+            availabilityEntityFirst = availabilityCrudService.findEntity(availabilityCrudService.add(testAvailabilityDtoFirst));
         } catch (MemberNotFoundException | AvailabilityAlreadyExistsException | UserNotFoundException | AvailabilityNotFoundException e) {
             e.printStackTrace();
         }
 
         AvailabilityEntity availabilityEntitySecond = null;
         try {
-            availabilityEntitySecond = availabilityCrudFacade.findEntity(availabilityCrudFacade.add(testAvailabilityDtoSecond));
+            availabilityEntitySecond = availabilityCrudService.findEntity(availabilityCrudService.add(testAvailabilityDtoSecond));
         } catch (MemberNotFoundException | AvailabilityAlreadyExistsException | UserNotFoundException | AvailabilityNotFoundException e) {
             e.printStackTrace();
         }
 
         GroupEntity groupEntity = null;
         try {
-            groupEntity = groupCrudFacade.findEntityByGroup(groupCrudFacade.add(testGroupDto));
+            groupEntity = groupCrudService.findEntityByGroup(groupCrudService.add(testGroupDto));
         } catch (GroupNotFoundException | GroupAlreadyExistsException | UserNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
             e.printStackTrace();
         }
 
         PollEntity pollEntity = null;
         try {
-            pollEntity = pollCrudFacade.findEntity(pollCrudFacade.add(testPollDto));
+            pollEntity = pollCrudService.findEntity(pollCrudService.add(testPollDto));
         } catch (GroupNotFoundException | PollAlreadyExistsException | PollNotFoundException e) {
             e.printStackTrace();
         }
@@ -292,7 +292,7 @@ public class AvailabilityVoteCrudFacadeTest {
     @Test
     public void WHERE_create_not_existing_vote_THEN_return_vote() throws UserNotFoundException, AvailabilityNotFoundException, GroupNotFoundException, AvailabilityVoteAlreadyExistsException, MemberNotFoundException, PollNotFoundException {
         initTestDB();
-        AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
+        AvailabilityVoteCrudService voteCrudFacade = initVoteCrudFacade();
         AvailabilityVoteDto voteEntity = voteCrudFacade.add(testVoteDto);
 
         assertThat(voteEntity).isNotNull();
@@ -308,7 +308,7 @@ public class AvailabilityVoteCrudFacadeTest {
     @Test
     public void WHERE_try_to_create_already_existing_vote_THEN_return_EntityAlreadyExistsException() throws AvailabilityNotFoundException, MemberNotFoundException, GroupNotFoundException, UserNotFoundException, PollNotFoundException {
         initTestDB();
-        AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
+        AvailabilityVoteCrudService voteCrudFacade = initVoteCrudFacade();
 
         try {
             voteCrudFacade.add(testVoteDto);
@@ -329,7 +329,7 @@ public class AvailabilityVoteCrudFacadeTest {
     @Test
     public void WHERE_found_vote_THEN_return_vote() throws UserNotFoundException, AvailabilityNotFoundException, GroupNotFoundException, AvailabilityVoteAlreadyExistsException, MemberNotFoundException, PollNotFoundException, AvailabilityVoteNotFoundException {
         initTestDB();
-        AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
+        AvailabilityVoteCrudService voteCrudFacade = initVoteCrudFacade();
         AvailabilityVoteDto created = voteCrudFacade.add(testVoteDto);
         AvailabilityVoteDto found = voteCrudFacade.find(testVoteDto);
 
@@ -343,7 +343,7 @@ public class AvailabilityVoteCrudFacadeTest {
     @Test
     public void WHEN_cant_find_vote_THEN_return_EntityNotFoundException() throws MemberNotFoundException, UserNotFoundException, GroupNotFoundException, PollNotFoundException {
         initTestDB();
-        AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
+        AvailabilityVoteCrudService voteCrudFacade = initVoteCrudFacade();
 
         try {
             voteCrudFacade.find(testVoteDto);
@@ -357,7 +357,7 @@ public class AvailabilityVoteCrudFacadeTest {
     @Test
     public void WHEN_try_to_read_all_votes_in_the_poll_THEN_return_votes() {
         initTestDB();
-        AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
+        AvailabilityVoteCrudService voteCrudFacade = initVoteCrudFacade();
         AvailabilityVoteDto createdVote = null;
         List<AvailabilityVoteDto> foundVotes = null;
 
@@ -379,7 +379,7 @@ public class AvailabilityVoteCrudFacadeTest {
     @Test
     public void WHEN_try_to_read_all_votes_in_the_poll_if_there_are_none_THEN_return_AvailabilityVoteNotFoundException() throws GroupNotFoundException, PollNotFoundException {
         initTestDB();
-        AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
+        AvailabilityVoteCrudService voteCrudFacade = initVoteCrudFacade();
 
         try {
             voteCrudFacade.findAll(testVoteDto);
@@ -393,7 +393,7 @@ public class AvailabilityVoteCrudFacadeTest {
     @Test
     public void WHEN_update_exist_vote_THEN_return_vote() throws AvailabilityVoteNotFoundException, GroupNotFoundException, UserNotFoundException, AvailabilityVoteException, MemberNotFoundException, AvailabilityNotFoundException, PollNotFoundException {
         initTestDB();
-        AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
+        AvailabilityVoteCrudService voteCrudFacade = initVoteCrudFacade();
         AvailabilityVoteDto created = null;
         AvailabilityVoteDto fakeUpdatedDto = updateVote(testVoteDto);
         AvailabilityVoteDto updated;
@@ -425,7 +425,7 @@ public class AvailabilityVoteCrudFacadeTest {
     @Test
     public void WHEN_delete_vote_THEN_return_vote() throws UserNotFoundException, AvailabilityNotFoundException, GroupNotFoundException, AvailabilityVoteAlreadyExistsException, MemberNotFoundException, PollNotFoundException, AvailabilityVoteFoundButNotActiveException, AvailabilityVoteNotFoundException {
         initTestDB();
-        AvailabilityVoteCrudFacade voteCrudFacade = initVoteCrudFacade();
+        AvailabilityVoteCrudService voteCrudFacade = initVoteCrudFacade();
         AvailabilityVoteDto created = voteCrudFacade.add(testVoteDto);
         AvailabilityVoteDto deleted = voteCrudFacade.delete(testVoteDto);
 

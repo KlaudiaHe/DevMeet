@@ -8,7 +8,7 @@ import pl.com.devmeet.devmeetcore.domain_utils.CrudEntityCreator;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityCrudInfoStatusEnum;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudFacade;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -20,7 +20,7 @@ class AvailabilityCrudCreator implements CrudEntityCreator<AvailabilityDto, Avai
 
     private AvailabilityCrudSaver availabilityCrudSaver;
     private AvailabilityCrudFinder availabilityCrudFinder;
-    private MemberCrudFacade memberCrudFacade;
+    private MemberCrudService memberCrudService;
 
     @Override
     public AvailabilityEntity createEntity(AvailabilityDto dto) throws AvailabilityAlreadyExistsException, MemberNotFoundException, UserNotFoundException {
@@ -28,11 +28,11 @@ class AvailabilityCrudCreator implements CrudEntityCreator<AvailabilityDto, Avai
 //        boolean availabilityActivity;
 
         try {
-            availability = availabilityCrudFinder.findEntity(dto);
+            availability = availabilityCrudFinder.findEntityByIdOrByMember(dto);
             if (!availability.isActive() && availability.getModificationTime() != null)
                 return availabilityCrudSaver.saveEntity(setDefaultValuesWhenAvailabilityExists(availability));
         } catch (AvailabilityNotFoundException e) {
-            availability= setDefaultValuesWhenAvailabilityNotExists(AvailabilityCrudFacade.map(dto));
+            availability= setDefaultValuesWhenAvailabilityNotExists(AvailabilityCrudService.map(dto));
             return availabilityCrudSaver.saveEntity(availability);
         }
 

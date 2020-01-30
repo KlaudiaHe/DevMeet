@@ -28,7 +28,7 @@ class AvailabilityCrudUpdater implements CrudEntityUpdater<AvailabilityDto, Avai
     }
 
     AvailabilityEntity findAvailabilityEntity(AvailabilityDto oldDto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
-        return availabilityCrudFinder.findEntity(oldDto);
+        return availabilityCrudFinder.findEntityByIdOrByMember(oldDto);
     }
 
     private AvailabilityDto checkMember(AvailabilityDto oldDto, AvailabilityDto newDto) throws AvailabilityException {
@@ -37,7 +37,7 @@ class AvailabilityCrudUpdater implements CrudEntityUpdater<AvailabilityDto, Avai
         throw new AvailabilityException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString());    }
 
     private AvailabilityEntity mapDtoToEntity(AvailabilityDto dto) {
-        return AvailabilityCrudFacade.map(dto);
+        return AvailabilityCrudService.map(dto);
     }
 
     private AvailabilityEntity updateAllowedParameters(AvailabilityEntity oldEntity, AvailabilityEntity newEntity) {

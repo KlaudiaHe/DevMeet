@@ -1,14 +1,13 @@
 package pl.com.devmeet.devmeetcore.user;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
-import pl.com.devmeet.devmeetcore.user.domain.UserCrudFacade;
+import pl.com.devmeet.devmeetcore.user.domain.UserCrudService;
 import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.UserRepository;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.*;
@@ -17,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-public class UserCrudFacadeTest {
+public class UserCrudServiceTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -28,8 +27,8 @@ public class UserCrudFacadeTest {
                 .isActive(true)
                 .build();
 
-    private UserCrudFacade initFacade() {
-        return new UserCrudFacade(userRepository);
+    private UserCrudService initFacade() {
+        return new UserCrudService(userRepository);
     }
 
     private UserDto createTestUser() throws UserAlreadyExistsException {
@@ -104,7 +103,7 @@ public class UserCrudFacadeTest {
     @Test
     public void WHEN_try_to_activate_activated_user_THEN_return_UserAlreadyActiveException() throws UserAlreadyExistsException, UserNotFoundException, UserAlreadyActiveException {
         createTestUser();
-        UserCrudFacade userFacade = initFacade();
+        UserCrudService userFacade = initFacade();
         userFacade.activation(testDto);
 
         try {
@@ -120,7 +119,7 @@ public class UserCrudFacadeTest {
     @Test
     public void WHEN_check_activated_user_is_active_THEN_return_true() throws UserAlreadyExistsException, UserNotFoundException, UserAlreadyActiveException {
         createTestUser();
-        UserCrudFacade userFacade = initFacade();
+        UserCrudService userFacade = initFacade();
         userFacade.activation(testDto);
 
         assertThat(userFacade.isUserActive(testDto)).isTrue();
@@ -152,7 +151,7 @@ public class UserCrudFacadeTest {
     @Test
     public void WHEN_try_to_update_activated_existing_user_THEN_return_UserDto() throws UserAlreadyExistsException, UserNotFoundException, UserAlreadyActiveException, UserFoundButNotActive {
         UserDto created = createTestUser();
-        UserCrudFacade userFacade = initFacade();
+        UserCrudService userFacade = initFacade();
         UserDto activated = userFacade.activation(testDto);
         UserDto updated = userFacade.update(userToUpdate(), created);
 
@@ -188,7 +187,7 @@ public class UserCrudFacadeTest {
     @Test
     public void WHEN_delete_existing_and_activated_user_THEN_return_UserDto() throws UserAlreadyExistsException, UserNotFoundException, UserAlreadyActiveException, UserFoundButNotActive {
         createTestUser();
-        UserCrudFacade userFacade = initFacade();
+        UserCrudService userFacade = initFacade();
         userFacade.activation(testDto);
         UserDto deleted = userFacade.delete(testDto);
 
