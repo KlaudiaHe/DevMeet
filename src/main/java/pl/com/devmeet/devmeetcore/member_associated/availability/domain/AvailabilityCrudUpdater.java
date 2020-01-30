@@ -28,7 +28,7 @@ class AvailabilityCrudUpdater implements CrudEntityUpdater<AvailabilityDto, Avai
     }
 
     AvailabilityEntity findAvailabilityEntity(AvailabilityDto oldDto) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
-        return availabilityCrudFinder.findEntity(oldDto);
+        return availabilityCrudFinder.findEntityByIdOrByMember(oldDto);
     }
 
     private AvailabilityDto checkMember(AvailabilityDto oldDto, AvailabilityDto newDto) throws AvailabilityException {

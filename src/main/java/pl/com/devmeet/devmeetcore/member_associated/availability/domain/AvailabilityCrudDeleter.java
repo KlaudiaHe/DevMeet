@@ -21,7 +21,7 @@ class AvailabilityCrudDeleter implements CrudEntityDeleter<AvailabilityDto, Avai
 
     @Override
     public AvailabilityEntity deleteEntity(AvailabilityDto dto) throws AvailabilityAlreadyExistsException, MemberNotFoundException, UserNotFoundException, AvailabilityNotFoundException {
-        AvailabilityEntity availability = availabilityCrudFinder.findEntity(dto);
+        AvailabilityEntity availability = availabilityCrudFinder.findEntityByIdOrByMember(dto);
         boolean availabilityActivity = availability.isActive();
 
         if (availabilityActivity) {

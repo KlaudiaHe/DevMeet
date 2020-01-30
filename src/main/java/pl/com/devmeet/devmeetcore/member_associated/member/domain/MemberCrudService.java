@@ -95,11 +95,6 @@ public class MemberCrudService implements CrudFacadeInterface<MemberDto, MemberE
         return map(findEntity(dto));
     }
 
-
-    public List<MemberDto> findAll(MemberDto dto) throws CrudException {
-        throw new CrudException(MemberCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
-    }
-
     @Override
     public MemberDto update(MemberDto oldDto, MemberDto newDto) throws MemberNotFoundException, UserNotFoundException, MemberFoundButNotActiveException {
         return map(initUpdater().update(oldDto, newDto));
@@ -119,7 +114,6 @@ public class MemberCrudService implements CrudFacadeInterface<MemberDto, MemberE
         return initFinder().findEntityByUser(userDto);
     }
 
-    @Deprecated
     public MemberEntity findEntity(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         return initFinder().findEntity(dto);
     }

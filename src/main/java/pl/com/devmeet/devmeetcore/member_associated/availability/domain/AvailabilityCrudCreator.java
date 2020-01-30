@@ -28,7 +28,7 @@ class AvailabilityCrudCreator implements CrudEntityCreator<AvailabilityDto, Avai
 //        boolean availabilityActivity;
 
         try {
-            availability = availabilityCrudFinder.findEntity(dto);
+            availability = availabilityCrudFinder.findEntityByIdOrByMember(dto);
             if (!availability.isActive() && availability.getModificationTime() != null)
                 return availabilityCrudSaver.saveEntity(setDefaultValuesWhenAvailabilityExists(availability));
         } catch (AvailabilityNotFoundException e) {

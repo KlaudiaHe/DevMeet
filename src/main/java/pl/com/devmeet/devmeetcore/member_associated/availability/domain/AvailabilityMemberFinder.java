@@ -16,8 +16,8 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 public class AvailabilityMemberFinder {
 
     private MemberCrudService memberCrudService;
+
     public MemberEntity findMember(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
             return memberCrudService.findEntity(dto);
     }
-
 }

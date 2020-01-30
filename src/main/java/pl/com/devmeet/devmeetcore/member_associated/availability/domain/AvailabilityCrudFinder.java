@@ -18,14 +18,13 @@ import java.util.Optional;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-class AvailabilityCrudFinder implements CrudEntityFinder<AvailabilityDto, AvailabilityEntity> {
+class AvailabilityCrudFinder {
 
     private AvailabilityCrudSaver availabilityCrudSaver;
     private AvailabilityCrudRepository availabilityRepository;
     private AvailabilityMemberFinder memberFinder;
 
-    @Override
-    public AvailabilityEntity findEntity(AvailabilityDto dto) throws AvailabilityNotFoundException, MemberNotFoundException, UserNotFoundException {
+    public AvailabilityEntity findEntityByIdOrByMember(AvailabilityDto dto) throws AvailabilityNotFoundException, MemberNotFoundException, UserNotFoundException {
         if (dto.getId() != null)
             return findById(dto.getId())
                     .orElseThrow(() -> new AvailabilityNotFoundException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString()));
@@ -36,7 +35,6 @@ class AvailabilityCrudFinder implements CrudEntityFinder<AvailabilityDto, Availa
 
     public Optional<AvailabilityEntity> findById(Long id) {
         return availabilityRepository.findById(id);
-
     }
 
     private MemberEntity findMemberEntity(MemberDto member) throws MemberNotFoundException, UserNotFoundException {
@@ -49,24 +47,17 @@ class AvailabilityCrudFinder implements CrudEntityFinder<AvailabilityDto, Availa
         return availabilityRepository.findByMember(member);
     }
 
-    @Override
-    public List<AvailabilityEntity> findEntities(AvailabilityDto dto) throws AvailabilityNotFoundException, MemberNotFoundException, UserNotFoundException {
-        Optional<List<AvailabilityEntity>> availabilityEntities = findAvailabilities(dto);
-
-        if (availabilityEntities.isPresent())
-            return availabilityEntities.get();
-        else
-            throw new AvailabilityNotFoundException(AvailabilityCrudInfoStatusEnum.AVAILABILITIES_NOT_FOUND.toString());
+    public List<AvailabilityEntity> findEntitiesByMember(AvailabilityDto dto) throws AvailabilityNotFoundException, MemberNotFoundException, UserNotFoundException {
+            return findAvailabilitiesByMember(dto)
+                    .orElseThrow(() -> new AvailabilityNotFoundException(AvailabilityCrudInfoStatusEnum.AVAILABILITY_NOT_FOUND.toString()));
     }
 
-    private Optional<List<AvailabilityEntity>> findAvailabilities(AvailabilityDto dto) throws MemberNotFoundException, UserNotFoundException {
+    private Optional<List<AvailabilityEntity>> findAvailabilitiesByMember(AvailabilityDto dto) throws MemberNotFoundException, UserNotFoundException {
         MemberEntity member = findMemberEntity(dto.getMember());
 
         return availabilityRepository.findAllByMember(member);
     }
 
-
-    @Override
     public boolean isExist(AvailabilityDto dto) {
         try {
             return findAvailabilityByMember(dto).isPresent();

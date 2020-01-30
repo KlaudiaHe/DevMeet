@@ -26,7 +26,6 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
         return findMember(userDto);
     }
 
-    @Deprecated
     @Override
     public MemberEntity findEntity(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         if (dto.getId() != null)
