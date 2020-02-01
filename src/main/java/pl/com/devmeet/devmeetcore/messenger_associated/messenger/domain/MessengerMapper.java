@@ -18,7 +18,7 @@ class MessengerMapper {
 
     static MessengerEntity map(MessengerDto messengerDto) {
         return messengerDto != null ? MessengerEntity.builder()
-                .Id(messengerDto.getId())
+                .id(messengerDto.getId())
                 .member(MemberCrudService.map(messengerDto.getMember()))
                 .group(GroupCrudService.map(messengerDto.getGroup()))
                 .creationTime(messengerDto.getCreationTime())

@@ -24,7 +24,7 @@ class PlaceCrudMapper {
 
     public static PlaceEntity map(PlaceDto dto) {
         return dto != null ? new PlaceEntity().builder()
-                .Id(dto.getId())
+                .id(dto.getId())
                 .member(MemberCrudService.map(dto.getMember()))
                 .placeName(dto.getPlaceName())
                 .description(dto.getDescription())
@@ -39,13 +39,13 @@ class PlaceCrudMapper {
 
     public static List<PlaceDto> mapDtoList(List<PlaceEntity> entities) {
         return entities.stream()
-                .map(entity -> map(entity))
+                .map(PlaceCrudMapper::map)
                 .collect(Collectors.toList());
     }
 
     public static List<PlaceEntity> mapEntityList(List<PlaceDto> dtos) {
         return dtos.stream()
-                .map(dto -> map(dto))
+                .map(PlaceCrudMapper::map)
                 .collect(Collectors.toList());
     }
 }

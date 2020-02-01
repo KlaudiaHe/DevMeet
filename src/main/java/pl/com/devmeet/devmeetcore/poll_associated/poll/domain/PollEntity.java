@@ -3,7 +3,6 @@ package pl.com.devmeet.devmeetcore.poll_associated.poll.domain;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupEntity;
@@ -12,7 +11,6 @@ import pl.com.devmeet.devmeetcore.poll_associated.place_vote.domain.PlaceVoteEnt
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -26,7 +24,7 @@ public class PollEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private GroupEntity group;

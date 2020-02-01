@@ -27,7 +27,7 @@ public class PlaceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private MemberEntity member;

@@ -18,7 +18,7 @@ class PollCrudMapper {
 
     public static PollEntity map(PollDto dto) {
         return dto != null ? PollEntity.builder()
-                .Id(dto.getId())
+                .id(dto.getId())
                 .group(GroupCrudService.map(dto.getGroup()))
                 .creationTime(dto.getCreationTime())
                 .active(dto.isActive())
@@ -27,13 +27,13 @@ class PollCrudMapper {
 
     public static List<PollDto> mapToDtos(List<PollEntity> entities) {
         return entities.stream()
-                .map(entity -> map(entity))
+                .map(PollCrudMapper::map)
                 .collect(Collectors.toList());
     }
 
     public static List<PollEntity> mapToEntities(List<PollDto> dtos) {
         return dtos.stream()
-                .map(dto -> map(dto))
+                .map(PollCrudMapper::map)
                 .collect(Collectors.toList());
     }
 }
