@@ -5,15 +5,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserCrudStatusEnum;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private UserRepository repository;
+    private MemberCrudService memberService;
 
     @Autowired
     public UserService(UserRepository repository) {
@@ -35,7 +41,7 @@ public class UserService {
     }
 
     public Optional<UserDto> findByEmail(String email) {
-        return repository.findByEmail(email)
+        return repository.findByEmailIgnoreCase(email)
                 .map(UserCrudService::map);
     }
 
@@ -56,11 +62,14 @@ public class UserService {
     // add
 
     public UserDto add(UserDto user) {
-        if (user.getPassword() != null
-                && user.getEmail() != null) { // add more ifs statements if required
-//            checkEmailDuplication(user);
-            user.setActive(false);
+        if (user.getEmail() != null) { // add more ifs statements if required
+            //todo validate email address
+            checkEmailDuplication(user);
+            user.setActivationKey(UUID.randomUUID());
+            user.setEmail(user.getEmail().toLowerCase());
             user.setCreationTime(DateTime.now());
+            int rand = (int) (Math.random() * 10000);
+            user.setPassword(String.valueOf(rand));
             return mapAndSave(user);
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                 "Adding user error!. Set all required fields without id or use update.");
@@ -101,7 +110,7 @@ public class UserService {
     }
 
     private void checkEmailDuplication(UserDto user) {
-        Optional<UserEntity> userByEmail = repository.findByEmail(user.getEmail());
+        Optional<UserEntity> userByEmail = repository.findByEmailIgnoreCase(user.getEmail());
         if (userByEmail.isPresent()) {
             if (!userByEmail.get().getId().equals(user.getId()))
                 throw new ResponseStatusException(HttpStatus.CONFLICT,
@@ -110,4 +119,16 @@ public class UserService {
     }
 
 
+    public String activateUser(String email, String userKey) throws UserNotFoundException, UserAlreadyActiveException {
+        UserDto user = findByEmail(email).orElseThrow(() -> new UserNotFoundException(UserCrudStatusEnum.USER_NOT_FOUND.toString()));
+        if (!user.isActive()) {
+            UUID uuid = UUID.fromString(userKey);
+            if (user.getActivationKey().equals(uuid)) {
+                user.setActive(true);
+                update(user);
+                //todo create member
+                return "User is active and TODO member created";
+            } else return "Wrong key!";
+        } else throw new UserAlreadyActiveException(UserCrudStatusEnum.USER_ALREADY_ACTIVE.toString());
+    }
 }

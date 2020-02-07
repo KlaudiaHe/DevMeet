@@ -8,9 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -28,7 +30,7 @@ public class UserEntity {
 
     private String password;
 
-   // @Column(unique = true)
+    @Column(unique = true)
     private String email;
 
 //    private String phone;
@@ -44,6 +46,7 @@ public class UserEntity {
     @JsonDeserialize(using = DateTimeDeserializer.class)
     private DateTime modificationTime;
 
+    @Column(columnDefinition = "boolean default false")
     private boolean isActive;
 //
 //    private boolean loggedIn;
@@ -51,5 +54,8 @@ public class UserEntity {
 //    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 //    @JsonDeserialize(using = DateTimeDeserializer.class)
 //    private DateTime loginTime;
+
+    private UUID activationKey;
+    private LocalDateTime lastLoggedIn;
 
 }

@@ -22,7 +22,8 @@ import java.util.List;
 @Builder
 @Table(name = "places")
 @Entity
-
+//@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class PlaceEntity {
 
     @Id
