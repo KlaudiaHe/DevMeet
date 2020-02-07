@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
+import pl.com.devmeet.devmeetcore.email.EmailService;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserCrudStatusEnum;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
@@ -19,11 +19,12 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private UserRepository repository;
-    private MemberCrudService memberService;
+    private EmailService emailService;
 
     @Autowired
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, EmailService emailService) {
         this.repository = repository;
+        this.emailService = emailService;
     }
 
     // find
@@ -70,6 +71,11 @@ public class UserService {
             user.setCreationTime(DateTime.now());
             int rand = (int) (Math.random() * 10000);
             user.setPassword(String.valueOf(rand));
+            emailService.sendMessageToActivateUser(
+                    user.getEmail(),
+                    "Devmeet user registration",
+                    user.getActivationKey().toString(),
+                    user.getPassword());
             return mapAndSave(user);
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                 "Adding user error!. Set all required fields without id or use update.");

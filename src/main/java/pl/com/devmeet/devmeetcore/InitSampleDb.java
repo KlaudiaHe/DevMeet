@@ -3,12 +3,9 @@ package pl.com.devmeet.devmeetcore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudService;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.UserService;
-import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 @Component
 class InitSampleDb implements CommandLineRunner {
@@ -28,7 +25,7 @@ class InitSampleDb implements CommandLineRunner {
 
     }
 
-    private void addPlaces() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
+    private void addPlaces() {
 
 //        placeService.add(PlaceDto.builder()
 //                .member(MemberDto.builder().build())
@@ -71,7 +68,7 @@ class InitSampleDb implements CommandLineRunner {
     }
 
     private void addUsers() {
-        userService.add(UserDto.builder().email("chrzaszczyk@gmail.com").build());
+        userService.add(UserDto.builder().email("emailt407@gmail.com").build());
         System.out.println(userService.findAll());
     }
 }
