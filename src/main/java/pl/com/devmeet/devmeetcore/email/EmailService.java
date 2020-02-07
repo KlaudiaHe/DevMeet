@@ -1,6 +1,5 @@
 package pl.com.devmeet.devmeetcore.email;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -12,8 +11,7 @@ public class EmailService {
 
     private JavaMailSender emailSender;
 
-    @Autowired
-    EmailService(JavaMailSender emailSender) {
+    public EmailService(JavaMailSender emailSender) {
         this.emailSender = emailSender;
     }
 
@@ -35,7 +33,7 @@ public class EmailService {
                             "Activate it within 24 h by clicking on below link:\n\r\n\r" +
                             url + "\n\r\n\rYour initial password is: " + initialPassword + "\n\r\n\rRegards\n\rDevmeet Team");
             try {
-                emailSender.send(msg);
+                this.emailSender.send(msg);
             } catch (Exception e) {
                 e.printStackTrace();
             }
