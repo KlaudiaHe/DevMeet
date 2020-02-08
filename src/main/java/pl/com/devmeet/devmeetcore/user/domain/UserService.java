@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.com.devmeet.devmeetcore.email.EmailService;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.InvalidUUIDStringException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserCrudStatusEnum;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
@@ -128,13 +129,17 @@ public class UserService {
     public String activateUser(String email, String userKey) throws UserNotFoundException, UserAlreadyActiveException {
         UserDto user = findByEmail(email).orElseThrow(() -> new UserNotFoundException(UserCrudStatusEnum.USER_NOT_FOUND.toString()));
         if (!user.isActive()) {
-            UUID uuid = UUID.fromString(userKey);
-            if (user.getActivationKey().equals(uuid)) {
-                user.setActive(true);
-                update(user);
-                //todo create member
-                return "User is active and TODO member created";
-            } else return "Wrong key!";
+            try {
+                UUID uuid = UUID.fromString(userKey);
+                if (user.getActivationKey().equals(uuid)) {
+                    user.setActive(true);
+                    update(user);
+                    //todo create member
+                    return "User is active and TODO member created";
+                } else throw new InvalidUUIDStringException("Wrong key!");
+            } catch (IllegalArgumentException ex) {
+                throw new InvalidUUIDStringException(ex.getMessage());
+            }
         } else throw new UserAlreadyActiveException(UserCrudStatusEnum.USER_ALREADY_ACTIVE.toString());
     }
 }

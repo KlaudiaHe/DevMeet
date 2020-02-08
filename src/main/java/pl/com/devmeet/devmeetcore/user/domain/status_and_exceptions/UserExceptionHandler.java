@@ -30,5 +30,11 @@ public class UserExceptionHandler {
         return ex.getMessage();
     }
 
+    @ResponseBody
+    @ExceptionHandler({InvalidUUIDStringException.class})
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public String invalidUUIDStringHandler(InvalidUUIDStringException ex) {
+        return ex.getMessage();
+    }
 
 }

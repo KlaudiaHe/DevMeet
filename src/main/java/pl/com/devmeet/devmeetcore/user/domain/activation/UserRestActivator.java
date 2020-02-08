@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.com.devmeet.devmeetcore.user.domain.UserService;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.InvalidUUIDStringException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -24,7 +25,7 @@ class UserRestActivator {
 
     @GetMapping(value = "/{email}/{userKey}")
     ResponseEntity<String> activate(@PathVariable String email,
-                                    @PathVariable String userKey) throws UserNotFoundException, UserAlreadyActiveException {
+                                    @PathVariable String userKey) throws UserNotFoundException, UserAlreadyActiveException, InvalidUUIDStringException {
         return new ResponseEntity<>(userService.activateUser(email, userKey), HttpStatus.OK);
     }
 }
