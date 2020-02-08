@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.UserService;
 
@@ -17,8 +16,6 @@ import pl.com.devmeet.devmeetcore.user.domain.UserService;
 class UserRegistration {
 
     private UserService service;
-
-    private MemberCrudService memberService;
 
     @Autowired
     UserRegistration(UserService service) {
@@ -32,6 +29,5 @@ class UserRegistration {
                 .build();
         return new ResponseEntity<>(service.add(user).toString(), HttpStatus.OK);
     }
-
 
 }
