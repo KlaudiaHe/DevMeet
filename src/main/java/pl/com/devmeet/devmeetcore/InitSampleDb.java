@@ -68,7 +68,11 @@ class InitSampleDb implements CommandLineRunner {
     }
 
     private void addUsers() {
-        userService.add(UserDto.builder().email("emailt407@gmail.com").build());
+        userService.add(UserDto.builder()
+                .email("emailt407@gmail.com")
+                .isActive(true)
+                .build());
+
         System.out.println(userService.findAll());
     }
 }

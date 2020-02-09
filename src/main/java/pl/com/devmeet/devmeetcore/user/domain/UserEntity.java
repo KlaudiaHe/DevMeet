@@ -12,6 +12,9 @@ import org.joda.time.LocalDateTime;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Data
@@ -31,6 +34,9 @@ public class UserEntity {
     private String password;
 
     @Column(unique = true)
+    @Email
+    @NotNull
+    @NotEmpty
     private String email;
 
 //    private String phone;

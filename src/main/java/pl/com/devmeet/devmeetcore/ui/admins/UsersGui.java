@@ -44,7 +44,8 @@ class UsersGui extends VerticalLayout {
         comboBoxIsActive.setClearButtonVisible(true);
         textFieldEmail = new TextField("Email", e -> filterUserList());
         textFieldEmail.setPlaceholder("filter");
-        textFieldEmail.setValueChangeMode(ValueChangeMode.EAGER);
+        textFieldEmail.setValueChangeMode(ValueChangeMode.LAZY);
+        textFieldEmail.setValueChangeTimeout(1000);
         textFieldEmail.setClearButtonVisible(true);
         filtersLayout.add(textFieldEmail, comboBoxIsActive);
 
@@ -58,6 +59,7 @@ class UsersGui extends VerticalLayout {
                 GridVariant.LUMO_NO_BORDER,
                 GridVariant.LUMO_NO_ROW_BORDERS,
                 GridVariant.LUMO_ROW_STRIPES);
+        userGrid.getColumns().forEach(c -> c.setAutoWidth(true));
         refreshGrid(userList);
 
         add(header1, filtersLayout, userGrid);
