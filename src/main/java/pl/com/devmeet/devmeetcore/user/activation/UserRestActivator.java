@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeetcore.user.domain.activation;
+package pl.com.devmeet.devmeetcore.user.activation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
