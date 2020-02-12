@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.com.devmeet.devmeetcore.email.EmailService;
+import pl.com.devmeet.devmeetcore.email.Mail;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.InvalidUUIDStringException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserCrudStatusEnum;
@@ -13,6 +14,7 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -70,19 +72,21 @@ public class UserService {
             user.setActivationKey(UUID.randomUUID());
             user.setEmail(user.getEmail().toLowerCase());
             user.setCreationTime(DateTime.now());
-            int rand = (int) (Math.random() * 10000);
-            user.setPassword(String.valueOf(rand));
-            emailService.sendMessageToActivateUser(
-                    user.getEmail(),
-                    "Devmeet user registration",
-                    user.getActivationKey().toString(),
-                    user.getPassword());
+            user.setPassword(String.valueOf(generateRandomPassword()));
+            if (!user.isActive()) {
+                sendMessageToActivateUser(
+                        user.getEmail(),
+                        "Devmeet user registration",
+                        user.getActivationKey().toString(),
+                        user.getPassword());
+            }
             return mapAndSave(user);
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                 "Adding user error!. Set all required fields without id or use update.");
     }
 
     // update
+
     public UserDto update(UserDto user) {
         Optional<UserEntity> first = repository.findById(user.getId());
         if (first.isPresent()) {
@@ -125,6 +129,14 @@ public class UserService {
         }
     }
 
+    private int generateRandomPassword() {
+        int min = 1000;
+        int max = 9999;
+        Random r = new Random();
+        return r.ints(min, (max + 1)).limit(1).findFirst().getAsInt();
+
+    }
+
 
     public String activateUser(String email, String userKey) throws UserNotFoundException, UserAlreadyActiveException {
         UserDto user = findByEmail(email).orElseThrow(() -> new UserNotFoundException(UserCrudStatusEnum.USER_NOT_FOUND.toString()));
@@ -141,5 +153,14 @@ public class UserService {
                 throw new InvalidUUIDStringException(ex.getMessage());
             }
         } else throw new UserAlreadyActiveException(UserCrudStatusEnum.USER_ALREADY_ACTIVE.toString());
+    }
+
+    public void sendMessageToActivateUser(String to, String subject, String activationKey, String initialPassword) {
+        Mail mail = new Mail();
+        mail.setFrom("no-reply@devmeet.com");
+        mail.setTo(to);
+        mail.setSubject(subject);
+        mail.setContent(to, activationKey, initialPassword);
+        emailService.sendSimpleMessage(mail);
     }
 }
