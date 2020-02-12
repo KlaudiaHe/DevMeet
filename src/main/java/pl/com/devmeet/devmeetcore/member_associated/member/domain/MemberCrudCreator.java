@@ -42,7 +42,7 @@ class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEntity> {
                         setDefaultValuesIfMemberNotExist(
                                 connectMemberWithUser(MemberMapper.map(dto), foundUser))
                 );
-                createMessengerForMember(dto);
+                createMessengerForMember(MemberMapper.map(memberEntity));
 
                 return memberEntity;
             }

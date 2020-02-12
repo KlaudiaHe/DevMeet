@@ -21,4 +21,6 @@ public class AvailabilityFacade {
     public AvailabilityDto addNewAvailability(AvailabilityDto availabilityDto) throws MemberNotFoundException, AvailabilityAlreadyExistsException, UserNotFoundException {
         return availabilityCrudService.add(availabilityDto);
     }
+
+
 }
