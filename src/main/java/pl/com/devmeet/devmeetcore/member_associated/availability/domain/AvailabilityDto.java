@@ -1,9 +1,11 @@
 package pl.com.devmeet.devmeetcore.member_associated.availability.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
-import pl.com.devmeet.devmeetcore.poll_associated.availability_vote.domain.AvailabilityVoteEntity;
 
 @Builder
 @AllArgsConstructor
@@ -14,9 +16,10 @@ public class AvailabilityDto {
     private Long id;
     private MemberDto member;
 
-    private DateTime beginTime;
-    private DateTime endTime;
+    private DateTime beginDateTime;
+    private DateTime endDateTime;
     private boolean remoteWork;
+    private boolean freeTime;
 
 //    private PlaceDto place;
 

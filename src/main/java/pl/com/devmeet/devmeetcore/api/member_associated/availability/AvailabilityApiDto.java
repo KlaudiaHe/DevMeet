@@ -6,16 +6,17 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-class AvailabilityDtoApi {
+class AvailabilityApiDto {
 
     private Long id;
     private Long memberId;
 
-    private String beginTime;
     private String beginDate;
+    private String beginTime;
 
-    private String endTime;
     private String endDate;
+    private String endTime;
 
-
+    private boolean freeTime;
+    private boolean remoteWork;
 }

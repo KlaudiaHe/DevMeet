@@ -49,7 +49,6 @@ class AvailabilityCrudCreator implements CrudEntityCreator<AvailabilityDto, Avai
         availability.setModificationTime(DateTime.now());
         availability.setActive(true);
         return availability;
-
     }
 }
 
