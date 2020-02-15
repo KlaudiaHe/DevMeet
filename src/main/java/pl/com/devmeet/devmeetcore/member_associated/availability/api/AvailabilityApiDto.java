@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeetcore.api.member_associated.availability;
+package pl.com.devmeet.devmeetcore.member_associated.availability.api;
 
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeetcore.api.member_associated.availability;
+package pl.com.devmeet.devmeetcore.member_associated.availability.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/availabilities")
-class AvailabilityApi {
+public class AvailabilityApi {
 
     private AvailabilityFacade availabilityFacade;
     private AvailabilityApiMapper mapperApi = new AvailabilityApiMapper();
