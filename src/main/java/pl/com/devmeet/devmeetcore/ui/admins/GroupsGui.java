@@ -48,6 +48,7 @@ class GroupsGui extends VerticalLayout {
                 GridVariant.LUMO_NO_BORDER,
                 GridVariant.LUMO_NO_ROW_BORDERS,
                 GridVariant.LUMO_ROW_STRIPES);
+        groupGrid.getColumns().forEach(c -> c.setAutoWidth(true));
         refreshGrid(groupList);
 
         radioButtonGroup.addValueChangeListener(e -> {

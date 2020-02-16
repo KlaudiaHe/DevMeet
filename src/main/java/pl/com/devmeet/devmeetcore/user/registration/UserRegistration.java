@@ -1,10 +1,30 @@
 package pl.com.devmeet.devmeetcore.user.registration;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Kamil Ptasinski
- * Date: 19.11.2019
- * Time: 18:19
- */
-public class UserRegistration {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pl.com.devmeet.devmeetcore.user.domain.UserDto;
+import pl.com.devmeet.devmeetcore.user.domain.UserService;
+
+@CrossOrigin
+@RestController
+@RequestMapping(value = "/register-user")
+class UserRegistration {
+
+    private UserService service;
+
+    @Autowired
+    UserRegistration(UserService service) {
+        this.service = service;
+    }
+
+    @PostMapping(value = "/{email}")
+    ResponseEntity<String> register(@PathVariable String email) {
+        UserDto user = UserDto.builder()
+                .email(email)
+                .build();
+        return new ResponseEntity<>(service.add(user).toString(), HttpStatus.OK);
+    }
+
 }

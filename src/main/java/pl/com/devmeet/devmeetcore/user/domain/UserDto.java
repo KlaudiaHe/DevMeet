@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
+
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -12,9 +15,9 @@ import org.joda.time.DateTime;
 @Builder
 public class UserDto {
 
-//    private DefaultUserLoginTypeEnum login;
+    //    private DefaultUserLoginTypeEnum login;
 //    private String phone;
-private Long id;
+    private Long id;
     private String email;
     private String password;
 
@@ -25,4 +28,7 @@ private Long id;
 //    private DateTime loginTime;
 
     private boolean isActive;
+    private UUID activationKey;
+    private LocalDateTime lastLoggedIn;
+
 }

@@ -1,6 +1,5 @@
 package pl.com.devmeet.devmeetcore.member_associated.member.domain;
 
-import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerCrudService;
 import pl.com.devmeet.devmeetcore.user.domain.UserCrudService;
 
 import java.util.List;
@@ -13,7 +12,7 @@ class MemberMapper {
                 .Id(dto.getId())
                 .user(UserCrudService.map(dto.getUser()))
                 .nick(dto.getNick())
-                .messenger(MessengerCrudService.map(dto.getMessenger()))
+//                .messenger(MessengerCrudService.map(dto.getMessenger()))
                 .creationTime(dto.getCreationTime())
                 .modificationTime(dto.getModificationTime())
                 .isActive(dto.isActive())
@@ -25,7 +24,7 @@ class MemberMapper {
                 .id(memberEntity.getId())
                 .user(UserCrudService.map(memberEntity.getUser()))
                 .nick(memberEntity.getNick())
-                .messenger(MessengerCrudService.map(memberEntity.getMessenger()))
+//                .messenger(MessengerCrudService.map(memberEntity.getMessenger()))
                 .creationTime(memberEntity.getCreationTime())
                 .modificationTime(memberEntity.getModificationTime())
                 .isActive(memberEntity.isActive())
