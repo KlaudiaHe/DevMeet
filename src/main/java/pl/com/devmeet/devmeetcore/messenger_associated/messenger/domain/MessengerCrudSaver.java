@@ -15,10 +15,6 @@ class MessengerCrudSaver implements CrudEntitySaver<MessengerEntity, MessengerEn
     private MessengerRepository messengerRepository;
     private MemberRepository memberRepository;
 
-    public MemberEntity saveMessengerByMember(MemberEntity entity){
-        return memberRepository.save(entity);
-    }
-
     @Override
     public MessengerEntity saveEntity(MessengerEntity entity) {
         return messengerRepository.save(entity);

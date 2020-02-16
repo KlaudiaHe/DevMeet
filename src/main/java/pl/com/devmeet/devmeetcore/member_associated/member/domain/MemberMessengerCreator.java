@@ -10,13 +10,6 @@ import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exce
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Kamil Ptasinski
- * Date: 21.12.2019
- * Time: 21:46
- */
-
 @RequiredArgsConstructor
 class MemberMessengerCreator {
 
