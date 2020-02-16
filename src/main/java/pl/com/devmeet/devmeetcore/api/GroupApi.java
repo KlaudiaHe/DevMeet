@@ -14,6 +14,7 @@ import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudServ
 import java.net.URI;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/groups")
 class GroupApi {

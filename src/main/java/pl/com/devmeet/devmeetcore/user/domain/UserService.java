@@ -1,24 +1,38 @@
 package pl.com.devmeet.devmeetcore.user.domain;
 
+import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.com.devmeet.devmeetcore.email.EmailService;
+import pl.com.devmeet.devmeetcore.email.Mail;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberUserNotActiveException;
+import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.InvalidUUIDStringException;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserCrudStatusEnum;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
     private UserRepository repository;
-
-    @Autowired
-    public UserService(UserRepository repository) {
-        this.repository = repository;
-    }
+    private EmailService emailService;
+    private MemberCrudService memberService;
 
     // find
 
@@ -35,7 +49,7 @@ public class UserService {
     }
 
     public Optional<UserDto> findByEmail(String email) {
-        return repository.findByEmail(email)
+        return repository.findByEmailIgnoreCase(email)
                 .map(UserCrudService::map);
     }
 
@@ -56,17 +70,27 @@ public class UserService {
     // add
 
     public UserDto add(UserDto user) {
-        if (user.getPassword() != null
-                && user.getEmail() != null) { // add more ifs statements if required
-//            checkEmailDuplication(user);
-            user.setActive(false);
+        if (user.getEmail() != null) { // add more ifs statements if required
+            //todo validate email address
+            checkEmailDuplication(user);
+            user.setActivationKey(UUID.randomUUID());
+            user.setEmail(user.getEmail().toLowerCase());
             user.setCreationTime(DateTime.now());
+            user.setPassword(String.valueOf(generateRandomPassword()));
+            if (!user.isActive()) {
+                sendMessageToActivateUser(
+                        user.getEmail(),
+                        "Devmeet user registration",
+                        user.getActivationKey().toString(),
+                        user.getPassword());
+            }
             return mapAndSave(user);
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                 "Adding user error!. Set all required fields without id or use update.");
     }
 
     // update
+
     public UserDto update(UserDto user) {
         Optional<UserEntity> first = repository.findById(user.getId());
         if (first.isPresent()) {
@@ -101,7 +125,7 @@ public class UserService {
     }
 
     private void checkEmailDuplication(UserDto user) {
-        Optional<UserEntity> userByEmail = repository.findByEmail(user.getEmail());
+        Optional<UserEntity> userByEmail = repository.findByEmailIgnoreCase(user.getEmail());
         if (userByEmail.isPresent()) {
             if (!userByEmail.get().getId().equals(user.getId()))
                 throw new ResponseStatusException(HttpStatus.CONFLICT,
@@ -109,5 +133,45 @@ public class UserService {
         }
     }
 
+    private int generateRandomPassword() {
+        int min = 1000;
+        int max = 9999;
+        Random r = new Random();
+        return r.ints(min, (max + 1)).limit(1).findFirst().orElse(1234);
 
+    }
+
+
+    public String activateUser(String email, String userKey) throws UserNotFoundException, UserAlreadyActiveException, GroupNotFoundException, MessengerArgumentNotSpecified, MemberAlreadyExistsException, MessengerAlreadyExistsException, MemberNotFoundException, MemberUserNotActiveException {
+        UserDto user = findByEmail(email).orElseThrow(() -> new UserNotFoundException(UserCrudStatusEnum.USER_NOT_FOUND.toString()));
+        if (!user.isActive()) {
+            try {
+                UUID uuid = UUID.fromString(userKey);
+                if (user.getActivationKey().equals(uuid)) {
+                    user.setActive(true);
+                    update(user);
+                    createMember(user);
+                    return "User is active and TODO member created";
+                } else throw new InvalidUUIDStringException("Wrong key!");
+            } catch (IllegalArgumentException ex) {
+                throw new InvalidUUIDStringException(ex.getMessage());
+            }
+        } else throw new UserAlreadyActiveException(UserCrudStatusEnum.USER_ALREADY_ACTIVE.toString());
+    }
+
+    private void createMember(UserDto user) throws MemberAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified, MemberUserNotActiveException {
+        MemberDto member = MemberDto.builder()
+                .user(user)
+                .build();
+        memberService.add(member);
+    }
+
+    public void sendMessageToActivateUser(String to, String subject, String activationKey, String initialPassword) {
+        Mail mail = new Mail();
+        mail.setFrom("no-reply@devmeet.com");
+        mail.setTo(to);
+        mail.setSubject(subject);
+        mail.setContent(to, activationKey, initialPassword);
+        emailService.sendSimpleMessage(mail);
+    }
 }

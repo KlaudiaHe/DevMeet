@@ -19,7 +19,7 @@ class UserCrudFinder {
     public UserEntity findByEmail(String email) throws UserNotFoundException {
         Optional<UserEntity> foundUser = Optional.empty();
         if (!email.isEmpty())
-            foundUser = repository.findByEmail(email);
+            foundUser = repository.findByEmailIgnoreCase(email);
 
         if (foundUser.isPresent())
             return foundUser.get();

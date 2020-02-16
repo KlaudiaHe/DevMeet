@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupEntity;
@@ -15,7 +14,6 @@ import pl.com.devmeet.devmeetcore.messenger_associated.message.domain.MessageEnt
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -27,7 +25,7 @@ public class MessengerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private MemberEntity member;

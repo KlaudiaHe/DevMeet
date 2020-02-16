@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByEmailAndPassword(String email, String password);
 
-    Optional<UserEntity> findByEmail(String email);
+    Optional<UserEntity> findByEmailIgnoreCase(String email);
 
     @Query("select u from UserEntity u where lower(u.email) like lower(concat('%', :search, '%') )")
     List<UserEntity> findEmailLike(String search);

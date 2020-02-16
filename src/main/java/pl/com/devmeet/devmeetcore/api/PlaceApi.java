@@ -3,10 +3,7 @@ package pl.com.devmeet.devmeetcore.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
@@ -17,6 +14,7 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/places")
 class PlaceApi {
