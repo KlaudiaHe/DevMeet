@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -41,14 +40,14 @@ public class UserEntity {
 
 //    private String phone;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private MemberEntity member;
+//    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    private MemberEntity member;
 
-    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = DateTimeDeserializer.class)
     private DateTime creationTime;
 
-    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = DateTimeDeserializer.class)
     private DateTime modificationTime;
 

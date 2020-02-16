@@ -12,7 +12,6 @@ import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudServic
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
-import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.UserService;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
@@ -76,19 +75,21 @@ public class InitSampleDb implements CommandLineRunner {
 
     private void insertUsers() throws MemberUserNotActiveException, GroupNotFoundException, MessengerArgumentNotSpecified, MemberAlreadyExistsException, MessengerAlreadyExistsException, UserNotFoundException, MemberNotFoundException {
 
-        UserDto user1 = UserDto.builder()
-                .email("emailt407@gmail.com")
-                .isActive(true)
-                .build();
-        userService.add(user1);
-        System.out.println(userService.findAll());
-
-//        memberService.add(MemberDto.builder()
-//                .user(user1)
+//        UserDto user1 = UserDto.builder()
+//                .email("emailt407@gmail.com")
+//                .isActive(true)
+//                .build();
+//        userService.add(user1);
+//        System.out.println(userService.findAll());
+//
+//        MemberDto admin = MemberDto.builder()
+//                .user(userService.findByEmail("emailt407@gmail.com").get())
 //                .creationTime(DateTime.now())
 //                .nick("admin")
 //                .isActive(true)
-//                .build());
+//                .build();
+//
+//        memberService.add(admin);
 
     }
 }

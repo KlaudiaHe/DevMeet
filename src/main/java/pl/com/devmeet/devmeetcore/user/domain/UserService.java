@@ -1,12 +1,20 @@
 package pl.com.devmeet.devmeetcore.user.domain;
 
+import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.com.devmeet.devmeetcore.email.EmailService;
 import pl.com.devmeet.devmeetcore.email.Mail;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberUserNotActiveException;
+import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.InvalidUUIDStringException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserCrudStatusEnum;
@@ -19,16 +27,12 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
     private UserRepository repository;
     private EmailService emailService;
-
-    @Autowired
-    public UserService(UserRepository repository, EmailService emailService) {
-        this.repository = repository;
-        this.emailService = emailService;
-    }
+    private MemberCrudService memberService;
 
     // find
 
@@ -133,12 +137,12 @@ public class UserService {
         int min = 1000;
         int max = 9999;
         Random r = new Random();
-        return r.ints(min, (max + 1)).limit(1).findFirst().getAsInt();
+        return r.ints(min, (max + 1)).limit(1).findFirst().orElse(1234);
 
     }
 
 
-    public String activateUser(String email, String userKey) throws UserNotFoundException, UserAlreadyActiveException {
+    public String activateUser(String email, String userKey) throws UserNotFoundException, UserAlreadyActiveException, GroupNotFoundException, MessengerArgumentNotSpecified, MemberAlreadyExistsException, MessengerAlreadyExistsException, MemberNotFoundException, MemberUserNotActiveException {
         UserDto user = findByEmail(email).orElseThrow(() -> new UserNotFoundException(UserCrudStatusEnum.USER_NOT_FOUND.toString()));
         if (!user.isActive()) {
             try {
@@ -146,13 +150,20 @@ public class UserService {
                 if (user.getActivationKey().equals(uuid)) {
                     user.setActive(true);
                     update(user);
-                    //todo create member
+                    createMember(user);
                     return "User is active and TODO member created";
                 } else throw new InvalidUUIDStringException("Wrong key!");
             } catch (IllegalArgumentException ex) {
                 throw new InvalidUUIDStringException(ex.getMessage());
             }
         } else throw new UserAlreadyActiveException(UserCrudStatusEnum.USER_ALREADY_ACTIVE.toString());
+    }
+
+    private void createMember(UserDto user) throws MemberAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified, MemberUserNotActiveException {
+        MemberDto member = MemberDto.builder()
+                .user(user)
+                .build();
+        memberService.add(member);
     }
 
     public void sendMessageToActivateUser(String to, String subject, String activationKey, String initialPassword) {

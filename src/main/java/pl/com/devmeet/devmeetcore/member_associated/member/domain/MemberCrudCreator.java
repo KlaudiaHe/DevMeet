@@ -1,6 +1,8 @@
 package pl.com.devmeet.devmeetcore.member_associated.member.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudEntityCreator;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
@@ -42,7 +44,7 @@ class MemberCrudCreator implements CrudEntityCreator<MemberDto, MemberEntity> {
                         setDefaultValuesIfMemberNotExist(
                                 connectMemberWithUser(MemberMapper.map(dto), foundUser))
                 );
-                createMessengerForMember(dto);
+                createMessengerForMember(MemberMapper.map(memberEntity));
 
                 return memberEntity;
             }
