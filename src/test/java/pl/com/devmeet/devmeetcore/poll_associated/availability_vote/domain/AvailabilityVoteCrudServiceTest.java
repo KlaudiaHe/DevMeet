@@ -109,8 +109,8 @@ public class AvailabilityVoteCrudServiceTest {
 
         testAvailabilityDtoFirst = AvailabilityDto.builder()
                 .member(testMemberDtoFirst)
-                .beginTime(new DateTime(2020, 3, 3, 15, 0, 0))
-                .endTime(new DateTime(2020, 3, 3, 16, 0, 0))
+                .beginDateTime(new DateTime(2020, 3, 3, 15, 0, 0))
+                .endDateTime(new DateTime(2020, 3, 3, 16, 0, 0))
 //                .availabilityVote(null)
                 .remoteWork(true)
                 .creationTime(null)
@@ -120,8 +120,8 @@ public class AvailabilityVoteCrudServiceTest {
 
         testAvailabilityDtoSecond = AvailabilityDto.builder()
                 .member(testMemberDtoFirst)
-                .beginTime(new DateTime(2020, 2, 2, 17, 0, 0))
-                .endTime(new DateTime(2020, 2, 2, 18, 0, 0))
+                .beginDateTime(new DateTime(2020, 2, 2, 17, 0, 0))
+                .endDateTime(new DateTime(2020, 2, 2, 18, 0, 0))
 //                .availabilityVote(null)
                 .remoteWork(false)
                 .creationTime(null)
@@ -131,8 +131,8 @@ public class AvailabilityVoteCrudServiceTest {
 
         testAvailabilityDtoSecond = AvailabilityDto.builder()
                 .member(testMemberDtoSecond)
-                .beginTime(new DateTime(2020, 3, 1, 18, 0, 0))
-                .endTime(new DateTime(2020, 3, 1, 20, 0, 0))
+                .beginDateTime(new DateTime(2020, 3, 1, 18, 0, 0))
+                .endDateTime(new DateTime(2020, 3, 1, 20, 0, 0))
 //                .availabilityVote(null)
                 .remoteWork(true)
                 .creationTime(null)
@@ -410,8 +410,8 @@ public class AvailabilityVoteCrudServiceTest {
         assertThat(updated.getCreationTime()).isEqualTo(created.getCreationTime());
 
         assertThat(updated.getAvailability().getMember().getUser().getEmail()).isEqualTo(fakeUpdatedDto.getAvailability().getMember().getUser().getEmail());
-        assertThat(updated.getAvailability().getBeginTime()).isEqualTo(fakeUpdatedDto.getAvailability().getBeginTime());
-        assertThat(updated.getAvailability().getEndTime()).isEqualTo(fakeUpdatedDto.getAvailability().getEndTime());
+        assertThat(updated.getAvailability().getBeginDateTime()).isEqualTo(fakeUpdatedDto.getAvailability().getBeginDateTime());
+        assertThat(updated.getAvailability().getEndDateTime()).isEqualTo(fakeUpdatedDto.getAvailability().getEndDateTime());
         assertThat(updated.getAvailability().isActive()).isEqualTo(fakeUpdatedDto.getAvailability().isActive());
         assertThat(updated.getAvailability().isRemoteWork()).isEqualTo(fakeUpdatedDto.getAvailability().isRemoteWork());
     }

@@ -1,10 +1,14 @@
 package pl.com.devmeet.devmeetcore;
 
 import lombok.AllArgsConstructor;
+import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
+import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberUserNotActiveException;
@@ -12,17 +16,21 @@ import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudServic
 import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
+import pl.com.devmeet.devmeetcore.user.domain.UserCrudService;
+import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.UserService;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
+import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 @Component
 @AllArgsConstructor
 public class InitSampleDb implements CommandLineRunner {
 
-    private UserService userService;
+    private UserCrudService userService;
     private MemberCrudService memberService;
     private PlaceCrudService placeService;
-//    private MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 //    private UserRepository userRepository;
 
     @Override
@@ -73,23 +81,24 @@ public class InitSampleDb implements CommandLineRunner {
 
     }
 
-    private void insertUsers() throws MemberUserNotActiveException, GroupNotFoundException, MessengerArgumentNotSpecified, MemberAlreadyExistsException, MessengerAlreadyExistsException, UserNotFoundException, MemberNotFoundException {
+    private void insertUsers() throws MemberUserNotActiveException, GroupNotFoundException, MessengerArgumentNotSpecified, MemberAlreadyExistsException, MessengerAlreadyExistsException, UserNotFoundException, MemberNotFoundException, UserAlreadyExistsException, UserAlreadyActiveException {
+        String userEmail = "emailt407@gmail.com";
 
-//        UserDto user1 = UserDto.builder()
-//                .email("emailt407@gmail.com")
-//                .isActive(true)
-//                .build();
-//        userService.add(user1);
-//        System.out.println(userService.findAll());
-//
-//        MemberDto admin = MemberDto.builder()
-//                .user(userService.findByEmail("emailt407@gmail.com").get())
-//                .creationTime(DateTime.now())
-//                .nick("admin")
-//                .isActive(true)
-//                .build();
-//
-//        memberService.add(admin);
+        UserDto userDto = UserDto.builder()
+                .email(userEmail)
+                .build();
 
+        UserDto userForAdminMember = userService.activation( userService.add(userDto));
+        System.out.println(userService.findAll());
+
+        MemberDto admin = MemberDto.builder()
+                .user(userForAdminMember)
+                .creationTime(DateTime.now())
+                .nick("admin")
+                .build();
+
+        MemberDto createdMember = memberService.add(admin);
+//        MemberDto createdMember = MemberCrudService.map(memberRepository.save(MemberCrudService.map(admin)));
+        System.out.println("Member created: " + createdMember.getId());
     }
 }

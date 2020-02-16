@@ -22,16 +22,6 @@ class MemberUserFinder {
     private UserCrudService userCrudService;
 
     public UserEntity findUserEntity(UserDto dto) throws UserNotFoundException {
-        UserEntity userEntity;
-
-        try {
-            userEntity = userCrudService.findEntity(dto);
-            if(userEntity != null)
-                return userEntity;
-        }catch (IllegalArgumentException e){
-            throw new UserNotFoundException(UserCrudStatusEnum.USER_NOT_FOUND.toString());
-        }
-
-        throw new UserNotFoundException(UserCrudStatusEnum.USER_NOT_FOUND.toString());
+        return userCrudService.findEntity(dto);
     }
 }

@@ -98,9 +98,20 @@ public class AvailabilityCrudService implements CrudFacadeInterface<Availability
         return mapDtoList(initFinder().findEntitiesByMember(dto));
     }
 
+    public List<AvailabilityDto> findAllByMemberId(Long memberId) throws MemberNotFoundException, AvailabilityNotFoundException, UserNotFoundException {
+        AvailabilityDto availabilityDto = AvailabilityDto.builder()
+                .id(memberId)
+                .build();
+        return findAll(availabilityDto);
+    }
+
     @Override
     public AvailabilityDto update(AvailabilityDto oldDto, AvailabilityDto newDto) throws UserNotFoundException, AvailabilityNotFoundException, AvailabilityException, MemberNotFoundException {
         return map(initUpdater().updateEntity(oldDto, newDto));
+    }
+
+    public AvailabilityDto updateByAvailabilityId(AvailabilityDto newDto) throws UserNotFoundException, MemberNotFoundException, AvailabilityException, AvailabilityNotFoundException {
+        return map(initUpdater().updateEntityById(newDto));
     }
 
     @Override

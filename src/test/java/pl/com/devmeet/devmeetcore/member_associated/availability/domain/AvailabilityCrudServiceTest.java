@@ -74,8 +74,8 @@ public class AvailabilityCrudServiceTest {
 
         testAvailabilityDto = AvailabilityDto.builder()
                 .member(testMemberDto)
-                .beginTime(new DateTime(2020, 3, 3, 15, 0, 0))
-                .endTime(new DateTime(2020, 3, 3, 16, 0, 0))
+                .beginDateTime(new DateTime(2020, 3, 3, 15, 0, 0))
+                .endDateTime(new DateTime(2020, 3, 3, 16, 0, 0))
 //                .availabilityVote(null)
                 .remoteWork(true)
                 .creationTime(null)
@@ -228,8 +228,8 @@ public class AvailabilityCrudServiceTest {
         assertThat(updated.isRemoteWork()).isFalse();
 
         assertThat(updated.getMember()).isEqualToComparingFieldByField(created.getMember());
-        assertThat(updated.getBeginTime()).isEqualTo(created.getBeginTime());
-        assertThat(updated.getEndTime()).isEqualTo(created.getEndTime());
+        assertThat(updated.getBeginDateTime()).isEqualTo(created.getBeginDateTime());
+        assertThat(updated.getEndDateTime()).isEqualTo(created.getEndDateTime());
 //        assertThat(updated.getAvailabilityVote()).isEqualTo(created.getAvailabilityVote());
         assertThat(updated.getCreationTime()).isEqualTo(created.getCreationTime());
         assertThat(updated.isActive()).isEqualTo(created.isActive());
