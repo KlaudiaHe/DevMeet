@@ -4,5 +4,5 @@ import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
 
 public interface CrudEntityUpdater<D, E> {
 
-    E updateEntity(D oldDto, D newDto) throws CrudException;
+    E updateEntity(D update) throws CrudException;
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudEntityUpdater;
+import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupCrudStatusEnum;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupException;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupFoundButNotActiveException;
@@ -19,21 +20,33 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
     private GroupCrudFinder groupCrudFinder;
 
     @Override
-    public GroupEntity updateEntity(GroupDto oldDto, GroupDto newDto) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
-        GroupEntity foundOldGroup = checkIsOldGroupActive(groupCrudFinder.findEntityByGroup(oldDto));
+    public GroupEntity updateEntity(GroupDto update) throws GroupNotFoundException, GroupFoundButNotActiveException {
+        GroupEntity founded = checkIsOldGroupActive(
+                groupCrudFinder.findById(update.getId())
+        );
 
-        GroupEntity newGroup = mapDtoToEntity(checkIsNewGroupHasAName(newDto, foundOldGroup));
+        GroupEntity toUpdate = mapDtoToEntity(update);
 
-        return groupCrudSaver.saveEntity(updateAllowedParameters(foundOldGroup, newGroup));
+        return groupCrudSaver.saveEntity(
+                updateAllowedParameters(founded, toUpdate)
+        );
     }
 
-    public GroupEntity updateEntity(GroupDto oldDto, String groupName, String website, String description) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
-        return updateEntity(oldDto, GroupDto.builder()
-                .groupName(groupName)
-                .website(website)
-                .description(description)
-                .build());
-    }
+//    public GroupEntity updateEntity(GroupDto oldDto, GroupDto newDto) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
+//        GroupEntity foundOldGroup = checkIsOldGroupActive(groupCrudFinder.findEntityByGroup(oldDto));
+//
+//        GroupEntity newGroup = mapDtoToEntity(checkIsNewGroupHasAName(newDto, foundOldGroup));
+//
+//        return groupCrudSaver.saveEntity(updateAllowedParameters(foundOldGroup, newGroup));
+//    }
+
+//    public GroupEntity updateEntity(GroupDto oldDto, String groupName, String website, String description) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
+//        return updateEntity(oldDto, GroupDto.builder()
+//                .groupName(groupName)
+//                .website(website)
+//                .description(description)
+//                .build());
+//    }
 
     private GroupEntity checkIsOldGroupActive(GroupEntity oldGroup) throws GroupFoundButNotActiveException {
         if (oldGroup.isActive())
@@ -50,7 +63,7 @@ class GroupCrudUpdater implements CrudEntityUpdater<GroupDto, GroupEntity> {
     }
 
     private GroupEntity mapDtoToEntity(GroupDto dto) {
-        return GroupCrudService.map(dto);
+        return GroupCrudMapper.map(dto);
     }
 
     private GroupEntity updateAllowedParameters(GroupEntity oldEntity, GroupEntity newEntity) {

@@ -1,6 +1,7 @@
 package pl.com.devmeet.devmeetcore.group_associated.meeting.domain;
 
 import pl.com.devmeet.devmeetcore.domain_utils.CrudEntityUpdater;
+import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeetcore.group_associated.meeting.domain.status_and_exceptions.MeetingNotFoundException;
 
 public class MeetingCrudUpdater implements CrudEntityUpdater<MeetingDto, MeetingEntity> {
@@ -40,5 +41,10 @@ public class MeetingCrudUpdater implements CrudEntityUpdater<MeetingDto, Meeting
         oldMeetingEntity.setCreationTime(newMeetingEntity.getCreationTime());
         oldMeetingEntity.setEndTime(newMeetingEntity.getEndTime());
         return oldMeetingEntity;
+    }
+
+    @Override
+    public MeetingEntity updateEntity(MeetingDto update) throws CrudException {
+        return null;
     }
 }

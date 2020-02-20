@@ -21,7 +21,7 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 import java.util.List;
 
 @Service
-public class GroupCrudService implements CrudFacadeInterface<GroupDto, GroupEntity> {
+public class GroupCrudService {
 
     private GroupCrudRepository groupCrudRepository;
     private MemberRepository memberRepository;
@@ -86,7 +86,7 @@ public class GroupCrudService implements CrudFacadeInterface<GroupDto, GroupEnti
         return new GroupMessengerDeactivator(initMessengerFacade());
     }
 
-    @Override
+
     public GroupDto add(GroupDto dto) throws GroupAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         return map(initCreator().createEntity(dto));
     }
@@ -116,16 +116,16 @@ public class GroupCrudService implements CrudFacadeInterface<GroupDto, GroupEnti
         return initFinder().findAllEntities();
     }
 
-    @Override
-    public GroupDto update(GroupDto oldDto, GroupDto newDto) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
-        return map(initUpdater().updateEntity(oldDto, newDto));
+
+    public GroupDto update(GroupDto toUpdateBasedOnId) throws GroupNotFoundException, GroupFoundButNotActiveException {
+        return map(initUpdater().updateEntity(toUpdateBasedOnId));
     }
 
-    public GroupDto update(GroupDto oldDto, String groupName, String website, String description) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
-        return map(initUpdater().updateEntity(oldDto, groupName, website, description));
-    }
+//    public GroupDto update(GroupDto oldDto, String groupName, String website, String description) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
+//        return map(initUpdater().updateEntity(oldDto, groupName, website, description));
+//    }
 
-    @Override
+
     public GroupDto delete(GroupDto dto) throws GroupNotFoundException, GroupFoundButNotActiveException, UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, MessengerAlreadyExistsException {
         return map(initDeleter().deleteEntity(dto));
     }

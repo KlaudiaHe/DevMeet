@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 class GroupCrudMapper {
 
     public static GroupDto map(GroupEntity entity) {
-        return entity != null ? new GroupDto().builder()
+        return entity != null ? GroupDto.builder()
                 .id(entity.getId())
                 .groupName(entity.getGroupName())
                 .website(entity.getWebsite())
@@ -22,7 +22,7 @@ class GroupCrudMapper {
     }
 
     public static GroupEntity map(GroupDto dto) {
-        return dto != null ? new GroupEntity().builder()
+        return dto != null ? GroupEntity.builder()
                 .groupName(dto.getGroupName())
                 .website(dto.getWebsite())
                 .description(dto.getDescription())
