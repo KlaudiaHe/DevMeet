@@ -16,13 +16,12 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-class AvailabilityVoteCrudUpdater implements CrudEntityUpdater<AvailabilityVoteDto, AvailabilityVoteEntity> {
+class AvailabilityVoteCrudUpdater {
 
     private AvailabilityVoteCrudFinder voteCrudFinder;
     private AvailabilityVoteCrudSaver voteCrudSaver;
     private AvailabilityVoteAvailabilityFinder availabilityFinder;
 
-    @Override
     public AvailabilityVoteEntity updateEntity(AvailabilityVoteDto oldDto, AvailabilityVoteDto newDto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, AvailabilityVoteException, GroupNotFoundException, AvailabilityNotFoundException, PollNotFoundException {
         AvailabilityVoteEntity oldVote = voteCrudFinder.findEntity(oldDto);
         AvailabilityEntity newVote = availabilityFinder.findAvailability(newDto.getAvailability());
