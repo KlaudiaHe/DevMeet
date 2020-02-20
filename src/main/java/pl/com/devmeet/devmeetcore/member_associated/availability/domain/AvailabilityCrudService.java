@@ -20,7 +20,7 @@ import java.util.Optional;
 import static pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudMapper.mapDtoList;
 
 @Service
-public class AvailabilityCrudService implements CrudFacadeInterface<AvailabilityDto, AvailabilityEntity> {
+public class AvailabilityCrudService {
 
     private AvailabilityCrudRepository availabilityRepository;
     private MemberRepository memberRepository;
@@ -79,8 +79,6 @@ public class AvailabilityCrudService implements CrudFacadeInterface<Availability
                 .build();
     }
 
-
-    @Override
     public AvailabilityDto add(AvailabilityDto dto) throws MemberNotFoundException, AvailabilityAlreadyExistsException, UserNotFoundException {
         return map(initCreator().createEntity(dto));
     }
@@ -105,16 +103,15 @@ public class AvailabilityCrudService implements CrudFacadeInterface<Availability
         return findAll(availabilityDto);
     }
 
-    @Override
-    public AvailabilityDto update(AvailabilityDto oldDto, AvailabilityDto newDto) throws UserNotFoundException, AvailabilityNotFoundException, AvailabilityException, MemberNotFoundException {
-        return map(initUpdater().updateEntity(oldDto, newDto));
+//    @Override
+//    public AvailabilityDto update(AvailabilityDto oldDto, AvailabilityDto newDto) throws UserNotFoundException, AvailabilityNotFoundException, AvailabilityException, MemberNotFoundException {
+//        return map(initUpdater().updateEntity(oldDto, newDto));
+//    }
+
+    public AvailabilityDto update(AvailabilityDto newDto) throws UserNotFoundException, MemberNotFoundException, AvailabilityException, AvailabilityNotFoundException {
+        return map(initUpdater().updateEntity(newDto));
     }
 
-    public AvailabilityDto updateByAvailabilityId(AvailabilityDto newDto) throws UserNotFoundException, MemberNotFoundException, AvailabilityException, AvailabilityNotFoundException {
-        return map(initUpdater().updateEntityById(newDto));
-    }
-
-    @Override
     public AvailabilityDto delete(AvailabilityDto dto) throws UserNotFoundException, AvailabilityNotFoundException, MemberNotFoundException, AvailabilityAlreadyExistsException {
         return map(initDeleter().deleteEntity(dto));
     }
