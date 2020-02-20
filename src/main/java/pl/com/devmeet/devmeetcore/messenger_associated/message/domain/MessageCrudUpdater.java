@@ -17,12 +17,11 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-class MessageCrudUpdater implements CrudEntityUpdater<MessageDto, MessageEntity> {
+class MessageCrudUpdater {
 
     private MessageCrudFinder messageCrudFinder;
     private MessageCrudSaver messageCrudSaver;
 
-    @Override
     public MessageEntity updateEntity(MessageDto oldDto, MessageDto newDto) throws MessageNotFoundException, GroupNotFoundException, MessengerNotFoundException, UserNotFoundException, MessageArgumentNotSpecifiedException, MemberNotFoundException {
         MessageEntity foundMessage = messageCrudFinder.findEntity(oldDto);
 
