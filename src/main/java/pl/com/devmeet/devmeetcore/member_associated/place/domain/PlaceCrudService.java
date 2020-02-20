@@ -21,7 +21,7 @@ import java.util.Optional;
 import static pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudMapper.mapDtoList;
 
 @Service
-public class PlaceCrudService implements CrudFacadeInterface<PlaceDto, PlaceEntity> {
+public class PlaceCrudService{
 
     private PlaceCrudRepository placeRepository;
     private MemberRepository memberRepository;
@@ -82,8 +82,6 @@ public class PlaceCrudService implements CrudFacadeInterface<PlaceDto, PlaceEnti
                 .build();
     }
 
-
-    @Override
     public PlaceDto add(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
         return map(initCreator().createEntity(dto));
     }
@@ -101,12 +99,10 @@ public class PlaceCrudService implements CrudFacadeInterface<PlaceDto, PlaceEnti
         return mapDtoList(initFinder().findAllEntities());
     }
 
-    @Override
-    public PlaceDto update(PlaceDto oldDto, PlaceDto newDto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
-        return map(initUpdater().updateEntity(oldDto, newDto));
+    public PlaceDto update(PlaceDto toUpdate) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
+        return map(initUpdater().updateEntity(toUpdate));
     }
 
-    @Override
     public PlaceDto delete(PlaceDto dto) throws UserNotFoundException, MemberNotFoundException, PlaceNotFoundException, PlaceFoundButNotActiveException {
         return map(initDeleter().deleteEntity(dto));
     }
