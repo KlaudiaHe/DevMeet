@@ -144,7 +144,7 @@ public class GroupCrudServiceTest {
         GroupDto group = createGroup();
         GroupDto update = modifiedTestGroup(testGroup);
 
-        GroupDto modifiedGroup = initGroupFacade().update(group, update);
+        GroupDto modifiedGroup = initGroupFacade().update(update);
 
         assertThat(modifiedGroup.getGroupName()).isEqualTo(update.getGroupName());
         assertThat(modifiedGroup.getWebsite()).isEqualTo(update.getWebsite());
@@ -162,7 +162,7 @@ public class GroupCrudServiceTest {
     public void WHEN_try_to_update_not_existing_group_THEN_return_EntityNotFoundException_group_not_found() throws GroupException, GroupFoundButNotActiveException {
         GroupDto update = modifiedTestGroup(testGroup);
         try {
-            initGroupFacade().update(testGroup, update);
+            initGroupFacade().update(update);
         } catch (GroupNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(CrudException.class)

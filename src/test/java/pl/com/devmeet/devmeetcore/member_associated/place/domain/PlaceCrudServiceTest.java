@@ -240,7 +240,7 @@ public class PlaceCrudServiceTest {
         initTestDB();
         PlaceCrudService placeCrudService = initPlaceCrudFacade();
         PlaceDto created = placeCrudService.add(testPlaceDto1);
-        PlaceDto updated = placeCrudService.update(testPlaceDto1, placeUpdatedValues(testPlaceDto1));
+        PlaceDto updated = placeCrudService.update(placeUpdatedValues(testPlaceDto1));
         assertThat(updated.getMember()).isEqualToComparingFieldByField(created.getMember());
         assertThat(updated.getPlaceName()).isEqualTo(created.getPlaceName());
         assertThat(updated.getDescription()).isNotEqualTo(created.getDescription());
@@ -266,7 +266,7 @@ public class PlaceCrudServiceTest {
         initTestDB();
         PlaceCrudService placeCrudService = initPlaceCrudFacade();
         try {
-            placeCrudService.update(testPlaceDto1, placeUpdatedValues(testPlaceDto1));
+            placeCrudService.update(placeUpdatedValues(testPlaceDto1));
         } catch (PlaceNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(PlaceNotFoundException.class)
