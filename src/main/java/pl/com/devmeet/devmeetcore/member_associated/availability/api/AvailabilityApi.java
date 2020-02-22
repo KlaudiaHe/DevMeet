@@ -17,6 +17,7 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 import java.net.URI;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/availabilities")
 public class AvailabilityApi {
@@ -50,22 +51,25 @@ public class AvailabilityApi {
     @GetMapping("{id}")
     public ResponseEntity<List<AvailabilityApiDto>> getMemberAvailabilities(@PathVariable Long memberId) {
         try {
-            return new ResponseEntity<>(mapperApi.mapListToFrontend(
-                    availabilityService.findAllByMemberId(memberId)),
+            return new ResponseEntity<>(
+                    mapperApi.mapListToFrontend(
+                            availabilityService.findAllByMemberId(memberId)),
                     HttpStatus.FOUND);
 
         } catch (MemberNotFoundException | AvailabilityNotFoundException | UserNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    ("Resource with id(" + memberId + ") not found becouse: " + e.getMessage()));
+                    ("Resource with id(" + memberId + ") not found because: " + e.getMessage()));
         }
     }
 
     @PutMapping
     public ResponseEntity<AvailabilityApiDto> update(@RequestBody AvailabilityApiDto apiDto) {
         try {
-            return availabilityService
-                    .update(mapperApi.mapToBackend(apiDto)) != null ?
-                    new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(
+                    mapperApi.mapToFrontend(
+                            availabilityService.update(
+                                    mapperApi.mapToBackend(apiDto))),
+                    HttpStatus.ACCEPTED);
 
         } catch (UserNotFoundException | MemberNotFoundException | AvailabilityException | AvailabilityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -76,9 +80,11 @@ public class AvailabilityApi {
     @DeleteMapping
     public ResponseEntity<AvailabilityApiDto> delete(@RequestBody AvailabilityApiDto apiDto) {
         try {
-            return availabilityService
-                    .delete(mapperApi.mapToBackend(apiDto)) != null ?
-                    new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(
+                    mapperApi.mapToFrontend(
+                            availabilityService.delete(
+                                    mapperApi.mapToBackend(apiDto))),
+                    HttpStatus.ACCEPTED);
 
         } catch (UserNotFoundException | AvailabilityNotFoundException | MemberNotFoundException | AvailabilityAlreadyExistsException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,

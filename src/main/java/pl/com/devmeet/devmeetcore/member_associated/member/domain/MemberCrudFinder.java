@@ -22,40 +22,32 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
     @NonNull
     private MemberUserFinder userFinder;
 
-    public MemberEntity findEntityByUser(UserDto userDto) throws MemberNotFoundException, UserNotFoundException {
-        return findMember(userDto);
-    }
-
     @Override
     public MemberEntity findEntity(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         if (dto.getId() != null)
-            return findById(dto.getId())
-                    .orElseThrow(() -> new MemberNotFoundException(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString()));
+            return findById(dto.getId());
         else
-            return findEntityByUser(dto);
+            return findMemberEntityByUser(dto.getUser());
 
     }
 
-    public MemberEntity findEntityByUser(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
-        UserDto userDto;
+//    public MemberEntity findEntityByUser(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
+//        UserDto userDto;
+//
+//        try {
+//            userDto = dto.getUser();
+//        } catch (NullPointerException e) {
+//            throw new MemberNotFoundException(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString());
+//        }
+//
+//        return findMember(userDto);
+//    }
 
-        try {
-            userDto = dto.getUser();
-        } catch (NullPointerException e) {
-            throw new MemberNotFoundException(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString());
-        }
-
-        return findMember(userDto);
-    }
-
-    private MemberEntity findMember(UserDto userDto) throws MemberNotFoundException, UserNotFoundException {
+    public MemberEntity findMemberEntityByUser(UserDto userDto) throws MemberNotFoundException, UserNotFoundException {
         UserEntity userEntity = findUser(userDto);
-        Optional<MemberEntity> member = memberRepository.findByUser(userEntity);
-
-        if (member.isPresent())
-            return member.get();
-        else
-            throw new MemberNotFoundException(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString());
+        return memberRepository
+                .findByUser(userEntity)
+                .orElseThrow(() -> new MemberNotFoundException(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString()));
     }
 
     private UserEntity findUser(UserDto dto) throws UserNotFoundException {
@@ -70,14 +62,15 @@ class MemberCrudFinder implements CrudEntityFinder<MemberDto, MemberEntity> {
     @Override
     public boolean isExist(MemberDto dto) {
         try {
-            findMember(dto.getUser());
+            findMemberEntityByUser(dto.getUser());
             return true;
         } catch (UserNotFoundException | MemberNotFoundException | NullPointerException e) {
             return false;
         }
     }
 
-    public Optional<MemberEntity> findById(Long id) {
-        return memberRepository.findById(id);
+    public MemberEntity findById(Long id) throws MemberNotFoundException {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new MemberNotFoundException(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString()));
     }
 }

@@ -198,36 +198,38 @@ public class MemberCrudServiceTest {
         initTestDatabaseByAddingUser();
         UserDto foundUser = initUserCrudFacade().find(testUserDto);
         MemberDto createdMember = createMember();
+        MemberDto updateForMember = updateTestMemberDto(createdMember);
 
-        MemberDto updatedMember = memberCrudService.update(testMemberDto, updateTestMemberDto(testMemberDto));
+        MemberDto updatedMember = memberCrudService.update(updateForMember);
 
         assertThat(updatedMember.getUser()).isEqualToComparingFieldByFieldRecursively(foundUser);
 
-        assertThat(updatedMember.isActive()).isEqualTo(createdMember.isActive());
+        assertThat(updatedMember.isActive()).isTrue();
+        assertThat(updatedMember.getNick()).isEqualTo(updateForMember.getNick());
         assertThat(updatedMember.getCreationTime()).isNotNull();
         assertThat(updatedMember.getModificationTime()).isNotNull();
     }
 
     private MemberDto updateTestMemberDto(MemberDto testMemberDto) {
         testMemberDto.setNick("changedNick");
-        return illegalOperations(testMemberDto);
+        return doSomeIllegalOperations(testMemberDto);
     }
 
-    private MemberDto illegalOperations(MemberDto testMemberDto) {
+    private MemberDto doSomeIllegalOperations(MemberDto testMemberDto) {
         testMemberDto.setActive(false);
-        testMemberDto.setCreationTime(DateTime.now());
-        testMemberDto.setModificationTime(null);
+        testMemberDto.setCreationTime(null);
+        testMemberDto.setModificationTime(DateTime.now());
         return testMemberDto;
     }
 
     @Test
     public void WHEN_try_to_update_existing_but_not_active_member_THEN_return_exception() throws MemberNotFoundException, UserNotFoundException, MemberAlreadyExistsException, MemberFoundButNotActiveException, GroupNotFoundException, MessengerArgumentNotSpecified, MessengerAlreadyExistsException, MessengerNotFoundException, MemberUserNotActiveException {
         initTestDatabaseByAddingUser();
-        memberCrudService.add(testMemberDto);
+        MemberDto created = memberCrudService.add(testMemberDto);
         memberCrudService.delete(testMemberDto);
 
         try {
-            memberCrudService.update(testMemberDto, updateTestMemberDto(testMemberDto));
+            memberCrudService.update(updateTestMemberDto(created));
             Assert.fail();
         } catch (MemberFoundButNotActiveException e) {
             assertThat(e)
@@ -237,16 +239,16 @@ public class MemberCrudServiceTest {
     }
 
     @Test
-    public void WHEN_try_to_update_not_existing_member_THEN_return_MemberNotFoundException() throws UserNotFoundException, MemberFoundButNotActiveException {
+    public void WHEN_try_to_update_not_existing_member_THEN_return_MemberNotFoundException() throws MemberFoundButNotActiveException {
         initTestDatabaseByAddingUser();
 
         try {
-            memberCrudService.update(testMemberDto, updateTestMemberDto(testMemberDto));
+            memberCrudService.update(updateTestMemberDto(testMemberDto));
             Assert.fail();
         } catch (MemberNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(MemberNotFoundException.class)
-                    .hasMessage(MemberCrudStatusEnum.MEMBER_NOT_FOUND.toString());
+                    .hasMessage(MemberCrudStatusEnum.ID_NOT_SPECIFIED.toString());
         }
     }
 

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class MemberCrudService implements CrudFacadeInterface<MemberDto, MemberEntity> {
+public class MemberCrudService {
 
     private MemberRepository memberRepository;
     private UserRepository userRepository;
@@ -78,29 +78,32 @@ public class MemberCrudService implements CrudFacadeInterface<MemberDto, MemberE
     }
 
     private MemberCrudUpdater initUpdater() {
-        return new MemberCrudUpdater(initFinder(), initSaver());
+        return MemberCrudUpdater.builder()
+                .memberFinder(initFinder())
+                .memberSaver(initSaver())
+                .build();
     }
 
-    @Override
     public MemberDto add(MemberDto dto) throws MemberAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified, MemberUserNotActiveException {
         return map(initCreator().createEntity(dto));
     }
 
-    public Optional<MemberDto> findById(Long id){
-        return initFinder().findById(id)
-                .map(MemberCrudService::map);
+    public MemberDto findById(Long id) throws MemberNotFoundException {
+        return map(initFinder().findById(id));
     }
 
     public MemberDto find(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         return map(findEntity(dto));
     }
 
-    @Override
-    public MemberDto update(MemberDto oldDto, MemberDto newDto) throws MemberNotFoundException, UserNotFoundException, MemberFoundButNotActiveException {
-        return map(initUpdater().update(oldDto, newDto));
+    public MemberDto findByUserId(Long id) throws MemberNotFoundException, UserNotFoundException {
+        return map(initFinder().findMemberEntityByUser(UserDto.builder().id(id).build()));
     }
 
-    @Override
+    public MemberDto update(MemberDto oldDto) throws MemberNotFoundException, MemberFoundButNotActiveException {
+        return map(initUpdater().update(oldDto));
+    }
+
     public MemberDto delete(MemberDto dto) throws MemberNotFoundException, UserNotFoundException, MemberFoundButNotActiveException, MessengerAlreadyExistsException, MessengerNotFoundException, GroupNotFoundException {
         return map(initDeleter().delete(dto));
     }
@@ -111,16 +114,11 @@ public class MemberCrudService implements CrudFacadeInterface<MemberDto, MemberE
 
 
     public MemberEntity findEntityByUser(UserDto userDto) throws MemberNotFoundException, UserNotFoundException {
-        return initFinder().findEntityByUser(userDto);
+        return initFinder().findMemberEntityByUser(userDto);
     }
 
     public MemberEntity findEntity(MemberDto dto) throws MemberNotFoundException, UserNotFoundException {
         return initFinder().findEntity(dto);
-    }
-
-
-    public List<MemberEntity> findEntities(MemberDto dto) throws CrudException {
-        throw new CrudException(MemberCrudStatusEnum.METHOD_NOT_IMPLEMENTED.toString());
     }
 
     public static MemberEntity map(MemberDto dto) {

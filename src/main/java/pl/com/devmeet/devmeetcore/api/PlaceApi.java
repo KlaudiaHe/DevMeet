@@ -31,7 +31,7 @@ class PlaceApi {
     }
 
     @GetMapping
-    public ResponseEntity<List<PlaceDtoApi>> getPlaces() throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
+    public ResponseEntity<List<PlaceDtoApi>> getPlaces() {
         placeDtoApiList.clear();
         for (PlaceDto placeDto : place.findAll()) {
             placeDtoApiList.add(modelMapper
