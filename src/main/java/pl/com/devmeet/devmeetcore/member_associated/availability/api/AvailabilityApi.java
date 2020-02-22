@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pl.com.devmeet.devmeetcore.member_associated.availability.AvailabilityFacade;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityDto;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityAlreadyExistsException;
@@ -22,22 +21,18 @@ import java.util.List;
 @RequestMapping("/api/v1/availabilities")
 public class AvailabilityApi {
 
-    private AvailabilityFacade availabilityFacade;
+    private AvailabilityCrudService availabilityService;
     private AvailabilityApiMapper mapperApi = new AvailabilityApiMapper();
 
     @Autowired
-    public AvailabilityApi(AvailabilityFacade availabilityFacade) {
-        this.availabilityFacade = availabilityFacade;
-    }
-
-    private AvailabilityCrudService getCrudService() {
-        return availabilityFacade.getAvailabilityCrudService();
+    public AvailabilityApi(AvailabilityCrudService availabilityService) {
+        this.availabilityService = availabilityService;
     }
 
     @PostMapping
     public ResponseEntity<AvailabilityApiDto> addNew(@RequestBody AvailabilityApiDto newAvailability) {
         try {
-            AvailabilityDto added = getCrudService().add(mapperApi.mapToBackend(newAvailability));
+            AvailabilityDto added = availabilityService.add(mapperApi.mapToBackend(newAvailability));
 
             URI uri = ServletUriComponentsBuilder
                     .fromCurrentRequest()
@@ -55,9 +50,9 @@ public class AvailabilityApi {
     @GetMapping("{id}")
     public ResponseEntity<List<AvailabilityApiDto>> getMemberAvailabilities(@PathVariable Long memberId) {
         try {
-            return new ResponseEntity<>(mapperApi.mapListToFrontend(availabilityFacade
-                    .getAvailabilityCrudService()
-                    .findAllByMemberId(memberId)), HttpStatus.FOUND);
+            return new ResponseEntity<>(mapperApi.mapListToFrontend(
+                    availabilityService.findAllByMemberId(memberId)),
+                    HttpStatus.FOUND);
 
         } catch (MemberNotFoundException | AvailabilityNotFoundException | UserNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -68,8 +63,7 @@ public class AvailabilityApi {
     @PutMapping
     public ResponseEntity<AvailabilityApiDto> update(@RequestBody AvailabilityApiDto apiDto) {
         try {
-            return availabilityFacade
-                    .getAvailabilityCrudService()
+            return availabilityService
                     .update(mapperApi.mapToBackend(apiDto)) != null ?
                     new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
@@ -82,8 +76,7 @@ public class AvailabilityApi {
     @DeleteMapping
     public ResponseEntity<AvailabilityApiDto> delete(@RequestBody AvailabilityApiDto apiDto) {
         try {
-            return availabilityFacade
-                    .getAvailabilityCrudService()
+            return availabilityService
                     .delete(mapperApi.mapToBackend(apiDto)) != null ?
                     new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
