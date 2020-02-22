@@ -8,7 +8,8 @@ public enum GroupCrudStatusEnum {
     GROUP_FOUND_BUT_NOT_ACTIVE("Group was found but is not active"),
     GROUP_INCORRECT_VALUES("Group has incorrect value / values"),
     ARGUMENTS_NOT_SPECIFIED("Group name, website or description is not specified"),
-    GROUP_NAME_NOT_SPECIFIED("Group name, website or description is not specified"),;
+    GROUP_NAME_NOT_SPECIFIED("Group name, website or description is not specified"),
+    ID_IS_NOT_SPECIFIED("Group id is not specified");
 
     private String status;
 

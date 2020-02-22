@@ -70,7 +70,7 @@ public class AvailabilityApi {
         try {
             return availabilityFacade
                     .getAvailabilityCrudService()
-                    .updateByAvailabilityId(mapperApi.mapToBackend(apiDto)) != null ?
+                    .update(mapperApi.mapToBackend(apiDto)) != null ?
                     new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         } catch (UserNotFoundException | MemberNotFoundException | AvailabilityException | AvailabilityNotFoundException e) {

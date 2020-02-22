@@ -34,7 +34,7 @@ class MemberCrudDeactivator {
         memberEntity.setActive(false);
         memberEntity.setModificationTime(DateTime.now());
 
-        deactivateMessenger(memberEntity);
+//        deactivateMessenger(memberEntity);
 
         return memberEntity;
     }

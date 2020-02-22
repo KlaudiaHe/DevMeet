@@ -3,13 +3,8 @@ package pl.com.devmeet.devmeetcore.group_associated.group.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupArgumentsNotSpecifiedException;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupCrudStatusEnum;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
-import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,29 +19,25 @@ class GroupCrudFinder {
     private GroupMemberFinder memberFinder;
 
     public GroupEntity findById(Long id) throws GroupNotFoundException {
-        Optional<GroupEntity> found = groupCrudRepository.findById(id);
-
-        if (found.isPresent())
-            return found.get();
-
-        throw new GroupNotFoundException(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString());
+        if (id != null) {
+            return groupCrudRepository.findById(id)
+                    .orElseThrow(() -> new GroupNotFoundException(GroupCrudStatusEnum.GROUP_NOT_FOUND.toString()));
+        } else
+            throw new GroupNotFoundException(GroupCrudStatusEnum.ID_IS_NOT_SPECIFIED.toString() + ": " + id);
     }
 
-    public GroupEntity findEntityByGroup(GroupDto dto) throws GroupNotFoundException {
-        String groupName;
-        String website;
-        String description;
+    public GroupEntity findEntityByGroup(GroupDto group) throws GroupNotFoundException {
+        Long id = group.getId();
 
-        groupName = dto.getGroupName();
-        website = dto.getWebsite();
-        description = dto.getDescription();
-
-        return findEntityByGroupNameAndWebsiteAndDescription(groupName, website, description);
+        if (id != null)
+            return findById(id);
+        else
+            return findEntityByGroupName(group.getGroupName());
     }
 
 
-    public GroupEntity findEntityByGroupNameAndWebsiteAndDescription(String groupName, String website, String description) throws GroupNotFoundException {
-        Optional<GroupEntity> group = groupCrudRepository.findByGroupNameAndWebsiteAndDescription(groupName, website, description);
+    public GroupEntity findEntityByGroupName(String groupName) throws GroupNotFoundException {
+        Optional<GroupEntity> group = groupCrudRepository.findByGroupName(groupName);
 
         if (group.isPresent())
             return group.get();
@@ -63,8 +54,6 @@ class GroupCrudFinder {
     }
 
     public List<GroupEntity> findAllEntities() {
-        List<GroupEntity> entities = new ArrayList<>();
-        groupCrudRepository.findAll().forEach(entities::add);
-        return entities;
+        return groupCrudRepository.findAll();
     }
 }

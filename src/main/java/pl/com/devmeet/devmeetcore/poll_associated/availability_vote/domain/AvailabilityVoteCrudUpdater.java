@@ -3,7 +3,6 @@ package pl.com.devmeet.devmeetcore.poll_associated.availability_vote.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import pl.com.devmeet.devmeetcore.domain_utils.CrudEntityUpdater;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityEntity;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.status_and_exceptions.AvailabilityNotFoundException;
@@ -16,13 +15,12 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-class AvailabilityVoteCrudUpdater implements CrudEntityUpdater<AvailabilityVoteDto, AvailabilityVoteEntity> {
+class AvailabilityVoteCrudUpdater {
 
     private AvailabilityVoteCrudFinder voteCrudFinder;
     private AvailabilityVoteCrudSaver voteCrudSaver;
     private AvailabilityVoteAvailabilityFinder availabilityFinder;
 
-    @Override
     public AvailabilityVoteEntity updateEntity(AvailabilityVoteDto oldDto, AvailabilityVoteDto newDto) throws MemberNotFoundException, UserNotFoundException, AvailabilityVoteNotFoundException, AvailabilityVoteException, GroupNotFoundException, AvailabilityNotFoundException, PollNotFoundException {
         AvailabilityVoteEntity oldVote = voteCrudFinder.findEntity(oldDto);
         AvailabilityEntity newVote = availabilityFinder.findAvailability(newDto.getAvailability());

@@ -222,7 +222,7 @@ public class AvailabilityCrudServiceTest {
         initTestDB();
         AvailabilityCrudService availabilityCrudService = initAvailabilityCrudFacade();
         AvailabilityDto created = availabilityCrudService.add(testAvailabilityDto);
-        AvailabilityDto updated = availabilityCrudService.update(testAvailabilityDto, availabilityUpdatedValues(testAvailabilityDto));
+        AvailabilityDto updated = availabilityCrudService.update(availabilityUpdatedValues(testAvailabilityDto));
 
 
         assertThat(updated.isRemoteWork()).isFalse();
@@ -246,7 +246,7 @@ public class AvailabilityCrudServiceTest {
         initTestDB();
         AvailabilityCrudService availabilityCrudService = initAvailabilityCrudFacade();
         try {
-            availabilityCrudService.update(testAvailabilityDto, availabilityUpdatedValues(testAvailabilityDto));
+            availabilityCrudService.update(availabilityUpdatedValues(testAvailabilityDto));
         } catch (AvailabilityNotFoundException e) {
             assertThat(e)
                     .isInstanceOf(AvailabilityNotFoundException.class)

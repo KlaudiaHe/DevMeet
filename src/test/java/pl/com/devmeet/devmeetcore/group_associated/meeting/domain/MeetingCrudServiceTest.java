@@ -191,7 +191,7 @@ public class MeetingCrudServiceTest {
 
         MeetingDto oldMeetingDto = createMeeting();
 
-        MeetingDto newDto = new MeetingDto().builder()
+        MeetingDto newDto = MeetingDto.builder()
                 .beginTime(DateTime.now())
                 .endTime(DateTime.now().plusHours(4))
                 .group(groupDto)
@@ -199,7 +199,7 @@ public class MeetingCrudServiceTest {
                 .place(placeDto)
                 .build();
 
-        MeetingDto updatedMeetingDto = meetingCrudService.update(oldMeetingDto, newDto);
+        MeetingDto updatedMeetingDto = meetingCrudService.update(newDto);
         assertThat(updatedMeetingDto.getMeetingNumber()).isEqualTo(1);
         assertThat(updatedMeetingDto.getEndTime().toLocalDate()).isEqualTo(DateTime.now().plusHours(4).toLocalDate());
     }
@@ -218,7 +218,7 @@ public class MeetingCrudServiceTest {
                 .place(placeDto)
                 .build();
 
-        MeetingDto updatedMeetingDto = meetingCrudService.update(oldMeetingDto, newDto);
+        MeetingDto updatedMeetingDto = meetingCrudService.update(newDto);
         assertThat(updatedMeetingDto.getMeetingNumber()).isEqualTo(1);
         assertThat(updatedMeetingDto.getEndTime().toLocalDate()).isEqualTo(DateTime.now().plusHours(4).toLocalDate());
     }

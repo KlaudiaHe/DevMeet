@@ -12,7 +12,7 @@ import java.util.List;
 import static pl.com.devmeet.devmeetcore.group_associated.meeting.domain.MeetingMapper.map;
 
 @Service
-public class MeetingCrudService implements CrudFacadeInterface<MeetingDto, MeetingEntity> {
+public class MeetingCrudService {
 
     private MeetingCrudRepository repository;
 
@@ -38,7 +38,6 @@ public class MeetingCrudService implements CrudFacadeInterface<MeetingDto, Meeti
     }
 
 
-    @Override
     public MeetingDto add(MeetingDto dto) throws MeetingAlreadyExistsException {
         return mapToDto(initCreator().createEntity(dto));
     }
@@ -59,12 +58,10 @@ public class MeetingCrudService implements CrudFacadeInterface<MeetingDto, Meeti
         return initFinder().isExist(meetingDto);
     }
 
-    @Override
-    public MeetingDto update(MeetingDto oldDto, MeetingDto newDto) throws MeetingNotFoundException {
-        return map(initUpdater().updateEntity(oldDto, newDto));
+    public MeetingDto update(MeetingDto toUpdate) throws MeetingNotFoundException {
+        return map(initUpdater().updateEntity(toUpdate));
     }
 
-    @Override
     public MeetingDto delete(MeetingDto dto) throws MeetingNotFoundException {
         return map(initDeleter().deleteEntity(dto));
     }

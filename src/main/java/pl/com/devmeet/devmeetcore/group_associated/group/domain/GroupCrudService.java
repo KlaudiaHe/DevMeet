@@ -2,9 +2,7 @@ package pl.com.devmeet.devmeetcore.group_associated.group.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.com.devmeet.devmeetcore.domain_utils.CrudFacadeInterface;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupException;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupFoundButNotActiveException;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
@@ -21,7 +19,7 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 import java.util.List;
 
 @Service
-public class GroupCrudService implements CrudFacadeInterface<GroupDto, GroupEntity> {
+public class GroupCrudService {
 
     private GroupCrudRepository groupCrudRepository;
     private MemberRepository memberRepository;
@@ -86,14 +84,14 @@ public class GroupCrudService implements CrudFacadeInterface<GroupDto, GroupEnti
         return new GroupMessengerDeactivator(initMessengerFacade());
     }
 
-    @Override
+
     public GroupDto add(GroupDto dto) throws GroupAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
         return map(initCreator().createEntity(dto));
     }
 
-    public GroupDto findByGroupNameWebsiteAndDescription(String groupName, String website, String description) throws GroupNotFoundException {
-        return map(findEntityByGroupNameAndWebsiteAndDescription(groupName, website, description));
-    }
+//    public GroupDto findByGroupName(String groupName) throws GroupNotFoundException {
+//        return map(findEntityByGroupName(groupName));
+//    }
 
     public List<GroupDto> findAll() {
         return mapDtoList(findAllEntities());
@@ -108,24 +106,24 @@ public class GroupCrudService implements CrudFacadeInterface<GroupDto, GroupEnti
         return initFinder().findEntityByGroup(groupDto);
     }
 
-    public GroupEntity findEntityByGroupNameAndWebsiteAndDescription(String groupName, String website, String description) throws GroupNotFoundException {
-        return initFinder().findEntityByGroupNameAndWebsiteAndDescription(groupName, website, description);
-    }
+//    public GroupEntity findEntityByGroupName(String groupName) throws GroupNotFoundException {
+//        return initFinder().findEntityByGroupName(groupName);
+//    }
 
     public List<GroupEntity> findAllEntities() {
         return initFinder().findAllEntities();
     }
 
-    @Override
-    public GroupDto update(GroupDto oldDto, GroupDto newDto) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
-        return map(initUpdater().updateEntity(oldDto, newDto));
+
+    public GroupDto update(GroupDto toUpdateBasedOnId) throws GroupNotFoundException, GroupFoundButNotActiveException {
+        return map(initUpdater().updateEntity(toUpdateBasedOnId));
     }
 
-    public GroupDto update(GroupDto oldDto, String groupName, String website, String description) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
-        return map(initUpdater().updateEntity(oldDto, groupName, website, description));
-    }
+//    public GroupDto update(GroupDto oldDto, String groupName, String website, String description) throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException {
+//        return map(initUpdater().updateEntity(oldDto, groupName, website, description));
+//    }
 
-    @Override
+
     public GroupDto delete(GroupDto dto) throws GroupNotFoundException, GroupFoundButNotActiveException, UserNotFoundException, MemberNotFoundException, MessengerNotFoundException, MessengerAlreadyExistsException {
         return map(initDeleter().deleteEntity(dto));
     }

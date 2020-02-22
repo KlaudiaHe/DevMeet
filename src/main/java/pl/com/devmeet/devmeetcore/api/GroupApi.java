@@ -52,12 +52,11 @@ class GroupApi {
     }
 
     @SneakyThrows
-    @PutMapping("/{id}")
-    private ResponseEntity<GroupDto> update(@PathVariable Long id,
-                                            @RequestBody GroupDto updatedGroup) {
-        if (!id.equals(updatedGroup.getId()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "id from path does not match with id in body!");
-        group.update(group.findById(id), updatedGroup);
+    @PutMapping
+    private ResponseEntity<GroupDto> update(@RequestBody GroupDto updatedGroup) {
+//        if (!id.equals(updatedGroup.getId()))
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "id from path does not match with id in body!");
+        group.update(updatedGroup);
         return new ResponseEntity<>(updatedGroup, HttpStatus.OK);
     }
 

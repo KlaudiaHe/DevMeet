@@ -15,12 +15,11 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-class PermissionCrudUpdater implements CrudEntityUpdater<PermissionDto, PermissionEntity> {
+class PermissionCrudUpdater{
 
     private PermissionCrudFinder permissionCrudFinder;
     private PermissionCrudSaver permissionCrudSaver;
 
-    @Override
     public PermissionEntity updateEntity(PermissionDto oldDto, PermissionDto newDto) throws GroupNotFoundException, MemberNotFoundException, UserNotFoundException, PermissionException, PermissionNotFoundException {
         PermissionEntity oldPermission = findPermissionEntity(oldDto);
         PermissionEntity newPermission = mapDtoToEntity(checkMemberAndGroup(oldDto, newDto));
