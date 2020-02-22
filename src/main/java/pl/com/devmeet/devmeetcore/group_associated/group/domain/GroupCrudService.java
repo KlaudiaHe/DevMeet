@@ -2,9 +2,7 @@ package pl.com.devmeet.devmeetcore.group_associated.group.domain;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.com.devmeet.devmeetcore.domain_utils.CrudFacadeInterface;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupException;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupFoundButNotActiveException;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
@@ -91,9 +89,9 @@ public class GroupCrudService {
         return map(initCreator().createEntity(dto));
     }
 
-    public GroupDto findByGroupNameWebsiteAndDescription(String groupName, String website, String description) throws GroupNotFoundException {
-        return map(findEntityByGroupNameAndWebsiteAndDescription(groupName, website, description));
-    }
+//    public GroupDto findByGroupName(String groupName) throws GroupNotFoundException {
+//        return map(findEntityByGroupName(groupName));
+//    }
 
     public List<GroupDto> findAll() {
         return mapDtoList(findAllEntities());
@@ -108,9 +106,9 @@ public class GroupCrudService {
         return initFinder().findEntityByGroup(groupDto);
     }
 
-    public GroupEntity findEntityByGroupNameAndWebsiteAndDescription(String groupName, String website, String description) throws GroupNotFoundException {
-        return initFinder().findEntityByGroupNameAndWebsiteAndDescription(groupName, website, description);
-    }
+//    public GroupEntity findEntityByGroupName(String groupName) throws GroupNotFoundException {
+//        return initFinder().findEntityByGroupName(groupName);
+//    }
 
     public List<GroupEntity> findAllEntities() {
         return initFinder().findAllEntities();

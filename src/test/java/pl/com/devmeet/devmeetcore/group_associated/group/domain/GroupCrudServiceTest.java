@@ -109,7 +109,7 @@ public class GroupCrudServiceTest {
     private GroupDto modifiedTestGroup(GroupDto dto) {
         dto.setDescription("ModifiedDesc");
         dto.setWebsite("www.modified.com.pl");
-        return testGroup;
+        return dto;
     }
 
     @Test
@@ -140,9 +140,9 @@ public class GroupCrudServiceTest {
     }
 
     @Test
-    public void WHEN_try_to_update_existing_group_THEN_return_group() throws GroupException, GroupNotFoundException, GroupFoundButNotActiveException, GroupAlreadyExistsException, UserNotFoundException, MessengerArgumentNotSpecified, MemberNotFoundException, MessengerAlreadyExistsException {
+    public void WHEN_try_to_update_existing_group_THEN_return_group() throws GroupNotFoundException, GroupFoundButNotActiveException, GroupAlreadyExistsException, UserNotFoundException, MessengerArgumentNotSpecified, MemberNotFoundException, MessengerAlreadyExistsException {
         GroupDto group = createGroup();
-        GroupDto update = modifiedTestGroup(testGroup);
+        GroupDto update = modifiedTestGroup(group);
 
         GroupDto modifiedGroup = initGroupFacade().update(update);
 
@@ -160,6 +160,7 @@ public class GroupCrudServiceTest {
 
     @Test
     public void WHEN_try_to_update_not_existing_group_THEN_return_EntityNotFoundException_group_not_found() throws GroupException, GroupFoundButNotActiveException {
+        testGroup.setId(1l);
         GroupDto update = modifiedTestGroup(testGroup);
         try {
             initGroupFacade().update(update);
