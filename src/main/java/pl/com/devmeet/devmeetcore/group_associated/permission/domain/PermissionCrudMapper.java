@@ -1,14 +1,11 @@
 package pl.com.devmeet.devmeetcore.group_associated.permission.domain;
 
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
-
 class PermissionCrudMapper {
 
     public static PermissionDto map (PermissionEntity entity){
         return entity != null ? new PermissionDto().builder()
-                .member(MemberCrudService.map(entity.getMember()))
-                .group(GroupCrudService.map(entity.getGroup()))
+//                .member(MemberCrudService.map(entity.getMember()))
+//                .group(GroupCrudService.map(entity.getGroup()))
                 .possibleToVote(entity.isPossibleToVote())
                 .possibleToMessaging(entity.isPossibleToMessaging())
                 .possibleToChangeGroupName(entity.isPossibleToChangeGroupName())
@@ -22,8 +19,8 @@ class PermissionCrudMapper {
 
     public static PermissionEntity map (PermissionDto dto){
         return dto != null ? new PermissionEntity().builder()
-                .member(MemberCrudService.map(dto.getMember()))
-                .group(GroupCrudService.map(dto.getGroup()))
+//                .member(MemberCrudService.map(dto.getMember()))
+//                .group(GroupCrudService.map(dto.getGroup()))
                 .possibleToVote(dto.isPossibleToVote())
                 .possibleToMessaging(dto.isPossibleToMessaging())
                 .possibleToChangeGroupName(dto.isPossibleToChangeGroupName())

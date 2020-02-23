@@ -264,7 +264,7 @@ public class AvailabilityVoteCrudServiceTest {
         GroupEntity groupEntity = null;
         try {
             groupEntity = groupCrudService.findEntityByGroup(groupCrudService.add(testGroupDto));
-        } catch (GroupNotFoundException | GroupAlreadyExistsException | UserNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
+        } catch (GroupNotFoundException | GroupAlreadyExistsException e) {
             e.printStackTrace();
         }
 

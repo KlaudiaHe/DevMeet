@@ -33,24 +33,24 @@ public class GroupEntity {
     private String website;
     private String description;
 
-    @OneToOne(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private MessengerEntity messenger;
+//    @OneToOne(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    private MessengerEntity messenger;
 
     private Integer membersLimit;
     private Integer memberCounter;
     private Integer meetingCounter;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private List<MemberEntity> members;
-
-    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<PermissionEntity> permissions;
-
-    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<PollEntity> polls;
-
-    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<MeetingEntity> meetings;
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+//    private List<MemberEntity> members;
+//
+//    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    private List<PermissionEntity> permissions;
+//
+//    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    private List<PollEntity> polls;
+//
+//    @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    private List<MeetingEntity> meetings;
 
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     @JsonDeserialize(using = LocalDateDeserializer.class)

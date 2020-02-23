@@ -20,35 +20,35 @@ class PermissionCrudUpdater{
     private PermissionCrudFinder permissionCrudFinder;
     private PermissionCrudSaver permissionCrudSaver;
 
-    public PermissionEntity updateEntity(PermissionDto oldDto, PermissionDto newDto) throws GroupNotFoundException, MemberNotFoundException, UserNotFoundException, PermissionException, PermissionNotFoundException {
-        PermissionEntity oldPermission = findPermissionEntity(oldDto);
-        PermissionEntity newPermission = mapDtoToEntity(checkMemberAndGroup(oldDto, newDto));
+//    public PermissionEntity updateEntity(PermissionDto oldDto, PermissionDto newDto) throws GroupNotFoundException, MemberNotFoundException, UserNotFoundException, PermissionException, PermissionNotFoundException {
+//        PermissionEntity oldPermission = findPermissionEntity(oldDto);
+//        PermissionEntity newPermission = mapDtoToEntity(checkMemberAndGroup(oldDto, newDto));
+//
+//        return permissionCrudSaver.saveEntity(updateAllowedParameters(oldPermission, newPermission));
+//    }
+//
+//    public PermissionEntity changeMemberBanInGroupStatus(PermissionDto oldDto, boolean memberBanInGroupStatus) throws GroupNotFoundException, MemberNotFoundException, UserNotFoundException, PermissionNotFoundException {
+//        PermissionEntity foundPermission = findPermissionEntity(oldDto);
+//
+//        if (foundPermission.isMemberBaned() != memberBanInGroupStatus) {
+//            foundPermission.setMemberBaned(memberBanInGroupStatus);
+//            foundPermission.setModificationTime(DateTime.now());
+//
+//            return permissionCrudSaver.saveEntity(foundPermission);
+//        }
+//        return foundPermission;
+//    }
 
-        return permissionCrudSaver.saveEntity(updateAllowedParameters(oldPermission, newPermission));
-    }
+//    private PermissionEntity findPermissionEntity(PermissionDto oldDto) throws UserNotFoundException, GroupNotFoundException, MemberNotFoundException, PermissionNotFoundException {
+//        return permissionCrudFinder.findEntity(oldDto);
+//    }
 
-    public PermissionEntity changeMemberBanInGroupStatus(PermissionDto oldDto, boolean memberBanInGroupStatus) throws GroupNotFoundException, MemberNotFoundException, UserNotFoundException, PermissionNotFoundException {
-        PermissionEntity foundPermission = findPermissionEntity(oldDto);
-
-        if (foundPermission.isMemberBaned() != memberBanInGroupStatus) {
-            foundPermission.setMemberBaned(memberBanInGroupStatus);
-            foundPermission.setModificationTime(DateTime.now());
-
-            return permissionCrudSaver.saveEntity(foundPermission);
-        }
-        return foundPermission;
-    }
-
-    private PermissionEntity findPermissionEntity(PermissionDto oldDto) throws UserNotFoundException, GroupNotFoundException, MemberNotFoundException, PermissionNotFoundException {
-        return permissionCrudFinder.findEntity(oldDto);
-    }
-
-    private PermissionDto checkMemberAndGroup(PermissionDto oldDto, PermissionDto newDto) throws PermissionException {
-        if (oldDto.getMember().getNick().equals(newDto.getMember().getNick()))
-            if(oldDto.getGroup().getGroupName().equals(newDto.getGroup().getGroupName()))
-                return newDto;
-        throw new PermissionException(PermissionCrudStatusEnum.INCORRECT_MEMBER_OR_GROUP.toString());
-    }
+//    private PermissionDto checkMemberAndGroup(PermissionDto oldDto, PermissionDto newDto) throws PermissionException {
+//        if (oldDto.getMember().getNick().equals(newDto.getMember().getNick()))
+//            if(oldDto.getGroup().getGroupName().equals(newDto.getGroup().getGroupName()))
+//                return newDto;
+//        throw new PermissionException(PermissionCrudStatusEnum.INCORRECT_MEMBER_OR_GROUP.toString());
+//    }
 
     private PermissionEntity mapDtoToEntity(PermissionDto dto) {
         return PermissionCrudService.map(dto);

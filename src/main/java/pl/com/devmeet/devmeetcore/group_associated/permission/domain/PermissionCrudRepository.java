@@ -9,5 +9,5 @@ import java.util.UUID;
 
 public interface PermissionCrudRepository extends PagingAndSortingRepository<PermissionEntity, UUID> {
 
-    Optional<PermissionEntity> findByMemberAndGroup(MemberEntity member, GroupEntity group);
+//    Optional<PermissionEntity> findByMemberAndGroup(MemberEntity member, GroupEntity group);
 }

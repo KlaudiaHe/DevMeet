@@ -28,11 +28,11 @@ public class PermissionEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID Id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private MemberEntity member;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private GroupEntity group;
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+//    private MemberEntity member;
+//
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+//    private GroupEntity group;
 
 //    private PermissionTypeEnum type;
 

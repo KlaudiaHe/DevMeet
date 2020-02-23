@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
+import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
@@ -11,11 +14,11 @@ import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberReposito
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberUserNotActiveException;
+import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
+import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.place.domain.PlaceCrudService;
 import pl.com.devmeet.devmeetcore.place.domain.PlaceDto;
 import pl.com.devmeet.devmeetcore.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
-import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
-import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
 import pl.com.devmeet.devmeetcore.user.domain.UserCrudService;
 import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserAlreadyActiveException;
@@ -27,15 +30,36 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 public class InitSampleDb implements CommandLineRunner {
 
     private UserCrudService userService;
+    private MemberRepository memberRepository;
     private MemberCrudService memberService;
     private PlaceCrudService placeService;
-    private MemberRepository memberRepository;
-//    private UserRepository userRepository;
+    private GroupCrudService groupService;
 
     @Override
     public void run(String... args) throws Exception {
         insertUsers();
         insertPlaces();
+        initGroups();
+    }
+
+    private void insertUsers() throws MemberUserNotActiveException, GroupNotFoundException, MessengerArgumentNotSpecified, MemberAlreadyExistsException, MessengerAlreadyExistsException, UserNotFoundException, MemberNotFoundException, UserAlreadyExistsException, UserAlreadyActiveException {
+        String userEmail = "adminforrunner@gmail.com";
+
+        UserDto userDto = UserDto.builder()
+                .email(userEmail)
+                .build();
+
+        UserDto userForAdminMember = userService.activation(userService.add(userDto));
+        System.out.println(userService.findAll());
+
+        MemberDto admin = MemberDto.builder()
+                .user(userForAdminMember)
+                .creationTime(DateTime.now())
+                .nick("admin")
+                .build();
+
+        MemberDto createdMember = memberService.add(admin);
+        System.out.println("Member created: " + createdMember.toString());
     }
 
     private void insertPlaces() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
@@ -76,26 +100,21 @@ public class InitSampleDb implements CommandLineRunner {
                 .build());
 
         System.out.println(placeService.findAll());
-
     }
 
-    private void insertUsers() throws MemberUserNotActiveException, GroupNotFoundException, MessengerArgumentNotSpecified, MemberAlreadyExistsException, MessengerAlreadyExistsException, UserNotFoundException, MemberNotFoundException, UserAlreadyExistsException, UserAlreadyActiveException {
-        String userEmail = "adminforrunner@gmail.com";
 
-        UserDto userDto = UserDto.builder()
-                .email(userEmail)
-                .build();
+    private void initGroups() throws GroupAlreadyExistsException {
+        groupService.add(GroupDto.builder()
+                .groupName("Java test group")
+                .website("www.testWebsite.com")
+                .description("Welcome to test group")
+                .build());
 
-        UserDto userForAdminMember = userService.activation( userService.add(userDto));
-        System.out.println(userService.findAll());
-
-        MemberDto admin = MemberDto.builder()
-                .user(userForAdminMember)
-                .creationTime(DateTime.now())
-                .nick("admin")
-                .build();
-
-        MemberDto createdMember = memberService.add(admin);
-        System.out.println("Member created: " + createdMember.toString());
+        groupService.add(GroupDto.builder()
+                .groupName("DevMeet developers")
+                .website("https://bitbucket.org/khturowska/devmeet/")
+                .description("Awesome team")
+                .build());
+        System.out.println("Groups created: " + groupService.findAll());
     }
 }

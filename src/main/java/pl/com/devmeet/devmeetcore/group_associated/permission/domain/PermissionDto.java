@@ -12,8 +12,8 @@ import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 @Getter
 public class PermissionDto {
 
-    private MemberDto member;
-    private GroupDto group;
+//    private MemberDto member;
+//    private GroupDto group;
 //    private PermissionTypeEnum type;
 
     private boolean possibleToVote;

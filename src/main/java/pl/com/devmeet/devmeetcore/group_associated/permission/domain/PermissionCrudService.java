@@ -98,7 +98,8 @@ public class PermissionCrudService implements CrudFacadeInterface<PermissionDto,
 
     @Override
     public PermissionDto update(PermissionDto oldDto, PermissionDto newDto) throws UserNotFoundException, MemberNotFoundException, GroupNotFoundException, PermissionException, PermissionNotFoundException {
-        return map(initUpdater().updateEntity(oldDto, newDto));
+//        return map(initUpdater().updateEntity(oldDto, newDto));
+    return null;
     }
 
     @Override
@@ -107,7 +108,8 @@ public class PermissionCrudService implements CrudFacadeInterface<PermissionDto,
     }
 
     public PermissionEntity findEntity(PermissionDto dto) throws UserNotFoundException, GroupNotFoundException, MemberNotFoundException, PermissionNotFoundException {
-        return initFinder().findEntity(dto);
+//        return initFinder().findEntity(dto);
+    return null;
     }
 
     public List<PermissionEntity> findEntities(PermissionDto dto) throws PermissionMethodNotImplemented {

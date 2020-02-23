@@ -24,27 +24,26 @@ class PermissionCrudSaver implements CrudEntitySaver<PermissionEntity, Permissio
     @Override
     public PermissionEntity saveEntity(PermissionEntity entity) throws GroupNotFoundException, MemberNotFoundException, UserNotFoundException {
         return permissionCrudRepository
-                .save(connectPermissionWithMember(
-                        connectPermissionWithGroup(entity)));
+                .save(entity);
     }
 
-    private PermissionEntity connectPermissionWithGroup(PermissionEntity permissionEntity) throws GroupNotFoundException {
-        GroupEntity groupEntity = permissionEntity.getGroup();
-
-        if (groupEntity.getId() == null)
-            groupEntity = groupFinder.findGroup(GroupCrudService.map(permissionEntity.getGroup()));
-
-        permissionEntity.setGroup(groupEntity);
-        return permissionEntity;
-    }
-
-    private PermissionEntity connectPermissionWithMember(PermissionEntity permissionEntity) throws MemberNotFoundException, UserNotFoundException {
-        MemberEntity memberEntity = permissionEntity.getMember();
-
-        if (memberEntity.getId() == null)
-            memberEntity = memberFinder.findMember(MemberCrudService.map(permissionEntity.getMember()));
-
-        permissionEntity.setMember(memberEntity);
-        return permissionEntity;
-    }
+//    private PermissionEntity connectPermissionWithGroup(PermissionEntity permissionEntity) throws GroupNotFoundException {
+//        GroupEntity groupEntity = permissionEntity.getGroup();
+//
+//        if (groupEntity.getId() == null)
+//            groupEntity = groupFinder.findGroup(GroupCrudService.map(permissionEntity.getGroup()));
+//
+//        permissionEntity.setGroup(groupEntity);
+//        return permissionEntity;
+//    }
+//
+//    private PermissionEntity connectPermissionWithMember(PermissionEntity permissionEntity) throws MemberNotFoundException, UserNotFoundException {
+//        MemberEntity memberEntity = permissionEntity.getMember();
+//
+//        if (memberEntity.getId() == null)
+//            memberEntity = memberFinder.findMember(MemberCrudService.map(permissionEntity.getMember()));
+//
+//        permissionEntity.setMember(memberEntity);
+//        return permissionEntity;
+//    }
 }

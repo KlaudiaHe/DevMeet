@@ -23,7 +23,7 @@ class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
     private GroupMessengerCreator groupMessengerCreator;
 
     @Override
-    public GroupEntity createEntity(GroupDto dto) throws GroupAlreadyExistsException, UserNotFoundException, GroupNotFoundException, MemberNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
+    public GroupEntity createEntity(GroupDto dto) throws GroupAlreadyExistsException{
         GroupEntity group;
 
         try {
@@ -36,7 +36,7 @@ class GroupCrudCreator implements CrudEntityCreator<GroupDto, GroupEntity> {
             group = groupCrudSaver.saveEntity(
                     setDefaultValuesWhenGroupNotExists(GroupCrudService.map(dto))
             );
-            createMessengerForGroup(dto);
+//            createMessengerForGroup(dto);
 
             return group;
         }

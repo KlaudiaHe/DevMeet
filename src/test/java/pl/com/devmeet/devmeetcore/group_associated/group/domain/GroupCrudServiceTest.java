@@ -85,8 +85,6 @@ public class GroupCrudServiceTest {
             assertThat(e)
                     .isInstanceOf(GroupAlreadyExistsException.class)
                     .hasMessage(GroupCrudStatusEnum.GROUP_ALREADY_EXISTS.toString());
-        } catch (MessengerAlreadyExistsException | UserNotFoundException | MemberNotFoundException | GroupNotFoundException | MessengerArgumentNotSpecified e) {
-            e.printStackTrace();
         }
     }
 

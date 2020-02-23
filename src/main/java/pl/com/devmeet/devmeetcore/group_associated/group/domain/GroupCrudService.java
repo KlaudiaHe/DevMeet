@@ -85,7 +85,7 @@ public class GroupCrudService {
     }
 
 
-    public GroupDto add(GroupDto dto) throws GroupAlreadyExistsException, UserNotFoundException, MemberNotFoundException, GroupNotFoundException, MessengerAlreadyExistsException, MessengerArgumentNotSpecified {
+    public GroupDto add(GroupDto dto) throws GroupAlreadyExistsException{
         return map(initCreator().createEntity(dto));
     }
 

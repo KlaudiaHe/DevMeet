@@ -23,18 +23,18 @@ class PermissionCrudCreator implements CrudEntityCreator<PermissionDto, Permissi
     @Override
     public PermissionEntity createEntity(PermissionDto dto) throws PermissionAlreadyExistsException, GroupNotFoundException, MemberNotFoundException, UserNotFoundException {
         PermissionEntity permission;
-
-        try {
-            permission = permissionCrudFinder.findEntity(dto);
-
-            if (!permission.isActive() && permission.getModificationTime() != null) {
-                return permissionCrudSaver.saveEntity(setDefaultValuesWhenPermissionExist(permission));
-            }
-
-        } catch (PermissionNotFoundException e) {
-            permission = setDefaultValuesWhenPermissionNotExist(PermissionCrudService.map(dto));
-            return permissionCrudSaver.saveEntity(permission);
-        }
+//
+//        try {
+//            permission = permissionCrudFinder.findEntity(dto);
+//
+//            if (!permission.isActive() && permission.getModificationTime() != null) {
+//                return permissionCrudSaver.saveEntity(setDefaultValuesWhenPermissionExist(permission));
+//            }
+//
+//        } catch (PermissionNotFoundException e) {
+//            permission = setDefaultValuesWhenPermissionNotExist(PermissionCrudService.map(dto));
+//            return permissionCrudSaver.saveEntity(permission);
+//        }
 
         throw new PermissionAlreadyExistsException(PermissionCrudStatusEnum.PERMISSION_ALREADY_EXISTS.toString());
     }

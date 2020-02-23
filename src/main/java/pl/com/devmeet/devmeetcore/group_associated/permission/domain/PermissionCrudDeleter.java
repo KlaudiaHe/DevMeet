@@ -22,15 +22,15 @@ class PermissionCrudDeleter implements CrudEntityDeleter<PermissionDto, Permissi
 
     @Override
     public PermissionEntity deleteEntity(PermissionDto dto) throws PermissionAlreadyExistsException, UserNotFoundException, GroupNotFoundException, MemberNotFoundException, PermissionNotFoundException {
-        PermissionEntity permissionEntity = permissionCrudFinder.findEntity(dto);
-        boolean permissionActivity = permissionEntity.isActive();
-
-        if (permissionActivity) {
-            permissionEntity.setActive(false);
-            permissionEntity.setModificationTime(DateTime.now());
-
-            return permissionCrudSaver.saveEntity(permissionEntity);
-        }
+//        PermissionEntity permissionEntity = permissionCrudFinder.findEntity(dto);
+//        boolean permissionActivity = permissionEntity.isActive();
+//
+//        if (permissionActivity) {
+//            permissionEntity.setActive(false);
+//            permissionEntity.setModificationTime(DateTime.now());
+//
+//            return permissionCrudSaver.saveEntity(permissionEntity);
+//        }
 
         throw new PermissionAlreadyExistsException(PermissionCrudStatusEnum.PERMISSION_FOUND_BUT_NOT_ACTIVE.toString());
     }

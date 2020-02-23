@@ -185,7 +185,7 @@ public class MessageCrudServiceTest {
         GroupEntity groupEntity = null;
         try {
             groupEntity = groupCrudService.findEntityByGroup(groupCrudService.add(testGroupAndReceiverGroup));
-        } catch (GroupNotFoundException | GroupAlreadyExistsException | UserNotFoundException | MemberNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified e) {
+        } catch (GroupNotFoundException | GroupAlreadyExistsException e) {
             e.printStackTrace();
         }
 
