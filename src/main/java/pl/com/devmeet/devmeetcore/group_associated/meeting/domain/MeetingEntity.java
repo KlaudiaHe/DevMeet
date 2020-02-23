@@ -7,7 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupEntity;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceEntity;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceEntity;
 
 import javax.persistence.*;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeetcore.member_associated.place.domain;
+package pl.com.devmeet.devmeetcore.place.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFound
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PlaceMemberFinder {
+class PlaceMemberFinder {
 
     private MemberCrudService memberCrudService;
 

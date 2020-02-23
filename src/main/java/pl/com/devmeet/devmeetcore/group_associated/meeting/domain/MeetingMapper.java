@@ -1,7 +1,7 @@
 package pl.com.devmeet.devmeetcore.group_associated.meeting.domain;
 
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudService;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudService;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceCrudService;
 
 import java.util.List;
 import java.util.stream.Collectors;

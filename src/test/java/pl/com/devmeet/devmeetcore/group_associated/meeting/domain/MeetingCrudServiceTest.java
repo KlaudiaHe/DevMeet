@@ -17,10 +17,10 @@ import pl.com.devmeet.devmeetcore.group_associated.meeting.domain.status_and_exc
 import pl.com.devmeet.devmeetcore.group_associated.meeting.domain.status_and_exceptions.MeetingNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberRepository;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudService;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudRepository;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceCrudService;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceCrudRepository;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceDto;
+import pl.com.devmeet.devmeetcore.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;

@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeetcore.member_associated.place.domain;
+package pl.com.devmeet.devmeetcore.place.domain;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupCrudRepository;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.status_and_exceptions.GroupNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
@@ -17,10 +16,10 @@ import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberReposito
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberUserNotActiveException;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceCrudStatusEnum;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceFoundButNotActiveException;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
+import pl.com.devmeet.devmeetcore.place.domain.status_and_exceptions.PlaceAlreadyExistsException;
+import pl.com.devmeet.devmeetcore.place.domain.status_and_exceptions.PlaceCrudStatusEnum;
+import pl.com.devmeet.devmeetcore.place.domain.status_and_exceptions.PlaceFoundButNotActiveException;
+import pl.com.devmeet.devmeetcore.place.domain.status_and_exceptions.PlaceNotFoundException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerRepository;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerAlreadyExistsException;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.status_and_exceptions.MessengerArgumentNotSpecified;
@@ -51,7 +50,6 @@ public class PlaceCrudServiceTest {
     private PlaceDto testPlaceDto2;
     private MemberDto testMemberDto;
     private UserDto testUserDto;
-    private AvailabilityDto testAvailabilityDto;
 
     @Before
     public void setUp() {
@@ -68,26 +66,24 @@ public class PlaceCrudServiceTest {
                 .build();
 
         testPlaceDto1 = PlaceDto.builder()
-                .member(testMemberDto)
                 .placeName("FOCUS")
                 .description("Centrum konferencyjne FOCUS - budynek z drzewem na piętrze")
                 .website("http://www.budynekfocus.com/pl")
                 .location("Aleja Armii Ludowej 26, 00-609 Warszawa")
                 //    .availability(testAvailabilityDto)
-                .placeVotes(null)
+//                .placeVotes(null)
                 .creationTime(null)
                 .modificationTime(null)
                 .isActive(true)
                 .build();
 
         testPlaceDto2 = PlaceDto.builder()
-                .member(testMemberDto)
                 .placeName("Wydział Matematyki, Informatyki i Mechaniki Uniwersytetu Warszawskiego – wydział Uniwersytetu Warszawskiego")
                 .description("MeetUp tup! tup! tup! jeb!")
                 .website("https://www.mimuw.edu.pl/")
                 .location("Stefana Banacha 2, 02-097 Warszawa")
                 //    .availability(testAvailabilityDto)
-                .placeVotes(null)
+//                .placeVotes(null)
                 .creationTime(null)
                 .modificationTime(null)
                 .isActive(true)
@@ -167,7 +163,8 @@ public class PlaceCrudServiceTest {
         initTestDB();
         placeCrudService = initPlaceCrudFacade();
         PlaceDto created = placeCrudService.add(testPlaceDto1);
-        assertThat(created.getMember().getUser()).isNotNull();
+
+//        assertThat(created.getMembers().getUser()).isNotNull();
 
         assertThat(created.getPlaceName()).isEqualTo(testPlaceDto1.getPlaceName());
         assertThat(created.getDescription()).isEqualTo(testPlaceDto1.getDescription());
@@ -203,9 +200,9 @@ public class PlaceCrudServiceTest {
         initTestDB();
         PlaceDto found;
         placeCrudService = initPlaceCrudFacade();
-        placeCrudService.add(testPlaceDto1);
+        PlaceDto created = placeCrudService.add(testPlaceDto1);
 
-        found = placeCrudService.find(testPlaceDto1);
+        found = placeCrudService.findPlaceByIdAndMapToDto(created.getId());
         assertThat(found).isNotNull();
     }
 
@@ -214,7 +211,7 @@ public class PlaceCrudServiceTest {
         initTestDB();
         placeCrudService = initPlaceCrudFacade();
         try {
-            placeCrudService.find(testPlaceDto1);
+            placeCrudService.findPlaceByIdOrFeaturesAndMapToDto(testPlaceDto1);
             Assert.fail();
         } catch (PlaceNotFoundException e) {
             assertThat(e)
@@ -241,7 +238,7 @@ public class PlaceCrudServiceTest {
         PlaceCrudService placeCrudService = initPlaceCrudFacade();
         PlaceDto created = placeCrudService.add(testPlaceDto1);
         PlaceDto updated = placeCrudService.update(placeUpdatedValues(testPlaceDto1));
-        assertThat(updated.getMember()).isEqualToComparingFieldByField(created.getMember());
+//        assertThat(updated.getMember()).isEqualToComparingFieldByField(created.getMember());
         assertThat(updated.getPlaceName()).isEqualTo(created.getPlaceName());
         assertThat(updated.getDescription()).isNotEqualTo(created.getDescription());
         assertThat(updated.getWebsite()).isNotEqualTo(created.getWebsite());
@@ -249,7 +246,7 @@ public class PlaceCrudServiceTest {
         assertThat(updated.getDescription()).isEqualTo("openspace");
         assertThat(updated.getLocation()).isEqualTo(created.getLocation());
         //   assertThat(updated.getAvailability()).isEqualTo(created.getAvailability());
-        assertThat(updated.getPlaceVotes()).isEqualTo(created.getPlaceVotes());
+//        assertThat(updated.getPlaceVotes()).isEqualTo(created.getPlaceVotes());
         assertThat(updated.getCreationTime()).isEqualTo(created.getCreationTime());
         assertThat(updated.getModificationTime()).isNotEqualTo(created.getModificationTime());
         assertThat(updated.isActive()).isEqualTo(created.isActive());

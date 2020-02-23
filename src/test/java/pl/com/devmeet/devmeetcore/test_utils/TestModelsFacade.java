@@ -6,9 +6,8 @@ import org.joda.time.DateTime;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
 import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityDto;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceDto;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerDto;
-import pl.com.devmeet.devmeetcore.user.domain.DefaultUserLoginTypeEnum;
 import pl.com.devmeet.devmeetcore.user.domain.UserDto;
 
 @Getter

@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudService;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDtoApi;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
-import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
+import org.springframework.web.server.ResponseStatusException;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceCrudService;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceDto;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceDtoApi;
+import pl.com.devmeet.devmeetcore.place.domain.status_and_exceptions.PlaceNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,14 +42,15 @@ class PlaceApi {
 
     @GetMapping("{id}")
     public ResponseEntity<PlaceDtoApi> getById(@PathVariable Long id) {
-        if (place.findById(id).isPresent()) {
-            PlaceDtoApi placeDtoApi = new PlaceDtoApi();
-            placeDtoApi = modelMapper.getModelMapper()
-                    .map(place.findById(id).get(), PlaceDtoApi.class);
+        try {
+            PlaceDto foundPlace = place.findPlaceByIdAndMapToDto(id);
+            PlaceDtoApi placeDtoApi = modelMapper.getModelMapper()
+                    .map(foundPlace, PlaceDtoApi.class);
             return new ResponseEntity<>(placeDtoApi, HttpStatus.OK);
-        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-
+        } catch (PlaceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "");
+        }
     }
 
 }

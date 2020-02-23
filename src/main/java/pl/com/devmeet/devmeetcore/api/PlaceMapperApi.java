@@ -3,8 +3,8 @@ package pl.com.devmeet.devmeetcore.api;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDtoApi;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceDto;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceDtoApi;
 
 @Component
 public class PlaceMapperApi {
@@ -15,7 +15,7 @@ public class PlaceMapperApi {
             @Override
             protected void configure() {
                 map().setId(source.getId());
-                map().setUserEmail(source.getMember().getUser().getEmail());
+//                map().setUserEmail(source.getMember().getUser().getEmail());
                 map().setPlaceName(source.getPlaceName());
                 map().setDescription(source.getDescription());
                 map().setWebsite(source.getWebsite());
