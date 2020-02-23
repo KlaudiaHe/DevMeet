@@ -43,8 +43,6 @@ public class PlaceCrudServiceTest {
     @Autowired private GroupCrudRepository groupCrudRepository;
 
     private PlaceCrudService placeCrudService;
-    private MemberCrudService memberCrudService;
-    private UserCrudService userCrudService;
 
     private PlaceDto testPlaceDto1;
     private PlaceDto testPlaceDto2;
@@ -92,79 +90,14 @@ public class PlaceCrudServiceTest {
 
     }
 
-    private UserCrudService initUserCrudFacade() {
-        return new UserCrudService(userRepository);
-    }
-
-    private MemberCrudService initMemberCrudFacade() {
-        return new MemberCrudService(memberRepository, userRepository, messengerRepository, groupCrudRepository);
-    }
-
     private PlaceCrudService initPlaceCrudFacade() {
         return new PlaceCrudService(repository, memberRepository, userRepository, messengerRepository, groupCrudRepository);
     }
 
-
-    private boolean initTestDB() {
-        userCrudService = initUserCrudFacade();
-        memberCrudService = initMemberCrudFacade();
-
-        UserEntity testUser = null;
-        try {
-            testUser = userCrudService
-                    .findEntity(
-                            userCrudService.activation(
-                                    userCrudService.add(testUserDto)
-                            )
-                    );
-        } catch (UserNotFoundException | UserAlreadyExistsException | UserAlreadyActiveException e) {
-            e.printStackTrace();
-        }
-
-        MemberEntity memberEntity = null;
-        try {
-            memberEntity = memberCrudService
-                    .findEntity(memberCrudService.add(testMemberDto));
-        } catch (MemberNotFoundException | MemberAlreadyExistsException | UserNotFoundException | GroupNotFoundException | MessengerAlreadyExistsException | MessengerArgumentNotSpecified | MemberUserNotActiveException e) {
-            e.printStackTrace();
-        }
-
-        return testUser != null &&
-                memberEntity != null;
-    }
-
-    @Test
-    public void USER_CRUD_FACADE_WR() throws UserNotFoundException, UserAlreadyExistsException {
-        UserCrudService userCrudService = initUserCrudFacade();
-        UserDto testUser = userCrudService.add(testUserDto);
-        UserEntity userEntity = userCrudService.findEntity(testUser);
-        assertThat(userEntity).isNotNull();
-    }
-
-    @Test
-    public void MEMBER_CRUD_FACADE_WR() throws UserNotFoundException, MemberNotFoundException, UserAlreadyExistsException, UserAlreadyActiveException, MemberUserNotActiveException, MessengerArgumentNotSpecified, GroupNotFoundException, MessengerAlreadyExistsException, MemberAlreadyExistsException {
-        MemberCrudService memberCrudService = initMemberCrudFacade();
-        UserCrudService userCrudService = initUserCrudFacade();
-        userCrudService.add(testUserDto);
-        userCrudService.activation(testUserDto);
-        memberCrudService.add(testMemberDto);
-        MemberEntity memberEntity = memberCrudService.findEntityByUser(testUserDto);
-        assertThat(memberEntity).isNotNull();
-    }
-
-    @Test
-    public void INIT_TEST_DB() {
-        boolean initDB = initTestDB();
-        assertThat(initDB).isTrue();
-    }
-
     @Test
     public void WHEN_try_to_create_non_existing_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
-        initTestDB();
         placeCrudService = initPlaceCrudFacade();
         PlaceDto created = placeCrudService.add(testPlaceDto1);
-
-//        assertThat(created.getMembers().getUser()).isNotNull();
 
         assertThat(created.getPlaceName()).isEqualTo(testPlaceDto1.getPlaceName());
         assertThat(created.getDescription()).isEqualTo(testPlaceDto1.getDescription());
@@ -178,7 +111,6 @@ public class PlaceCrudServiceTest {
 
     @Test
     public void WHEN_try_to_create_existing_place_THEN_EntityAlreadyExistsException() throws MemberNotFoundException, UserNotFoundException {
-        initTestDB();
         placeCrudService = initPlaceCrudFacade();
         try {
             placeCrudService.add(testPlaceDto1);
@@ -197,21 +129,19 @@ public class PlaceCrudServiceTest {
 
     @Test
     public void WHEN_found_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException {
-        initTestDB();
         PlaceDto found;
         placeCrudService = initPlaceCrudFacade();
         PlaceDto created = placeCrudService.add(testPlaceDto1);
 
-        found = placeCrudService.findPlaceByIdAndMapToDto(created.getId());
+        found = placeCrudService.findPlaceById(created.getId());
         assertThat(found).isNotNull();
     }
 
     @Test
     public void WHEN_try_to_find_non_existing_place_THEN_return_EntityNotFoundException() throws MemberNotFoundException, UserNotFoundException {
-        initTestDB();
         placeCrudService = initPlaceCrudFacade();
         try {
-            placeCrudService.findPlaceByIdOrFeaturesAndMapToDto(testPlaceDto1);
+            placeCrudService.findPlaceByIdOrFeatures(testPlaceDto1);
             Assert.fail();
         } catch (PlaceNotFoundException e) {
             assertThat(e)
@@ -222,7 +152,6 @@ public class PlaceCrudServiceTest {
 
     @Test
     public void WHEN_try_to_find_all_places_THEN_return_places() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
-        initTestDB();
         List<PlaceDto> found;
         PlaceCrudService placeCrudService = initPlaceCrudFacade();
         placeCrudService.add(testPlaceDto1);
@@ -234,19 +163,16 @@ public class PlaceCrudServiceTest {
 
     @Test
     public void WHEN_try_to_update_existing_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException {
-        initTestDB();
         PlaceCrudService placeCrudService = initPlaceCrudFacade();
         PlaceDto created = placeCrudService.add(testPlaceDto1);
+        testPlaceDto1.setId(created.getId());
         PlaceDto updated = placeCrudService.update(placeUpdatedValues(testPlaceDto1));
-//        assertThat(updated.getMember()).isEqualToComparingFieldByField(created.getMember());
         assertThat(updated.getPlaceName()).isEqualTo(created.getPlaceName());
         assertThat(updated.getDescription()).isNotEqualTo(created.getDescription());
         assertThat(updated.getWebsite()).isNotEqualTo(created.getWebsite());
         assertThat(updated.getWebsite()).isEqualTo("www.pw.pl");
         assertThat(updated.getDescription()).isEqualTo("openspace");
         assertThat(updated.getLocation()).isEqualTo(created.getLocation());
-        //   assertThat(updated.getAvailability()).isEqualTo(created.getAvailability());
-//        assertThat(updated.getPlaceVotes()).isEqualTo(created.getPlaceVotes());
         assertThat(updated.getCreationTime()).isEqualTo(created.getCreationTime());
         assertThat(updated.getModificationTime()).isNotEqualTo(created.getModificationTime());
         assertThat(updated.isActive()).isEqualTo(created.isActive());
@@ -260,7 +186,6 @@ public class PlaceCrudServiceTest {
 
     @Test
     public void WHEN_try_to_update_non_existing_place_THEN_return_EntityNotFoundException() throws MemberNotFoundException, UserNotFoundException {
-        initTestDB();
         PlaceCrudService placeCrudService = initPlaceCrudFacade();
         try {
             placeCrudService.update(placeUpdatedValues(testPlaceDto1));
@@ -273,10 +198,9 @@ public class PlaceCrudServiceTest {
 
     @Test
     public void WHEN_delete_existing_place_THEN_return_place() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException, PlaceNotFoundException, PlaceFoundButNotActiveException {
-        initTestDB();
         PlaceCrudService placeCrudService = initPlaceCrudFacade();
         PlaceDto created = placeCrudService.add(testPlaceDto1);
-        PlaceDto deleted = placeCrudService.delete(testPlaceDto1);
+        PlaceDto deleted = placeCrudService.delete(created);
 
         assertThat(deleted).isNotNull();
         assertThat(deleted.isActive()).isNotEqualTo(created.isActive());
@@ -286,9 +210,7 @@ public class PlaceCrudServiceTest {
 
     @Test
     public void WHEN_try_to_delete_non_existing_place_THEN_return_EntityNotFoundException() throws UserNotFoundException, MemberNotFoundException, PlaceFoundButNotActiveException {
-        initTestDB();
         PlaceCrudService placeCrudService = initPlaceCrudFacade();
-
         try {
             placeCrudService.delete(testPlaceDto1);
         } catch (PlaceNotFoundException e) {

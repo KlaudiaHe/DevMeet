@@ -41,7 +41,6 @@ public class InitSampleDb implements CommandLineRunner {
     private void insertPlaces() throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
 
         placeService.add(PlaceDto.builder()
-//                .member(memberService.findById(1L))
                 .placeName("Centrum Zarządzania Innowacjami i Transferem Technologii Politechniki Warszawskiej")
                 .description("Openspace koło Metra Politechniki")
                 .website("cziitt.pw.edu.pl")
@@ -97,7 +96,6 @@ public class InitSampleDb implements CommandLineRunner {
                 .build();
 
         MemberDto createdMember = memberService.add(admin);
-//        MemberDto createdMember = MemberCrudService.map(memberRepository.save(MemberCrudService.map(admin)));
         System.out.println("Member created: " + createdMember.toString());
     }
 }

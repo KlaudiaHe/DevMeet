@@ -11,6 +11,8 @@ import pl.com.devmeet.devmeetcore.place.domain.status_and_exceptions.PlaceCrudSt
 import pl.com.devmeet.devmeetcore.place.domain.status_and_exceptions.PlaceNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -21,11 +23,10 @@ class PlaceCrudCreator implements CrudEntityCreator<PlaceDto, PlaceEntity> {
     private PlaceMemberFinder placeMemberFinder;
 
     @Override
-    public PlaceEntity createEntity(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
+    public PlaceEntity createEntity(PlaceDto dto) throws PlaceAlreadyExistsException {
         PlaceEntity place;
-//        MemberEntity foundMember = placeMemberFinder.findMember(getSafeMemberDto(dto));
         try {
-            place = placeCrudFinder.findPlaceById(dto.getId());
+            place = placeCrudFinder.findPlaceFeatures(dto);
 
             if (!place.isActive() && place.getModificationTime() != null)
                 return placeCrudSaver.saveEntity(setDefaultValuesWhenPlaceExists(place));

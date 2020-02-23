@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PlaceCrudRepository extends JpaRepository<PlaceEntity, Long> {
@@ -16,5 +17,5 @@ public interface PlaceCrudRepository extends JpaRepository<PlaceEntity, Long> {
             "or lower(p.location) like lower(concat('%',:search,'%'))")
     List<PlaceEntity> findAllBySearchText(String search);
 
-//    Optional<List<PlaceEntity>> findAllByMember(MemberEntity member);
+    Optional<PlaceEntity> findByPlaceNameAndDescriptionAndWebsiteAndLocation(String placeName, String description, String website, String location);
 }

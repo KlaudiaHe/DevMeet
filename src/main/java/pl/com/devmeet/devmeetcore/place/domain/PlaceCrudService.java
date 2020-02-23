@@ -19,7 +19,7 @@ import java.util.List;
 import static pl.com.devmeet.devmeetcore.place.domain.PlaceCrudMapper.mapDtoList;
 
 @Service
-public class PlaceCrudService extends PlaceCrudFinder{
+public class PlaceCrudService {
 
     private PlaceCrudRepository placeRepository;
     private MemberRepository memberRepository;
@@ -34,12 +34,6 @@ public class PlaceCrudService extends PlaceCrudFinder{
         this.userRepository = userRepository;
         this.messengerRepository = messengerRepository;
         this.groupCrudRepository = groupCrudRepository;
-
-        super.builder()
-                .placeRepository(placeRepository)
-                .memberFinder(initMemberFinder())
-                .placeCrudSaver(initSaver())
-                .build();
     }
 
 
@@ -87,16 +81,32 @@ public class PlaceCrudService extends PlaceCrudFinder{
                 .build();
     }
 
-//    public PlaceCrudFinder find(){
-//        return initFinder();
-//    }
+    public PlaceCrudFinder getEntityFinder() {
+        return initFinder();
+    }
 
-    public PlaceDto add(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
-        return map(initCreator().createEntity(dto));
+    public PlaceDto findPlaceById(Long id) throws PlaceNotFoundException {
+        return map(initFinder().findPlaceById(id));
+    }
+
+    public PlaceDto findPlaceByIdOrFeatures(PlaceDto dto) throws PlaceNotFoundException {
+        return map(initFinder().findPlaceFeatures(dto));
+    }
+
+    public List<PlaceDto> findAllBySearchingText(String text) {
+        return mapDtoList(initFinder().findAllBySearchingText(text));
     }
 
     public List<PlaceDto> findAll() {
         return mapDtoList(initFinder().findAllEntities());
+    }
+
+    public boolean isExist(PlaceDto dto){
+        return initFinder().isExist(dto);
+    }
+
+    public PlaceDto add(PlaceDto dto) throws MemberNotFoundException, UserNotFoundException, PlaceAlreadyExistsException {
+        return map(initCreator().createEntity(dto));
     }
 
     public PlaceDto update(PlaceDto toUpdate) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {

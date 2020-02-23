@@ -43,7 +43,7 @@ class PlaceApi {
     @GetMapping("{id}")
     public ResponseEntity<PlaceDtoApi> getById(@PathVariable Long id) {
         try {
-            PlaceDto foundPlace = place.findPlaceByIdAndMapToDto(id);
+            PlaceDto foundPlace = place.findPlaceById(id);
             PlaceDtoApi placeDtoApi = modelMapper.getModelMapper()
                     .map(foundPlace, PlaceDtoApi.class);
             return new ResponseEntity<>(placeDtoApi, HttpStatus.OK);
