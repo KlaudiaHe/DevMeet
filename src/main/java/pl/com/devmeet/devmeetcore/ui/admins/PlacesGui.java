@@ -7,9 +7,9 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import pl.com.devmeet.devmeetcore.api.PlaceMapperApi;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceCrudService;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDtoApi;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceCrudService;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceDto;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceDtoApi;
 
 import java.util.ArrayList;
 import java.util.List;

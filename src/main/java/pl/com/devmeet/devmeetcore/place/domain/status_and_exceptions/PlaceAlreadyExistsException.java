@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions;
+package pl.com.devmeet.devmeetcore.place.domain.status_and_exceptions;
 
 import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
 

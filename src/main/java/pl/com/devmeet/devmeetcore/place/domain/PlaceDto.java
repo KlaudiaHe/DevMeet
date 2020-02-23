@@ -1,11 +1,7 @@
-package pl.com.devmeet.devmeetcore.member_associated.place.domain;
+package pl.com.devmeet.devmeetcore.place.domain;
 
 import lombok.*;
 import org.joda.time.DateTime;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberDto;
-import pl.com.devmeet.devmeetcore.poll_associated.place_vote.domain.PlaceVoteEntity;
-
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -15,7 +11,7 @@ import java.util.List;
 public class PlaceDto {
 
     private Long id;
-    private MemberDto member;
+//    private List<MemberDto> members;
 
     private String placeName;
     private String description;
@@ -24,7 +20,7 @@ public class PlaceDto {
 
     //   private AvailabilityDto availability;
 
-    private List<PlaceVoteEntity> placeVotes;
+//    private List<PlaceVoteEntity> placeVotes;
 
     private DateTime creationTime;
     private DateTime modificationTime;

@@ -1,12 +1,13 @@
 package pl.com.devmeet.devmeetcore.member_associated.member.domain;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import pl.com.devmeet.devmeetcore.user.domain.UserEntity;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public interface MemberRepository extends PagingAndSortingRepository<MemberEntity, Long> {
+public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
 
     MemberEntity findByNick(String nick);
 

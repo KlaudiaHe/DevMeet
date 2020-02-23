@@ -1,6 +1,4 @@
-package pl.com.devmeet.devmeetcore.member_associated.place.domain;
-
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberCrudService;
+package pl.com.devmeet.devmeetcore.place.domain;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +8,6 @@ class PlaceCrudMapper {
     public static PlaceDto map(PlaceEntity entity) {
         return entity != null ? new PlaceDto().builder()
                 .id(entity.getId())
-                .member(MemberCrudService.map(entity.getMember()))
                 .placeName(entity.getPlaceName())
                 .description(entity.getDescription())
                 .website(entity.getWebsite())
@@ -25,7 +22,6 @@ class PlaceCrudMapper {
     public static PlaceEntity map(PlaceDto dto) {
         return dto != null ? new PlaceEntity().builder()
                 .id(dto.getId())
-                .member(MemberCrudService.map(dto.getMember()))
                 .placeName(dto.getPlaceName())
                 .description(dto.getDescription())
                 .website(dto.getWebsite())
@@ -38,13 +34,13 @@ class PlaceCrudMapper {
     }
 
     public static List<PlaceDto> mapDtoList(List<PlaceEntity> entities) {
-        return entities.stream()
+        return entities.parallelStream()
                 .map(PlaceCrudMapper::map)
                 .collect(Collectors.toList());
     }
 
     public static List<PlaceEntity> mapEntityList(List<PlaceDto> dtos) {
-        return dtos.stream()
+        return dtos.parallelStream()
                 .map(PlaceCrudMapper::map)
                 .collect(Collectors.toList());
     }

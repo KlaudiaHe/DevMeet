@@ -8,13 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
-import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupEntity;
-import pl.com.devmeet.devmeetcore.group_associated.permission.domain.PermissionEntity;
-import pl.com.devmeet.devmeetcore.member_associated.availability.domain.AvailabilityEntity;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceEntity;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceEntity;
 import pl.com.devmeet.devmeetcore.messenger_associated.messenger.domain.MessengerEntity;
-import pl.com.devmeet.devmeetcore.poll_associated.availability_vote.domain.AvailabilityVoteEntity;
-import pl.com.devmeet.devmeetcore.poll_associated.place_vote.domain.PlaceVoteEntity;
 import pl.com.devmeet.devmeetcore.user.domain.UserEntity;
 
 import javax.persistence.*;
@@ -47,7 +42,7 @@ public class MemberEntity {
 //    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
 //    private List<AvailabilityEntity> availabilities;
 //
-//    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
 //    private List<PlaceEntity> places;
 //
 //    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)

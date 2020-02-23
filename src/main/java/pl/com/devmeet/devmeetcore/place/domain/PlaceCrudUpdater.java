@@ -1,14 +1,12 @@
-package pl.com.devmeet.devmeetcore.member_associated.place.domain;
+package pl.com.devmeet.devmeetcore.place.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeetcore.domain_utils.CrudEntityUpdater;
-import pl.com.devmeet.devmeetcore.domain_utils.exceptions.CrudException;
 import pl.com.devmeet.devmeetcore.member_associated.member.domain.status_and_exceptions.MemberNotFoundException;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceCrudStatusEnum;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.status_and_exceptions.PlaceNotFoundException;
+import pl.com.devmeet.devmeetcore.place.domain.status_and_exceptions.PlaceNotFoundException;
 import pl.com.devmeet.devmeetcore.user.domain.status_and_exceptions.UserNotFoundException;
 
 @AllArgsConstructor
@@ -22,7 +20,6 @@ class PlaceCrudUpdater implements CrudEntityUpdater<PlaceDto, PlaceEntity> {
     @Override
     public PlaceEntity updateEntity(PlaceDto update) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
         PlaceEntity oldPlace = findPlaceEntity(update);
-        checkMember(oldPlace, update);
 
         return placeCrudSaver.saveEntity(
                 updateAllowedParameters(oldPlace, mapDtoToEntity(update))
@@ -37,14 +34,14 @@ class PlaceCrudUpdater implements CrudEntityUpdater<PlaceDto, PlaceEntity> {
 //    }
 
     PlaceEntity findPlaceEntity(PlaceDto oldDto) throws MemberNotFoundException, PlaceNotFoundException, UserNotFoundException {
-        return placeCrudFinder.findEntity(oldDto);
+        return placeCrudFinder.findPlaceById(oldDto.getId());
     }
 
-    private PlaceDto checkMember(PlaceEntity oldDto, PlaceDto newDto) throws PlaceNotFoundException {
-        if (oldDto.getMember().getNick().equals(newDto.getMember().getNick()))
-            return newDto;
-        throw new PlaceNotFoundException(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString());
-    }
+//    private PlaceDto checkMember(PlaceEntity oldDto, PlaceDto newDto) throws PlaceNotFoundException {
+//        if (oldDto.getMember().getNick().equals(newDto.getMember().getNick()))
+//            return newDto;
+//        throw new PlaceNotFoundException(PlaceCrudStatusEnum.PLACE_NOT_FOUND.toString());
+//    }
 
     private PlaceEntity mapDtoToEntity(PlaceDto dto) {
         return PlaceCrudService.map(dto);

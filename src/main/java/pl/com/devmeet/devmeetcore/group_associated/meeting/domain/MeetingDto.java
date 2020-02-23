@@ -3,7 +3,7 @@ package pl.com.devmeet.devmeetcore.group_associated.meeting.domain;
 import lombok.*;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeetcore.group_associated.group.domain.GroupDto;
-import pl.com.devmeet.devmeetcore.member_associated.place.domain.PlaceDto;
+import pl.com.devmeet.devmeetcore.place.domain.PlaceDto;
 
 @Builder
 @NoArgsConstructor

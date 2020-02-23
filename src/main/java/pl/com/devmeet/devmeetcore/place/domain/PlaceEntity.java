@@ -1,4 +1,4 @@
-package pl.com.devmeet.devmeetcore.member_associated.place.domain;
+package pl.com.devmeet.devmeetcore.place.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import pl.com.devmeet.devmeetcore.group_associated.meeting.domain.MeetingEntity;
-import pl.com.devmeet.devmeetcore.member_associated.member.domain.MemberEntity;
-import pl.com.devmeet.devmeetcore.poll_associated.place_vote.domain.PlaceVoteEntity;
 
 import javax.persistence.*;
 import java.util.List;
@@ -30,8 +28,8 @@ public class PlaceEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
-    private MemberEntity member;
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+//    private List<MemberEntity> members;
 
     private String placeName;
 
@@ -44,8 +42,8 @@ public class PlaceEntity {
 //    @OneToOne(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
 //    private AvailabilityEntity availability;
 
-    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
-    private List<PlaceVoteEntity> placeVotes;
+//    @OneToMany(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
+//    private List<PlaceVoteEntity> placeVotes;
 
     @OneToMany(mappedBy = "place", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<MeetingEntity> meetings;
